@@ -1,7 +1,11 @@
-from flask import Flask, render_template, session, current_app
+import os
+import csv
+from flask import Flask, render_template, session, current_app, request
 
+
+APP_DIR = os.path.dirname(__file__)
 app = Flask(__name__)
-
+app.secret_key = 'D1GG2I5C00L'
 
 @app.route('/')
 def index():
@@ -20,7 +24,13 @@ def dashboard():
 
 @app.route('/system_info')
 def system_info():
-    return render_template('/projects/legacy/john/social/system_info.html')
+    records = get_system_info()
+    header = records[0]
+    records = records[1:]
+
+    return render_template('/projects/legacy/john/social/system_info.html',
+                           header=header,
+                           records=records)
 
 
 @app.route('/new_run_1')
@@ -71,6 +81,17 @@ def new_run_9():
 @app.route('/new_run_end')
 def new_run_end():
     return render_template('/projects/legacy/john/social/new_run_end.html')
+
+
+# Non decorator functions
+
+def get_system_info():
+    """Read csv and return as a list of lists."""
+    f = open(os.path.join(APP_DIR, 'ips_system_info.csv'), encoding='utf-8')
+    reader = csv.reader(f)
+    records = list(reader)
+
+    return records
 
 
 if __name__ == '__main__':
