@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en-gb" dir="ltr" class="no-js"> 
+<html lang="en-gb" dir="ltr" class="no-js">
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -64,10 +64,10 @@
 			                    <li class="sitenavigation__listitem">
 			                    	<a href="/dashboard">Dashboard</a>
 			                    </li>
-			                    <li class="sitenavigation__listitem sitenavigation__listitem--active">
+			                    <li class="sitenavigation__listitem">
 			                    	<a href="#">New run</a>
 			                    </li>
-			                    <li class="sitenavigation__listitem">
+			                    <li class="sitenavigation__listitem sitenavigation__listitem--active">
 			                    	<a href="#">System info</a>
 			                    </li>
 			                    <li class="sitenavigation__listitem">
@@ -88,12 +88,26 @@
 	<div class="wrapper">
 		<div class="col-8">
 
+
+
+			<div class="top_50_extra_space">
+				<div class="panel panel--simple panel--info">
+			        <div class="panel__body">
+			        	<!--
+			            <strong class="u-mb-s u-d-b">Simple info panel - separate</strong>
+			        	-->
+			            <p class="mars">You are about to create a new initial IPS run for FR02 </p>
+			            <p></p>
+			        </div>
+			    </div>
+			</div>
+
 			<div class="group top_40_extra_space">
 				<div>
-					<h2 class="pluto grey_text ">Step 2 of 7 </h2>				
+					<h2 class="pluto grey_text ">STEP 1 </h2>
 				</div>
 				<div>
-					<h2 class="saturn">Select fieldwork </h2>				
+					<h2 class="saturn">Run details </h2>
 				</div>
 			</div>
 
@@ -107,10 +121,27 @@
 	<div class="wrapper">
 		<div class="col-8 top_40_extra_space">
 
-			<form id="run" action="/new_run_3" class="form">
+			<form>
+
+				<div class="field">
+			        <label class="label venus " for="text-input">Name </label>
+			        <input class="input input--text" type="text" id="text-input" />
+			    </div>
+
+			    <br>
+
+			    <div class="answer__fields js-fields">
+				    <label class="label venus " for="textarea-answer">Description</label>
+				    <textarea class="input input--textarea js-charlimit-input" cols="60" rows="6" id="textarea-answer" name="textarea-answer" maxlength="40" aria-describedby="description-question guidance-answer-trigger textarea-answer-remaining" data-maxlength="40"></textarea>
+				    <div class="input__limit u-mt-xs mercury" data-qa="textarea-with-limit" id="textarea-answer-remaining" aria-live="polite">You have <span>40</span>.
+				    </div>
+				</div>
+
+				<br>
+				<br>
 
 				<fieldset class="fieldgroup fieldgroup--date" data-qa="widget-date">
-				    <legend class="fieldgroup__title venus">Start date</legend>
+				    <legend class="fieldgroup__title venus">Fieldwork Start date</legend>
 				    <div class="fieldgroup__fields">
 				        <div class="field field--input field--day">
 				            <label class="label mercury" for="input-date-range-from-day" id="label-date-range-from-day">Day</label>
@@ -148,7 +179,7 @@
 				<br>
 
 				<fieldset class="fieldgroup fieldgroup--date" data-qa="widget-date">
-				    <legend class="fieldgroup__title venus">End date</legend>
+				    <legend class="fieldgroup__title venus">Fieldwork End date</legend>
 				    <div class="fieldgroup__fields">
 				        <div class="field field--input field--day">
 				            <label class="label mercury" for="input-date-range-from-day" id="label-date-range-from-day">Day</label>
@@ -182,12 +213,54 @@
 
 				</fieldset>
 
-			    <div class="top_60_extra_space">
-				    <button class="btn btn--primary" type="submit">Save and continue</button>
-				    &nbsp;&nbsp;&nbsp;
-				    <a class="btn btn--secondary btn--border" href="/new_run_1">Back</a>
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-					<label><a href="/dashboard">Cancel</a></label>
+				<br>
+				<br>
+
+				<div>
+					<label class="label venus" for="file" id="upload">Load survey data
+					<br/><span class="label__description pluto">File types accepted are .xls and .xlsx</span></label>
+					<input type="file" accept=".xls,.xlsx,.pdf" id="file" name="file" class="input input--upload" aria-describedby="upload">
+				</div>
+
+				<br>
+				<br>
+
+				<div>
+					<label class="label venus" for="file" id="upload">Load external data
+					<br/><span class="label__description pluto">File types accepted are .xls and .xlsx</span></label>
+					<input type="file" accept=".xls,.xlsx,.pdf" id="file" name="file" class="input input--upload" aria-describedby="upload">
+					<div class="top_15_extra_space">
+						<label><a href="#">Load another file</a></label>
+					</div>
+				</div>
+
+				<br>
+				<br>
+
+				<div class="field field--select col-6">
+			        <label class="label venus " for="select-wide">External data source</label>
+			        <select class="input input--select input--block" id="select-wide" name="select">
+			        	<option selected disabled>Select an option</option>
+			        	<option value="bart">Bart Simpson</option>
+			        	<option value="homer">Homer Simpson</option>
+			        	<option value="marge">Marge Simpson</option>
+			        	<option value="lisa">Lisa Simpson</option>
+			        	<option value="ned">Ned Flanders</option>
+			        	<option value="bugs">Bugs Bunny</option>
+			  		</select>
+			    </div>
+
+			    <br>
+			    <br>
+			    <br>
+			    <br>
+
+			    <div class="top_50_extra_space">
+				    <button class="btn btn--primary">Save and continue</button>
+				    <!--
+				    <button class="btn btn--neutral">Cancel</button>
+					-->
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <label><a href="#">Cancel</a></label>
 				</div>
 
 			</form>
@@ -236,26 +309,26 @@ $('.ui.dropdown').dropdown();
 
 
 <script type="text/javascript">
- 
+
 window.onload = function(){
- 
+
   var form = document.getElementById("form-sign-in");
 
   form.onsubmit = function(e) {
     e.preventDefault();
     var userInput = document.getElementById('text-input').value;
-   
+
     if (userInput.includes('123')) {
-   
+
       window.location = 'contributor.html';
-   
+
     } else if (userInput.includes('cme')) {
       window.location = 'search_results.html';
     }
     return false;
   }
 };
- 
+
 </script>​
 
 
