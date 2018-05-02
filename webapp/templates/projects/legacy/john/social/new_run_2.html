@@ -88,21 +88,12 @@
 	<div class="wrapper">
 		<div class="col-8">
 
-			<div class="top_50_extra_space">
-				<div class="panel panel--simple panel--info">
-			        <div class="panel__body">
-			            <p class="mars">You are about to create a new initial IPS run for FR02 </p>
-			            <p></p>
-			        </div>
-			    </div>
-			</div>
-
 			<div class="group top_40_extra_space">
 				<div>
-					<h2 class="pluto grey_text ">Step 1 of 7 </h2>				
+					<h2 class="pluto grey_text ">Step 2 of 7 </h2>				
 				</div>
 				<div>
-					<h2 class="saturn">Run details </h2>				
+					<h2 class="saturn">Select fieldwork </h2>				
 				</div>
 			</div>
 
@@ -116,28 +107,59 @@
 	<div class="wrapper">
 		<div class="col-8 top_40_extra_space">
 
-			<form id="run" action="/new_run_2" class="form">
+			<form id="run" action="/new_run_2" class="form", method="post">
 
-				<div class="field">
-			        <label class="label venus " for="text-input">Name </label>
-			        <input class="input input--text" type="text" id="text-input" />
-			    </div>
+				<fieldset class="fieldgroup fieldgroup--date" data-qa="widget-date">
+				    <legend class="fieldgroup__title venus">Start date</legend>
+				    <div class="fieldgroup__fields">
+				        <div class="field field--input field--day">
+							{{ sd_form.s_day.label(class="label mercury", for="input-date-range-from-day", id="label-date-range-from-day")}}
+							{{ sd_form.s_day(class="input input--StringField ", value="", placeholder="DD", id="input-date-range-from-day") }}
+				        </div>
 
-			    <br>
+				        <div class="field field--select field--month">
+							{{ sd_form.s_month.label(class="label mercury", for="input-date-range-from-month")}}
+							{{ sd_form.s_month(class="input input--select")}}
+				        </div>
 
-			    <div class="answer__fields js-fields">
-				    <label class="label venus " for="textarea-answer">Description</label>
-				    <textarea class="input input--textarea js-charlimit-input" cols="60" rows="6" id="textarea-answer" name="textarea-answer" maxlength="40" aria-describedby="description-question guidance-answer-trigger textarea-answer-remaining" data-maxlength="40"></textarea>
-				    <div class="input__limit u-mt-xs mercury" data-qa="textarea-with-limit" id="textarea-answer-remaining" aria-live="polite">You have <span>40</span>.
+				        <div class="field field--input field--year">
+							{{ sd_form.s_year.label(class="label mercury", for="input-date-range-from-year", id="label-date-range-from-year")}}
+							{{ sd_form.s_year(class="input input--StringField ", value="", placeholder="YYYY", id="input-date-range-from-year") }}
+				        </div>
 				    </div>
-				</div>
 
-			    <div class="top_50_extra_space">
-				    <button class="btn btn--primary" type="submit">Save and continue</button>
-				    <!--
-				    <button class="btn btn--neutral">Cancel</button>
-					-->
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <label><a href="/dashboard">Cancel</a></label>
+				</fieldset>
+
+				<br>
+				<br>
+
+				<fieldset class="fieldgroup fieldgroup--date" data-qa="widget-date">
+				    <legend class="fieldgroup__title venus">End date</legend>
+				    <div class="fieldgroup__fields">
+				        <div class="field field--input field--day">
+							{{ ed_form.e_day.label(class="label mercury", for="input-date-range-from-day", id="label-date-range-from-day")}}
+							{{ ed_form.e_day(class="input input--StringField ", value="", placeholder="DD", id="input-date-range-from-day") }}
+				        </div>
+
+				        <div class="field field--select field--month">
+							{{ ed_form.e_month.label(class="label mercury", for="input-date-range-from-month")}}
+							{{ ed_form.e_month(class="input input--select")}}
+				        </div>
+
+				        <div class="field field--input field--year">
+							{{ ed_form.e_year.label(class="label mercury", for="input-date-range-from-year", id="label-date-range-from-year")}}
+							{{ ed_form.e_year(class="input input--StringField ", value="", placeholder="YYYY", id="input-date-range-from-year") }}
+				        </div>
+				    </div>
+
+				</fieldset>
+
+			    <div class="top_60_extra_space">
+				    <button class="btn btn--primary" type="submit" name="submit" value="create_run">Save and continue</button>
+				    &nbsp;&nbsp;&nbsp;
+				    <a class="btn btn--secondary btn--border" href="/new_run_1">Back</a>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+					<label><a href="/dashboard">Cancel</a></label>
 				</div>
 
 			</form>

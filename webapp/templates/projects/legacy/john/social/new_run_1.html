@@ -88,12 +88,21 @@
 	<div class="wrapper">
 		<div class="col-8">
 
+			<div class="top_50_extra_space">
+				<div class="panel panel--simple panel--info">
+			        <div class="panel__body">
+			            <p class="mars">You are about to create a new initial IPS run for FR02 </p>
+			            <p></p>
+			        </div>
+			    </div>
+			</div>
+
 			<div class="group top_40_extra_space">
 				<div>
-					<h2 class="pluto grey_text ">Step 2 of 7 </h2>				
+					<h2 class="pluto grey_text ">Step 1 of 7 </h2>				
 				</div>
 				<div>
-					<h2 class="saturn">Select fieldwork </h2>				
+					<h2 class="saturn">Run details </h2>				
 				</div>
 			</div>
 
@@ -107,87 +116,28 @@
 	<div class="wrapper">
 		<div class="col-8 top_40_extra_space">
 
-			<form id="run" action="/new_run_3" class="form">
+			<form id="run" action="/new_run_1" class="form" method="post">
 
-				<fieldset class="fieldgroup fieldgroup--date" data-qa="widget-date">
-				    <legend class="fieldgroup__title venus">Start date</legend>
-				    <div class="fieldgroup__fields">
-				        <div class="field field--input field--day">
-				            <label class="label mercury" for="input-date-range-from-day" id="label-date-range-from-day">Day</label>
-				            <input class="input input--StringField " value="" placeholder="DD" id="input-date-range-from-day" name="date-range-from-day">
-				        </div>
+				<div class="field">
+					{{ form.run_name.label(class="label venus ", for="text-input")}}
+					{{ form.run_name(class="input input--text", type="text", id="text-input", placeholder="Enter run name") }}
+			    </div>
 
-				        <div class="field field--select field--month">
-				            <label class="label mercury" for="input-date-range-from-month" id="label-date-range-from-month">Month</label>
-				            <select class="input input--select" id="input-date-range-from-month" name="date-range-from-month">
-				              <option disabled="disabled" value="" selected="selected">Select month</option>
-				              <option value="1">January</option>
-				              <option value="2">February</option>
-				              <option value="3">March</option>
-				              <option value="4">April</option>
-				              <option value="5">May</option>
-				              <option value="6">June</option>
-				              <option value="7">July</option>
-				              <option value="8">August</option>
-				              <option value="9">September</option>
-				              <option value="10">October</option>
-				              <option value="11">November</option>
-				              <option value="12">December</option>
-				            </select>
-				        </div>
+			    <br>
 
-				        <div class="field field--input field--year">
-				            <label class="label mercury" for="input-date-range-from-year" id="label-date-range-from-year">Year</label>
-				            <input data-qa="input-StringField" class="input input--StringField " value="" placeholder="YYYY" id="input-date-range-from-year" name="date-range-from-year">
-				        </div>
+			    <div class="answer__fields js-fields">
+					{{ form.run_description.label(class="label venus ", for="text-input")}}
+					{{ form.run_description(class="input input--textarea js-charlimit-input",cols="60",rows="6",id="textarea-answer",maxlength="40")}}
+				    <div class="input__limit u-mt-xs mercury" data-qa="textarea-with-limit" id="textarea-answer-remaining" aria-live="polite">You have <span>40</span>.
 				    </div>
+				</div>
 
-				</fieldset>
-
-				<br>
-				<br>
-
-				<fieldset class="fieldgroup fieldgroup--date" data-qa="widget-date">
-				    <legend class="fieldgroup__title venus">End date</legend>
-				    <div class="fieldgroup__fields">
-				        <div class="field field--input field--day">
-				            <label class="label mercury" for="input-date-range-from-day" id="label-date-range-from-day">Day</label>
-				            <input class="input input--StringField " value="" placeholder="DD" id="input-date-range-from-day" name="date-range-from-day">
-				        </div>
-
-				        <div class="field field--select field--month">
-				            <label class="label mercury" for="input-date-range-from-month" id="label-date-range-from-month">Month</label>
-				            <select class="input input--select" id="input-date-range-from-month" name="date-range-from-month">
-				              <option disabled="disabled" value="" selected="selected">Select month</option>
-				              <option value="1">January</option>
-				              <option value="2">February</option>
-				              <option value="3">March</option>
-				              <option value="4">April</option>
-				              <option value="5">May</option>
-				              <option value="6">June</option>
-				              <option value="7">July</option>
-				              <option value="8">August</option>
-				              <option value="9">September</option>
-				              <option value="10">October</option>
-				              <option value="11">November</option>
-				              <option value="12">December</option>
-				            </select>
-				        </div>
-
-				        <div class="field field--input field--year">
-				            <label class="label mercury" for="input-date-range-from-year" id="label-date-range-from-year">Year</label>
-				            <input data-qa="input-StringField" class="input input--StringField " value="" placeholder="YYYY" id="input-date-range-from-year" name="date-range-from-year">
-				        </div>
-				    </div>
-
-				</fieldset>
-
-			    <div class="top_60_extra_space">
-				    <button class="btn btn--primary" type="submit">Save and continue</button>
-				    &nbsp;&nbsp;&nbsp;
-				    <a class="btn btn--secondary btn--border" href="/new_run_1">Back</a>
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-					<label><a href="/dashboard">Cancel</a></label>
+			    <div class="top_50_extra_space">
+					<button class="btn btn--primary" type="submit" name="submit" value="create_run">Save and continue</button>
+				    <!--
+				    <button class="btn btn--neutral">Cancel</button>
+					-->
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <label><a href="/dashboard">Cancel</a></label>
 				</div>
 
 			</form>
