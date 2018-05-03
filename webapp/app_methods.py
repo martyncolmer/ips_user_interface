@@ -33,4 +33,11 @@ def get_system_info():
     return records
 
 
+def get_runs():
+    """Read csv and return as a list of lists."""
 
+    f = open(os.path.join(APP_DIR, '../webapp/resources/run_list.csv'), encoding='utf-8')
+    reader = csv.reader(f)
+    records = list(reader)
+
+    return records

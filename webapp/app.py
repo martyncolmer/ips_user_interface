@@ -3,12 +3,13 @@ import csv
 import uuid
 from flask import Flask, render_template, session, current_app, request, url_for, redirect
 from webapp import app_methods
-from webapp.forms import CreateRunForm, DateSelectionForm
-
+from webapp.forms import CreateRunForm, DateSelectionForm, SearchActivityForm
+import requests
 
 APP_DIR = os.path.dirname(__file__)
 app = Flask(__name__)
 app.secret_key = 'D1GG2I5C00L'
+
 
 @app.route('/')
 def index():
@@ -22,7 +23,16 @@ def login():
 
 @app.route('/dashboard')
 def dashboard():
-    return render_template('/projects/legacy/john/social/dashboard.html')
+    form = SearchActivityForm()
+
+    records = app_methods.get_runs()
+    header = records[0]
+    records = records[1:]
+
+    return render_template('/projects/legacy/john/social/dashboard.html',
+                           header=header,
+                           records=records,
+                           form=form)
 
 
 @app.route('/system_info')
@@ -39,22 +49,15 @@ def system_info():
 @app.route('/new_run_1', methods=['GET', 'POST'])
 def new_run_1():
     form = CreateRunForm()
-
-    print(request.method)
     # if request is a post
     if request.method == 'POST' and form.validate():
-        print('a')
         if request.form['submit'] == 'create_run':
-            print('b')
             unique_id = uuid.uuid4()
             session['current_run_id'] = unique_id
             session['run_name'] = request.form['run_name']
             session['run_description'] = request.form['run_description']
-            print('c')
             return redirect(url_for('new_run_2'), code=302)
 
-        print('d')
-    print('e')
     return render_template('/projects/legacy/john/social/new_run_1.html',
                            form=form)
 
