@@ -5,4 +5,4 @@ applications:
   instances: 1
   command: flask run --host 0.0.0.0 --port $PORT --with-threads
   env:
-    FLASK_APP: UI_app/app.py
+    FLASK_APP: webapp/app.py
