@@ -41,43 +41,56 @@ def new_run_1():
     form = CreateRunForm()
 
     print(request.method)
-
     # if request is a post
-    if request.method == 'POST':
+    if request.method == 'POST' and form.validate():
+        print('a')
         if request.form['submit'] == 'create_run':
+            print('b')
             unique_id = uuid.uuid4()
             session['current_run_id'] = unique_id
             session['run_name'] = request.form['run_name']
             session['run_description'] = request.form['run_description']
-
+            print('c')
             return redirect(url_for('new_run_2'), code=302)
 
+        print('d')
+    print('e')
     return render_template('/projects/legacy/john/social/new_run_1.html',
                            form=form)
 
 
+def flash_errors(form):
+    for field, errors in form.errors.items():
+        for error in errors:
+            print(u"Error in the %s field - %s" % (
+                getattr(form, field).label.text,
+                error
+            ))
+
+
 @app.route('/new_run_2', methods=['GET', 'POST'])
 def new_run_2():
-    start_date_form = DateSelectionForm()
-    end_date_form = DateSelectionForm()
+    form = DateSelectionForm()
 
     # if request is a post
     if request.method == 'POST':
-        if request.form['submit'] == 'create_run':
-            start_date = request.form['s_day'] + request.form['s_month'] + request.form['s_year']
-            end_date = request.form['e_day'] + request.form['e_month'] + request.form['e_year']
+        if form.validate():
+            if request.form['submit'] == 'create_run':
+                start_date = request.form['s_day'] + request.form['s_month'] + request.form['s_year']
+                end_date = request.form['e_day'] + request.form['e_month'] + request.form['e_year']
 
-            session['start_date'] = start_date
-            session['end_date'] = end_date
+                session['start_date'] = start_date
+                session['end_date'] = end_date
 
-            app_methods.create_run(session['current_run_id'], session['run_name'], session['run_description'],
-                       session['start_date'], session['end_date'])
+                app_methods.create_run(session['current_run_id'], session['run_name'], session['run_description'],
+                                       session['start_date'], session['end_date'])
 
-            return redirect(url_for('new_run_3'), code=302)
+                return redirect(url_for('new_run_3'), code=302)
+        else:
+            flash_errors(form)
 
     return render_template('/projects/legacy/john/social/new_run_2.html',
-                           sd_form=start_date_form,
-                           ed_form=end_date_form)
+                           form=form)
 
 
 @app.route('/new_run_3')

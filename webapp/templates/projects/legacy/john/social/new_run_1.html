@@ -119,8 +119,18 @@
 			<form id="run" action="/new_run_1" class="form" method="post">
 
 				<div class="field">
+					{{ form.csrf_token }}
 					{{ form.run_name.label(class="label venus ", for="text-input")}}
 					{{ form.run_name(class="input input--text", type="text", id="text-input", placeholder="Enter run name") }}
+
+					{% if form.run_name.errors %}
+					<ul>
+						{% for error_message in form.run_name.errors %}
+						<li>{{ error_message }}</li>
+						{% endfor %}
+					</ul>
+					{% endif %}
+
 			    </div>
 
 			    <br>
@@ -128,6 +138,15 @@
 			    <div class="answer__fields js-fields">
 					{{ form.run_description.label(class="label venus ", for="text-input")}}
 					{{ form.run_description(class="input input--textarea js-charlimit-input",cols="60",rows="6",id="textarea-answer",maxlength="40")}}
+
+					{% if form.run_description.errors %}
+					<ul>
+						{% for error_message in form.run_description.errors %}
+						<li>{{ error_message }}</li>
+						{% endfor %}
+					</ul>
+					{% endif %}
+
 				    <div class="input__limit u-mt-xs mercury" data-qa="textarea-with-limit" id="textarea-answer-remaining" aria-live="polite">You have <span>40</span>.
 				    </div>
 				</div>

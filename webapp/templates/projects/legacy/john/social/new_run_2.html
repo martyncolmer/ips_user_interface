@@ -113,18 +113,43 @@
 				    <legend class="fieldgroup__title venus">Start date</legend>
 				    <div class="fieldgroup__fields">
 				        <div class="field field--input field--day">
-							{{ sd_form.s_day.label(class="label mercury", for="input-date-range-from-day", id="label-date-range-from-day")}}
-							{{ sd_form.s_day(class="input input--StringField ", value="", placeholder="DD", id="input-date-range-from-day") }}
+							{{ form.csrf_token }}
+							{{ form.s_day.label(class="label mercury", for="input-date-range-from-day", id="label-date-range-from-day")}}
+							{{ form.s_day(class="input input--StringField ", value="", placeholder="DD", id="input-date-range-from-day") }}
+
+							{% if form.s_day.errors %}
+							<ul>
+								{% for error_message in form.s_day.errors %}
+								<li>{{ error_message }}</li>
+								{% endfor %}
+							</ul>
+							{% endif %}
 				        </div>
 
 				        <div class="field field--select field--month">
-							{{ sd_form.s_month.label(class="label mercury", for="input-date-range-from-month")}}
-							{{ sd_form.s_month(class="input input--select")}}
+							{{ form.csrf_token }}
+							{{ form.s_month.label(class="label mercury", for="input-date-range-from-month")}}
+							{{ form.s_month(class="input input--select")}}
+							{% if form.s_month.errors %}
+							<ul>
+								{% for error_message in form.s_month.errors %}
+								<li>{{ error_message }}</li>
+								{% endfor %}
+							</ul>
+							{% endif %}
 				        </div>
 
 				        <div class="field field--input field--year">
-							{{ sd_form.s_year.label(class="label mercury", for="input-date-range-from-year", id="label-date-range-from-year")}}
-							{{ sd_form.s_year(class="input input--StringField ", value="", placeholder="YYYY", id="input-date-range-from-year") }}
+							{{ form.csrf_token }}
+							{{ form.s_year.label(class="label mercury", for="input-date-range-from-year", id="label-date-range-from-year")}}
+							{{ form.s_year(class="input input--StringField ", value="", placeholder="YYYY", id="input-date-range-from-year") }}
+							{% if form.s_year.errors %}
+							<ul>
+								{% for error_message in form.s_year.errors %}
+								<li>{{ error_message }}</li>
+								{% endfor %}
+							</ul>
+							{% endif %}
 				        </div>
 				    </div>
 
@@ -137,18 +162,46 @@
 				    <legend class="fieldgroup__title venus">End date</legend>
 				    <div class="fieldgroup__fields">
 				        <div class="field field--input field--day">
-							{{ ed_form.e_day.label(class="label mercury", for="input-date-range-from-day", id="label-date-range-from-day")}}
-							{{ ed_form.e_day(class="input input--StringField ", value="", placeholder="DD", id="input-date-range-from-day") }}
+							{{ form.csrf_token }}
+							{{ form.e_day.label(class="label mercury", for="input-date-range-from-day", id="label-date-range-from-day")}}
+							{{ form.e_day(class="input input--StringField ", value="", placeholder="DD", id="input-date-range-from-day") }}
+
+							{% if form.e_day.errors %}
+							<ul>
+								{% for error_message in form.e_day.errors %}
+								<li>{{ error_message }}</li>
+								{% endfor %}
+							</ul>
+							{% endif %}
 				        </div>
 
 				        <div class="field field--select field--month">
-							{{ ed_form.e_month.label(class="label mercury", for="input-date-range-from-month")}}
-							{{ ed_form.e_month(class="input input--select")}}
+							{{ form.csrf_token }}
+							{{ form.e_month.label(class="label mercury", for="input-date-range-from-month")}}
+							{{ form.e_month(class="input input--select")}}
+
+							{% if form.e_month.errors %}
+							<ul>
+								{% for error_message in form.e_month.errors %}
+								<li>{{ error_message }}</li>
+								{% endfor %}
+							</ul>
+							{% endif %}
 				        </div>
 
 				        <div class="field field--input field--year">
-							{{ ed_form.e_year.label(class="label mercury", for="input-date-range-from-year", id="label-date-range-from-year")}}
-							{{ ed_form.e_year(class="input input--StringField ", value="", placeholder="YYYY", id="input-date-range-from-year") }}
+							{{ form.csrf_token }}
+							{{ form.e_year.label(class="label mercury", for="input-date-range-from-year", id="label-date-range-from-year")}}
+							{{ form.e_year(class="input input--StringField ", value="", placeholder="YYYY", id="input-date-range-from-year") }}
+
+							{% if form.e_year.errors %}
+							<ul>
+								{% for error_message in form.e_year.errors %}
+								<li>{{ error_message }}</li>
+								{% endfor %}
+							</ul>
+							{% endif %}
+
 				        </div>
 				    </div>
 
