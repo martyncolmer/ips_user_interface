@@ -36,3 +36,15 @@ def test_create_run():
     f.close()
 
     assert number_of_runs_after == number_of_runs_before + 1
+
+
+def test_get_runs_json():
+    result = app_methods.get_runs_json()
+    assert isinstance(result, list)
+    assert len(result) > 0
+
+
+def test_get_runs_csv():
+    result = app_methods.get_runs_json()
+    assert isinstance(result, list)
+    assert len(result) > 0

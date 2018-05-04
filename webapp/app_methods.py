@@ -33,7 +33,16 @@ def get_system_info():
     return records
 
 
-def get_runs():
+def get_runs_json():
+
+    import requests
+    import json
+    requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs")
+    response = requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs")
+    return json.loads(response.content)
+
+
+def get_runs_csv():
     """Read csv and return as a list of lists."""
 
     f = open(os.path.join(APP_DIR, '../webapp/resources/run_list.csv'), encoding='utf-8')

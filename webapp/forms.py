@@ -2,16 +2,20 @@
 from flask_wtf import FlaskForm
 from wtforms import IntegerField
 from wtforms import StringField
-from wtforms import SelectField, SubmitField, Label
-from wtforms import DateField
+from wtforms import SelectField, SubmitField
 from wtforms.validators import InputRequired, NumberRange
 
 
 class SearchActivityForm(FlaskForm):
-    search_activity = StringField(label='Search activity',
-                                   validators=[InputRequired()])
+    search_activity = StringField(label='Search activity')
     search_button = SubmitField(label='Search')
-    advance_search = Label(text='Advanced search', field_id="advanced")
+    advanced_search = SubmitField(label='Advanced search')
+    run_type_list = [('-1', 'All Runs'),
+                     ('0', 'Live'),
+                     ('1', 'Published'),
+                     ('2', 'Test'),
+                     ('3', 'Deleted')]
+    run_type_filter = SelectField(label='RunType', choices=run_type_list)
 
 
 class CreateRunForm(FlaskForm):
