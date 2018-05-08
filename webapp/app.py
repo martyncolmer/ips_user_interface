@@ -42,12 +42,10 @@ def dashboard():
         record[5] = run_statuses[record[5]]
         record[6] = run_types[record[6]]
 
-    form.validate()
-    flash_errors(form)
-
-    # If this is a pose then validate if needed
+    # If this is a post then validate if needed
     if request.method == 'POST' and form.validate():
         print(request.form)
+        flash_errors(form)
 
         # If the search button is selected filter hte results on the run status and the searched word.
         if 'search_button' in request.form:
