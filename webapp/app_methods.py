@@ -10,8 +10,8 @@ def create_run(unique_id,run_name, run_description, start_date, end_date):
 
     :return: NA
     """
-
-    new_entry = str(unique_id) + "," + run_name + "," + run_description + "," + start_date + "," + end_date + "," + "0" + "\n"
+    
+    new_entry = str(unique_id) + "," + run_name + "," + run_description + "," + start_date + "," + end_date + "," + "0" +  "," + "6" + "\n"
 
     f = open('../webapp/resources/run_list.csv', 'a')
     f.write(new_entry)
