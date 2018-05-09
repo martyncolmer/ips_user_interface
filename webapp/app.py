@@ -27,9 +27,11 @@ def dashboard():
     form = SearchActivityForm()
 
     # Get the records and separate the headers and values
-    records = app_methods.get_runs_csv()
-    header = records[0]
-    records = records[1:]
+    #records = app_methods.get_runs_csv()
+    records = app_methods.get_runs_json()
+    header = ['Run_ID', 'Run_Name', 'Run_Description', 'Start_Date', 'End_Date', 'Run_Status', 'Run Type']
+    #header = records[0]
+    #records = records[1:]
 
     # Setup key value pairs for displaying run information
     run_statuses = {'0': 'Live', '1': 'Published', '2': 'Test', '3': 'Deleted'}
@@ -37,10 +39,10 @@ def dashboard():
 
     # Reformat values to be displayed on the UI
     for record in records:
-        record[3] = record[3][:2] + "-" + record[3][2:4] + "-" + record[3][4:]
-        record[4] = record[4][:2] + "-" + record[4][2:4] + "-" + record[4][4:]
-        record[5] = run_statuses[record[5]]
-        record[6] = run_types[record[6]]
+        record['start_date'] = record['start_date'][:2] + "-" + record['start_date'][2:4] + "-" + record['start_date'][4:]
+        record['end_date'] = record['end_date'][:2] + "-" + record['end_date'][2:4] + "-" + record['end_date'][4:]
+        record['status'] = run_statuses[record['status']]
+        record['type'] = run_types[record['type']]
 
     # If this is a post then validate if needed
     if request.method == 'POST' and form.validate():
@@ -55,19 +57,19 @@ def dashboard():
             # If the filer is -1 then no filter to apply otherwise filter using the run_status value
             if request.form['run_type_filter'] != '-1':
                 records = [x for x in records
-                           if (search_activity.lower() in x[0].lower() or
-                               search_activity.lower() in x[1].lower() or
-                               search_activity.lower() in x[2].lower() or
-                               search_activity.lower() in x[3].lower() or
-                               search_activity.lower() in x[4].lower()) and
-                           run_statuses[filter_value].lower() == x[5].lower()]
+                           if (search_activity.lower() in x['id'].lower() or
+                               search_activity.lower() in x['name'].lower() or
+                               search_activity.lower() in x['desc'].lower() or
+                               search_activity.lower() in x['start_date'].lower() or
+                               search_activity.lower() in x['end_date'].lower()) and
+                           run_statuses[filter_value].lower() == x['status'].lower()]
             else:
                 records = [x for x in records
-                           if search_activity.lower() in x[0].lower() or
-                           search_activity.lower() in x[1].lower() or
-                           search_activity.lower() in x[2].lower() or
-                           search_activity.lower() in x[3].lower() or
-                           search_activity.lower() in x[4].lower()]
+                           if search_activity.lower() in x['id'].lower() or
+                           search_activity.lower() in x['name'].lower() or
+                           search_activity.lower() in x['desc'].lower() or
+                           search_activity.lower() in x['start_date'].lower() or
+                           search_activity.lower() in x['end_date'].lower()]
 
     return render_template('/projects/legacy/john/social/dashboard.html',
                            header=header,
@@ -95,7 +97,7 @@ def new_run_1():
     if request.method == 'POST' and form.validate():
         if request.form['submit'] == 'create_run':
             unique_id = uuid.uuid4()
-            session['current_run_id'] = unique_id
+            session['current_run_id'] = str(unique_id)
             session['run_name'] = request.form['run_name']
             session['run_description'] = request.form['run_description']
             return redirect(url_for('new_run_2'), code=302)
@@ -177,6 +179,21 @@ def new_run_9():
 def new_run_end():
     return render_template('/projects/legacy/john/social/new_run_end.html')
 
+
+@app.route('/reference/<run_id>')
+def reference(run_id):
+
+    run = app_methods.get_run(run_id)
+
+    session['current_run_id'] = run['id']
+    session['run_name'] = run['name']
+    session['run_description'] = run['desc']
+    session['start_date'] = run['start_date']
+    session['end_date'] = run['end_date']
+    current_run = run
+
+    return render_template('/projects/legacy/john/social/reference.html',
+                           current_run=current_run)
 
 if __name__ == '__main__':
     app.run(debug=True)
