@@ -31,6 +31,3 @@ def get_system_info():
     f.close()
 
     return records
-
-
-

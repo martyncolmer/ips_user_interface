@@ -107,12 +107,15 @@
 	<div class="wrapper">
 		<div class="col-8 top_40_extra_space">
 
-			<form id="run" action="/new_run_4" class="form">
+			<form id="run" action="/new_run_3" class="form", method="post", enctype="multipart/form-data">
 
 				<div>
 					<label class="label venus" for="file" id="upload">Survey data
-					<br/><span class="label__description pluto">File type accepted is .csv</span></label>
-					<input type="file" accept=".xls,.xlsx,.pdf" id="file" name="file" class="input input--upload" aria-describedby="upload">
+					<br/>
+
+						<span class="label__description pluto">File type accepted is .csv</span></label>
+					{{form.survey_file}}
+					<!--<input type="file" accept=".csv" id="file" name="file" class="input input--upload" aria-describedby="upload">-->
 				</div>
 
 				<br>
@@ -123,10 +126,71 @@
 					<br/>
 					<span class="label__description pluto">File type accepted is .csv </span>
 					</label>
-					<input type="file" accept=".xls,.xlsx,.pdf" id="file" name="file" class="input input--upload" aria-describedby="upload">
+					<!--<input type="file" accept=".xls,.xlsx,.pdf" id="file" name="file" class="input input--upload" aria-describedby="upload">-->
 				</div>
 
 				<br>
+
+                <div>
+                    <label class="label_venus" for="file" id="upload">Shift data
+                    </br>
+                    </label>
+                    {{form.shift_file}}
+
+                </div>
+
+                <br>
+
+                <div>
+                    <label class="label_venus" for="file" id="upload">Non_response data
+                    </br>
+                    </label>
+                    {{form.non_response_file}}
+
+                </div>
+
+                <br>
+
+                <div>
+                    <label class="label_venus" for="file" id="upload">Unsampled data
+                    </br>
+                    </label>
+                    {{form.unsampled_file}}
+
+                </div>
+
+                <br>
+
+                <div>
+                    <label class="label_venus" for="file" id="upload">Tunnel data
+                    </br>
+                    </label>
+                    {{form.tunnel_file}}
+
+                </div>
+
+                <br>
+
+                <div>
+                    <label class="label_venus" for="file" id="upload">Sea data
+                    </br>
+                    </label>
+                    {{form.sea_file}}
+
+                </div>
+
+                <br>
+
+                <div>
+                    <label class="label_venus" for="file" id="upload">Air data
+                    </br>
+                    </label>
+                    {{form.air_file}}
+
+                </div>
+
+                <br>
+                <br>
 
 				<div class="field field--select col-6">
 					<select class="input input--select input--block" id="select-wide" name="select">

@@ -1,9 +1,9 @@
 import os
 import csv
 import uuid
-from flask import Flask, render_template, session, current_app, request, url_for, redirect
+from flask import Flask, render_template, session, current_app, request, url_for, redirect, flash
 from webapp import app_methods
-from webapp.forms import CreateRunForm, DateSelectionForm
+from webapp.forms import CreateRunForm, DateSelectionForm, LoadDataForm
 
 
 APP_DIR = os.path.dirname(__file__)
@@ -93,9 +93,29 @@ def new_run_2():
                            form=form)
 
 
-@app.route('/new_run_3')
+@app.route('/new_run_3', methods = ['GET', 'POST'])
 def new_run_3():
-    return render_template('/projects/legacy/john/social/new_run_3.html')
+    form = LoadDataForm()
+
+    if request.method == 'POST':
+        print("ya")
+        if(form.validate()==False):
+            flash_errors(form)
+        else:
+            print("dude")
+            for i in form:
+                if i.name == 'csrf_token':
+                    pass
+                else:
+                    print("Morning" + i.name)
+                    file_data = str(request.files[i.name].read())
+                    #file_data = form.data.file[i.name].read()
+                    f = open('../webapp/resources/' + i.name + '.csv', 'a')
+                    f.write(file_data)
+                    print("printing!")
+            return redirect(url_for('new_run_4'))
+
+    return render_template('/projects/legacy/john/social/new_run_3.html', form = form)
 
 
 @app.route('/new_run_4')

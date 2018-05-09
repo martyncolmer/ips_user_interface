@@ -1,9 +1,10 @@
 
 from flask_wtf import FlaskForm
+from flask_wtf.file import DataRequired
 from wtforms import IntegerField
 from wtforms import StringField
 from wtforms import SelectField
-from wtforms import DateField
+from wtforms import FileField
 from wtforms.validators import InputRequired, NumberRange
 
 
@@ -39,3 +40,16 @@ class DateSelectionForm(FlaskForm):
     e_day = IntegerField(label='Day', validators=[InputRequired(), NumberRange(min=1, max=31)])
     e_month = SelectField(label='Month', choices=months)
     e_year = IntegerField(label='Year', validators=[InputRequired(), NumberRange(min=1991, max=now.year + 1)])
+
+
+class LoadDataForm(FlaskForm):
+
+    survey_file = FileField(validators=[DataRequired()])
+    shift_file = FileField(validators=[DataRequired()])
+    non_response_file = FileField(validators=[DataRequired()])
+    unsampled_file = FileField(validators=[DataRequired()])
+    tunnel_file = FileField(validators=[DataRequired()])
+    sea_file = FileField(validators=[DataRequired()])
+    air_file = FileField(validators=[DataRequired()])
+
+
