@@ -104,27 +104,31 @@
 	<div class="wrapper">
 		<div class="col-8 top_40_extra_space">
 
-			<form id="run" action="weights_2.html" class="form">
+			<form id="run" action="/weights_2" class="form">
 
 				<div class="field">
-			        <label class="label venus " for="text-input">Select weight </label>
-			        <select class="input input--select" id="input-date-range-from-month" name="date-range-from-month">
-			        	<option disabled="disabled" value="" selected="selected">Select</option>
-			        	<option value="1">Shift data</option>
-			        	<option value="2">Traffic data</option>
-			        	<option value="3">No response data</option>
-			        	<option value="4">Tunnel data</option>
-			        	<option value="5">Air data</option>
-			        	<option value="6">Sea data</option>
-			        	<option value="7">Unsampled data</option>
-			        	<option value="8">Shift weight summary</option>
-			        	<option value="9">Non response weight summary</option>
-			        	<option value="10">Minimum weight summary</option>
-			        	<option value="11">Sampled traffic weight summary</option>
-			        	<option value="12">Unsampled traffic weight summary</option>
-			        	<option value="13">Imbalance weight summary</option>
-			        	<option value="14">Final weight summary</option>
-			        </select>
+
+					{{ form.data_selection.label(class="label venus ", for="text-input")}}
+					{{ form.data_selection(class="input input--select", type="submit")}}
+
+			        <!--<label class="label venus " for="text-input">Select weight </label>-->
+			        <!--<select class="input input&#45;&#45;select" id="input-weight_selection" name="weight_selection">-->
+			        	<!--<option disabled="disabled" value="" selected="selected">Select</option>-->
+			        	<!--<option value="SHIFT_DATA">Shift data</option>-->
+			        	<!--<option value="Traffic data">Traffic data</option>-->
+			        	<!--<option value="Non response data">Non response data</option>-->
+			        	<!--<option value="Tunnel data">Tunnel data</option>-->
+			        	<!--<option value="Air data">Air data</option>-->
+			        	<!--<option value="Sea data">Sea data</option>-->
+			        	<!--<option value="UNSAMPLED_OOH_DATA">Unsampled data</option>-->
+			        	<!--<option value="Shift weight summary">Shift weight summary</option>-->
+			        	<!--<option value="Non response weight summary">Non response weight summary</option>-->
+			        	<!--<option value="Minimums weight summary">Minimums weight summary</option>-->
+			        	<!--<option value="Sampled traffic weight summary">Sampled traffic weight summary</option>-->
+			        	<!--<option value="Unsampled traffic weight summary">Unsampled traffic weight summary</option>-->
+			        	<!--<option value="Imbalance weight summary">Imbalance weight summary</option>-->
+			        	<!--<option value="Final weight summary">Final weight summary</option>-->
+			        <!--</select>-->
 			    </div>
 
 			    <div class="top_50_extra_space">

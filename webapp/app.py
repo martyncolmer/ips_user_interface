@@ -3,7 +3,7 @@ import csv
 import uuid
 from flask import Flask, render_template, session, current_app, request, url_for, redirect
 from webapp import app_methods
-from webapp.forms import CreateRunForm, DateSelectionForm, SearchActivityForm
+from webapp.forms import CreateRunForm, DateSelectionForm, SearchActivityForm, WeightSelectionForm
 import requests
 
 APP_DIR = os.path.dirname(__file__)
@@ -23,7 +23,7 @@ def login():
 
 @app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
-    print(request.method)
+    #print(request.method)
     form = SearchActivityForm()
 
     # Get the records and separate the headers and values
@@ -198,6 +198,8 @@ def reference(run_id):
 
 @app.route('/weights/<run_id>')
 def weights(run_id):
+    form = WeightSelectionForm()
+
     run = app_methods.get_run(run_id)
 
     session['current_run_id'] = run['id']
@@ -208,7 +210,17 @@ def weights(run_id):
     current_run = run
 
     return render_template('/projects/legacy/john/social/weights.html',
+                           form=form,
                            current_run=current_run)
+
+
+@app.route('/weights_2')
+def weights_2():
+
+    print(request)
+    table_name = request.values['data_selection']
+    print(table_name)
+    return render_template('/projects/legacy/john/social/weights_2.html')
 
 
 if __name__ == '__main__':
