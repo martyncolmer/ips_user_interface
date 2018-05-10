@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en-gb" dir="ltr" class="no-js"> 
+<html lang="en-gb" dir="ltr" class="no-js">
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -85,163 +85,157 @@
 
 <section>
 
-	<div class="wrapper">
-		<div class="col-8">
-
-			<div class="group top_40_extra_space">
-				<div>
-					<h2 class="pluto grey_text ">Step 5 of 7</h2>				
-				</div>
-				<div>
-					<h2 class="saturn">Manage  - {{current_run['name']}} ({{current_run['id']}}) </h2>
-					Field Work Start - {{current_run['start_date']}}
-					<br></br>
-					Field Work End - {{current_run['end_date']}}
-					<br></br>
-					Run Status - {{current_run['status']}}
-					<br></br>
-					Run Type - {{current_run['type']}}
+	<div>
+		<div class="wrapper">
+			<div class="group top_50_extra_space">
+				<div class="col-8">
+					<h2 class="jupiter sml-margin">{{current_run['id']}} </h2>
+					<h3 class="saturn sml-margin buttom_10_extra_space">{{current_run['name']}} &nbsp;
+						<em class="badge-status badge--completed">&nbsp;&nbsp;&nbsp;COMPLETED&nbsp;&nbsp;&nbsp;</em></h3>
+					<div>
+						<spam><strong>Description: </strong>&nbsp; {{current_run['desc']}}</spam>
+						<br>
+						<spam><strong>Creation date & time: </strong>&nbsp; 19 10 2017 at 12:05</spam>
+						<br>
+						<spam><strong>User: </strong>&nbsp; {{current_run['user']}}</spam>
+					</div>
 				</div>
 			</div>
-
-	  	</div>
+		</div>
 	</div>
 
 </section>
 
 <section>
 
-	<div class="wrapper">
-		<div class="group">
-			<form id="run" action="/new_run_6" class="form">
-				<div class="wrapper">
-					<div class="group">
-						<div class="col-8 top_40_extra_space">
-							<table class="table table__dense">
-								<thead class="table--head">
-									<th width="10%" class="table--header--cell">&nbsp;&nbsp; Select</th>
-									<th width="70%" class="table--header--cell">Steps</th>
-									<th width="20%" class="table--header--cell">Status</th>
-								</thead>
-								<tbody>
-									<tr class="table--row">
-										<td width="10%" class="table--cell field__item2"> 
-											<input class="input--checkbox2" type="checkbox">
-										</td>
-										<td width="70%" class="table--cell">1. Calculate shift weight</td>
-										<td width="20%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;READY&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
-									</tr>
-									<tr class="table--row">
-										<td width="10%" class="table--cell field__item2"> 
-											<input class="input--checkbox2" type="checkbox">
-										</td>
-										<td width="70%" class="table--cell">2. Calculate non response weight</td>
-										<td width="20%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;READY&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
-									</tr>
-									<tr class="table--row">
-										<td width="10%" class="table--cell field__item2"> 
-											<input class="input--checkbox2" type="checkbox">
-										</td>
-										<td width="70%" class="table--cell">3. Calculate minimums weight</td>
-										<td width="20%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;READY&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
-									</tr>
-									<tr class="table--row">
-										<td width="10%" class="table--cell field__item2"> 
-											<input class="input--checkbox2" type="checkbox">
-										</td>
-										<td width="70%" class="table--cell">4. Calculate traffic weight</td>
-										<td width="20%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;READY&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
-									</tr>
-									<tr class="table--row">
-										<td width="10%" class="table--cell field__item2"> 
-											<input class="input--checkbox2" type="checkbox">
-										</td>
-										<td width="70%" class="table--cell">5. Calculate unsampled weight</td>
-										<td width="20%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;READY&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
-									</tr>
-									<tr class="table--row">
-										<td width="10%" class="table--cell field__item2"> 
-											<input class="input--checkbox2" type="checkbox">
-										</td>
-										<td width="70%" class="table--cell">6. Calculate imbalance weight</td>
-										<td width="20%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;READY&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
-									</tr>
-									<tr class="table--row">
-										<td width="10%" class="table--cell field__item2"> 
-											<input class="input--checkbox2" type="checkbox">
-										</td>
-										<td width="70%" class="table--cell">7. Calculate final weight</td>
-										<td width="20%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;READY&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
-									</tr>
-									<tr class="table--row">
-										<td width="10%" class="table--cell field__item2"> 
-											<input class="input--checkbox2" type="checkbox">
-										</td>
-										<td width="70%" class="table--cell">8. Stay imputation</td>
-										<td width="20%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;READY&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
-									</tr>
-									<tr class="table--row">
-										<td width="10%" class="table--cell field__item2"> 
-											<input class="input--checkbox2" type="checkbox">
-										</td>
-										<td width="70%" class="table--cell">9. Fares imputation</td>
-										<td width="20%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;READY&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
-									</tr>
-									<tr class="table--row">
-										<td width="10%" class="table--cell field__item2"> 
-											<input class="input--checkbox2" type="checkbox">
-										</td>
-										<td width="=70%" class="table--cell">10. Spend imputation</td>
-										<td width="20%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;READY&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
-									</tr>
-									<tr class="table--row">
-										<td width="10%" class="table--cell field__item2"> 
-											<input class="input--checkbox2" type="checkbox">
-										</td>
-										<td width="70%" class="table--cell">11. Rail imputation</td>
-										<td width="20%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;READY&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
-									</tr>
-									<tr class="table--row">
-										<td width="10%" class="table--cell field__item2"> 
-											<input class="input--checkbox2" type="checkbox">
-										</td>
-										<td width="70%" class="table--cell">12. Regional weight</td>
-										<td width="20%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;READY&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
-									</tr>
-									<tr class="table--row">
-										<td width="10%" class="table--cell field__item2"> 
-											<input class="input--checkbox3" type="checkbox">
-										</td>
-										<td width="70%" class="table--cell grey_text">13. Town stay and expenditure imputation</td>
-										<td width="20%" class="table--cell"><em class="badge-status badge--pending">&nbsp;&nbsp;&nbsp;NOT AVAILABLE&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
-									</tr>
-									<tr class="table--row">
-										<td width="10%" class="table--cell field__item2"> 
-											<input class="input--checkbox3" type="checkbox">
-										</td>
-										<td width="70%" class="table--cell grey_text">14. Air miles</td>
-										<td width="20%" class="table--cell"><em class="badge-status badge--pending">&nbsp;&nbsp;&nbsp;NOT AVAILABLE&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
-									</tr>
-									
-								</tbody>
-							</table>
-						</div>
+	<form id="run" action="new_run_6.html" class="form">
+
+
+
+
+
+		<div class="wrapper">
+			<div class="group">
+				<div class="col-7 top_40_extra_space">
+
+				<ul class="nav-tabs clearfix u-mb-l" data-tabgroup="first-tab-group">
+				  	<li class="nav-tabs__tab--active"><a class="tab-label" href="#tab1">Runs </a></li>
+              		<li class="nav-tabs__tab"><a class="tab-label" href="#tab2">Exports </a></li>
+              		<li class="nav-tabs__tab"><a class="tab-label" href="#tab3">Downloads </a></li>
+				</ul>
+
+				<!--
+
+				<section id="first-tab-group">
+
+					<div id="tab1">
+
+						1
+
 					</div>
 
-				</div>
+					<div id="tab2">
 
-				<div class="top_50_extra_space">
-					<button class="btn btn--primary" type="submit">Save and run now</button>
-					&nbsp;&nbsp;&nbsp;
-					<a class="btn btn--secondary btn--border" href="/new_run_4">Back</a>
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-					<label><a href="/dashboard">Cancel</a></label>
-				</div>
+						2
 
-			</form>
+					</div>
+
+					<div id="tab3">
+
+						3
+
+					</div>
+
+				</section>
+
+			    -->
+
+
+					<table class="table table__dense">
+						<thead class="table--head">
+							<th width="70%" class="table--header--cell">&nbsp;&nbsp; Steps</th>
+							<th width="20%" class="table--header--cell">Status</th>
+						</thead>
+						<tbody>
+							<tr class="table--row">
+								<td width="70%" class="table--cell">&nbsp; 1. Calculate shift weight</td>
+								<td width="20%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SUCCESS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
+							</tr>
+							<tr class="table--row">
+								<td width="70%" class="table--cell">&nbsp; 2. Calculate non response weight</td>
+								<td width="20%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SUCCESS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
+							</tr>
+							<tr class="table--row">
+								<td width="70%" class="table--cell">&nbsp; 3. Calculate minimums weight</td>
+								<td width="20%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SUCCESS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
+							</tr>
+							<tr class="table--row">
+								<td width="70%" class="table--cell">&nbsp; 4. Calculate traffic weight</td>
+								<td width="20%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SUCCESS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
+							</tr>
+							<tr class="table--row">
+								<td width="70%" class="table--cell">&nbsp; 5. Calculate unsampled weight</td>
+								<td width="20%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SUCCESS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
+							</tr>
+							<tr class="table--row">
+								<td width="70%" class="table--cell">&nbsp; 6. Calculate imbalance weight</td>
+								<td width="20%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SUCCESS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
+							</tr>
+							<tr class="table--row">
+								<td width="70%" class="table--cell">&nbsp; 7. Calculate final weight</td>
+								<td width="20%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SUCCESS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
+							</tr>
+							<tr class="table--row">
+								<td width="70%" class="table--cell">&nbsp; 8. Stay imputation</td>
+								<td width="20%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SUCCESS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
+							</tr>
+							<tr class="table--row">
+								<td width="70%" class="table--cell">&nbsp; 9. Fares imputation</td>
+								<td width="20%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SUCCESS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
+							</tr>
+							<tr class="table--row">
+								<td width="=70%" class="table--cell">&nbsp; 10. Spend imputation</td>
+								<td width="20%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SUCCESS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
+							</tr>
+							<tr class="table--row">
+								<td width="70%" class="table--cell">&nbsp; 11. Rail imputation</td>
+								<td width="20%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SUCCESS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
+							</tr>
+							<tr class="table--row">
+								<td width="70%" class="table--cell">&nbsp; 12. Regional weight</td>
+								<td width="20%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SUCCESS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
+							</tr>
+							<tr class="table--row">
+								<td width="70%" class="table--cell grey_text">&nbsp; 13. Town stay and expenditure imputation</td>
+								<td width="20%" class="table--cell"><em class="badge-status badge--pending">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FAILED&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
+							</tr>
+							<tr class="table--row">
+								<td width="70%" class="table--cell grey_text">&nbsp; 14. Air miles</td>
+								<td width="20%" class="table--cell"><em class="badge-status badge--grey">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PENDING&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
+							</tr>
+
+						</tbody>
+					</table>
+				</div>
+			</div>
 
 		</div>
-	</div>
+
+		<div class="wrapper">
+			<div class="group">
+
+				<form id="run" action="weights.html" class="form">
+					<div class="top_50_extra_space">
+						<a class="btn btn--primary" href="weights.html">Display weights</a>
+						&nbsp;&nbsp;&nbsp;
+						<a class="btn btn--primary" href="export_data.html">Export data</a>
+					</div>
+				</form>
+
+			</div>
+		</div>
+
+	</form>
 
 </section>
 
