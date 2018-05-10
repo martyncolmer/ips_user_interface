@@ -195,5 +195,21 @@ def reference(run_id):
     return render_template('/projects/legacy/john/social/reference.html',
                            current_run=current_run)
 
+
+@app.route('/weights/<run_id>')
+def weights(run_id):
+    run = app_methods.get_run(run_id)
+
+    session['current_run_id'] = run['id']
+    session['run_name'] = run['name']
+    session['run_description'] = run['desc']
+    session['start_date'] = run['start_date']
+    session['end_date'] = run['end_date']
+    current_run = run
+
+    return render_template('/projects/legacy/john/social/weights.html',
+                           current_run=current_run)
+
+
 if __name__ == '__main__':
     app.run(debug=True)
