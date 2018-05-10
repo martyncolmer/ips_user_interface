@@ -3,9 +3,6 @@ import csv
 from webapp import app_methods
 
 
-APP_DIR = os.path.dirname(__file__)
-
-
 def test_get_system_info():
     """
     Purpose: Tests the get_system_info method's functionality.
