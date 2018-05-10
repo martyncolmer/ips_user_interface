@@ -40,3 +40,18 @@ class DateSelectionForm(FlaskForm):
     e_day = IntegerField(label='Day', validators=[InputRequired(), NumberRange(min=1, max=31)])
     e_month = SelectField(label='Month', choices=months)
     e_year = IntegerField(label='Year', validators=[InputRequired(), NumberRange(min=1991, max=now.year + 1)])
+
+
+class WeightSelectionForm(FlaskForm):
+    data_list = [('00', 'Select Data'),
+                 ('SHIFT_DATA', 'Shift Data'), ('TRAFFIC_DATA', 'Traffic Data'), ('NON_RESPONSE_DATA', 'Non response data'),
+                 ('TRAFFIC_DATA', 'Tunnel data'), ('TRAFFIC_DATA', 'Air data'), ('TRAFFIC_DATA', 'Sea data'),
+                 ('UNSAMPLED_OOH_DATA', 'Unsampled data'),
+                 ('PS_SHIFT_DATA', 'Shift weight summary'), ('PS_NON_RESPONSE', 'Non response weight summary'),
+                 ('PS_MINIMUMS', 'Minimums weight summary'), ('PS_TRAFFIC', 'Sampled traffic weight summary'),
+                 ('PS_UNSAMPLED_OOH', 'Unsampled traffic weight summary'), ('PS_IMBALANCE', 'Imbalance weight summary'),
+                 ('PS_FINAL', 'Final weight summary')]
+
+    display_data = SubmitField(label='Display data')
+    data_selection = SelectField(label='Select Data', choices=data_list)
+
