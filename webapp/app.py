@@ -3,7 +3,7 @@ import csv
 import uuid
 from flask import Flask, render_template, session, current_app, request, url_for, redirect
 from webapp import app_methods
-from webapp.forms import CreateRunForm, DateSelectionForm, SearchActivityForm, WeightSelectionForm
+from webapp.forms import CreateRunForm, DateSelectionForm, SearchActivityForm, DataSelectionForm
 import requests
 
 APP_DIR = os.path.dirname(__file__)
@@ -198,7 +198,7 @@ def reference(run_id):
 
 @app.route('/weights/<run_id>')
 def weights(run_id):
-    form = WeightSelectionForm()
+    form = DataSelectionForm()
 
     run = app_methods.get_run(run_id)
 
@@ -222,6 +222,23 @@ def weights_2():
     print(table_name)
     return render_template('/projects/legacy/john/social/weights_2.html')
 
+
+@app.route('/export_data/<run_id>')
+def export_data(run_id):
+    form = DataSelectionForm() # change to export form once you make one
+
+    run = app_methods.get_run(run_id)
+
+    session['current_run_id'] = run['id']
+    session['run_name'] = run['name']
+    session['run_description'] = run['desc']
+    session['start_date'] = run['start_date']
+    session['end_date'] = run['end_date']
+    current_run = run
+
+    return render_template('/projects/legacy/john/social/export_data.html',
+                           form=form,
+                           current_run=current_run)
 
 if __name__ == '__main__':
     app.run(debug=True)

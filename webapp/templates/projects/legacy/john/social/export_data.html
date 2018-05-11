@@ -64,13 +64,13 @@
 			                    <li class="sitenavigation__listitem">
 			                    	<a href="/dashboard">Dashboard</a>
 			                    </li>
-			                    <li class="sitenavigation__listitem sitenavigation__listitem--active">
+			                    <li class="sitenavigation__listitem">
 			                    	<a href="#">New run</a>
 			                    </li>
 			                    <li class="sitenavigation__listitem">
 			                    	<a href="/system_info">System info</a>
 			                    </li>
-			                    <li class="sitenavigation__listitem">
+			                    <li class="sitenavigation__listitem sitenavigation__listitem--active">
 			                    	<a href="#">Other</a>
 			                    </li>
 			                </ul>
@@ -90,7 +90,8 @@
 
 			<div class="group top_40_extra_space">
 				<div>
-					<h2 class="saturn">Display weights for <i>'{{current_run['name']}}'</i></h2>
+					<h2 class="saturn">Export data </h2>
+                    {{current_run['id']}}
 				</div>
 			</div>
 
@@ -99,46 +100,36 @@
 
 </section>
 
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
 <section>
 
 	<div class="wrapper">
-		<div class="col-8 top_40_extra_space">
+		<div class="group">
 
-			<form id="run" action="/weights_2" class="form">
+			<form id="run" action="weights.html" class="form">
 
-				<div class="field">
-
-					{{ form.data_selection.label(class="label venus ", for="text-input")}}
-					{{ form.data_selection(class="input input--select", type="submit")}}
-
-
-			        <!--<label class="label venus " for="text-input">Select weight </label>-->
-			        <!--<select class="input input&#45;&#45;select" id="input-weight_selection" name="weight_selection">-->
-			        	<!--<option disabled="disabled" value="" selected="selected">Select</option>-->
-			        	<!--<option value="SHIFT_DATA">Shift data</option>-->
-			        	<!--<option value="Traffic data">Traffic data</option>-->
-			        	<!--<option value="Non response data">Non response data</option>-->
-			        	<!--<option value="Tunnel data">Tunnel data</option>-->
-			        	<!--<option value="Air data">Air data</option>-->
-			        	<!--<option value="Sea data">Sea data</option>-->
-			        	<!--<option value="UNSAMPLED_OOH_DATA">Unsampled data</option>-->
-			        	<!--<option value="Shift weight summary">Shift weight summary</option>-->
-			        	<!--<option value="Non response weight summary">Non response weight summary</option>-->
-			        	<!--<option value="Minimums weight summary">Minimums weight summary</option>-->
-			        	<!--<option value="Sampled traffic weight summary">Sampled traffic weight summary</option>-->
-			        	<!--<option value="Unsampled traffic weight summary">Unsampled traffic weight summary</option>-->
-			        	<!--<option value="Imbalance weight summary">Imbalance weight summary</option>-->
-			        	<!--<option value="Final weight summary">Final weight summary</option>-->
-			        <!--</select>-->
-			    </div>
-
-			    <div class="top_50_extra_space">
-					{{ form.display_data(class="btn btn--primary", type="submit") }}
-				    <!--<button class="btn btn&#45;&#45;primary" type="submit">Display data</button>-->
-				    <!--
-				    <button class="btn btn--neutral">Cancel</button>
-					-->
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <label><a href="Dashboard_completed.html">Cancel</a></label>
+				<div class="top_50_extra_space">
+					<a class="btn btn--primary" href="example.csv">Generate</a>
+					&nbsp;&nbsp;&nbsp;
+					<a class="btn btn--secondary btn--border" href="new_run_4.html">Back</a>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+					<label><a href="dashboard.html">Cancel</a></label>
 				</div>
 
 			</form>
