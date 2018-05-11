@@ -2,8 +2,7 @@ import os
 import csv
 import requests
 import json
-
-APP_DIR = os.path.dirname(__file__)
+import pandas
 
 
 def create_run(unique_id, run_name, run_description, start_date, end_date, run_status='0', run_type='6'):
@@ -41,7 +40,7 @@ def get_system_info():
     :return: List of records
     """
 
-    f = open(os.path.join(APP_DIR, '../webapp/resources/ips_system_info.csv'), encoding='utf-8')
+    f = open('webapp/resources/ips_system_info.csv', encoding='utf-8')
     reader = csv.reader(f)
     records = list(reader)
     f.close()
@@ -49,21 +48,11 @@ def get_system_info():
     return records
 
 
-def get_runs_json():
+def get_runs():
 
     requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs")
     response = requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs")
     return json.loads(response.content)
-
-
-def get_runs_csv():
-    """Read csv and return as a list of lists."""
-
-    f = open(os.path.join(APP_DIR, '../webapp/resources/run_list.csv'), encoding='utf-8')
-    reader = csv.reader(f)
-    records = list(reader)
-
-    return records
 
 
 def get_run(run_id):
@@ -74,3 +63,14 @@ def get_run(run_id):
     for x in runs:
         if x['id'] == run_id:
             return x
+
+
+def get_display_data(table_name):
+
+    file_path = 'webapp/resources/data/' + table_name + '.csv'
+    if os.path.exists(file_path):
+        df = pandas.read_csv('webapp/resources/data/' + table_name + '.csv')
+    else:
+        df = pandas.DataFrame()
+
+    return df

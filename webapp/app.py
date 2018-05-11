@@ -5,6 +5,7 @@ from flask import Flask, render_template, session, current_app, request, url_for
 from webapp import app_methods
 from webapp.forms import CreateRunForm, DateSelectionForm, SearchActivityForm, DataSelectionForm
 import requests
+import pandas as pd
 
 APP_DIR = os.path.dirname(__file__)
 app = Flask(__name__)
@@ -28,7 +29,7 @@ def dashboard():
 
     # Get the records and separate the headers and values
     #records = app_methods.get_runs_csv()
-    records = app_methods.get_runs_json()
+    records = app_methods.get_runs()
     header = ['Run_ID', 'Run_Name', 'Run_Description', 'Start_Date', 'End_Date', 'Run_Status', 'Run Type']
     #header = records[0]
     #records = records[1:]
@@ -218,9 +219,13 @@ def weights(run_id):
 def weights_2():
 
     print(request)
-    table_name = request.values['data_selection']
-    print(table_name)
-    return render_template('/projects/legacy/john/social/weights_2.html')
+    table_name, table_title = request.values['data_selection'].split('|')
+
+    dataframe = app_methods.get_display_data(table_name)
+
+    return render_template('/projects/legacy/john/social/weights_2.html',
+                           table_title=table_title,
+                           table=dataframe)
 
 
 @app.route('/export_data/<run_id>')

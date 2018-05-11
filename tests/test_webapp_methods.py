@@ -19,30 +19,30 @@ def test_create_run():
     Purpose: Tests the create_run method's functionality.
     """
     pass
-    # f = open(os.path.join(APP_DIR, '../webapp/resources/run_list.csv'), encoding='utf-8')
-    # reader = csv.reader(f)
-    # records_before = list(reader)
-    # number_of_runs_before = len(records_before)
-    # f.close()
-    #
-    # res = app_methods.create_run('Test-ID-000','TestRun','Run created by automated test','10051991','08052018','0','6')
-    #
-    # f = open(os.path.join(APP_DIR, '../webapp/resources/run_list.csv'), encoding='utf-8')
-    # reader = csv.reader(f)
-    # records_after = list(reader)
-    # number_of_runs_after = len(records_after)
-    # f.close()
-    #
-    # assert number_of_runs_after == number_of_runs_before + 1
 
 
-def test_get_runs_json():
-    result = app_methods.get_runs_json()
+def test_get_runs():
+    """
+    Purpose: Tests the get_runs method's functionality.
+    """
+    result = app_methods.get_runs()
     assert isinstance(result, list)
     assert len(result) > 0
 
 
-def test_get_runs_csv():
-    result = app_methods.get_runs_json()
-    assert isinstance(result, list)
-    assert len(result) > 0
+def test_get_display_data():
+    """
+    Purpose: Tests the get_display_data method's functionality.
+    """
+    real_table_name = 'SHIFT_DATA'
+    fake_table_name = 'NO_DATA'
+
+    df1 = app_methods.get_display_data(real_table_name)
+
+    df2 = app_methods.get_display_data(fake_table_name)
+
+    # Dataframe should not be empty
+    assert df1.empty is False
+
+    # Dataframe should be empty
+    assert df2.empty is True

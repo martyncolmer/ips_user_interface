@@ -44,13 +44,13 @@ class DateSelectionForm(FlaskForm):
 
 class DataSelectionForm(FlaskForm):
     data_list = [('00', 'Select Data'),
-                 ('SHIFT_DATA', 'Shift Data'), ('TRAFFIC_DATA', 'Traffic Data'), ('NON_RESPONSE_DATA', 'Non response data'),
-                 ('TRAFFIC_DATA', 'Tunnel data'), ('TRAFFIC_DATA', 'Air data'), ('TRAFFIC_DATA', 'Sea data'),
-                 ('UNSAMPLED_OOH_DATA', 'Unsampled data'),
-                 ('PS_SHIFT_DATA', 'Shift weight summary'), ('PS_NON_RESPONSE', 'Non response weight summary'),
-                 ('PS_MINIMUMS', 'Minimums weight summary'), ('PS_TRAFFIC', 'Sampled traffic weight summary'),
-                 ('PS_UNSAMPLED_OOH', 'Unsampled traffic weight summary'), ('PS_IMBALANCE', 'Imbalance weight summary'),
-                 ('PS_FINAL', 'Final weight summary')]
+                 ('SHIFT_DATA|Shift Data', 'Shift Data'), ('TRAFFIC_DATA|Traffic Data', 'Traffic Data'), ('NON_RESPONSE_DATA|Non response data', 'Non response data'),
+                 ('TRAFFIC_DATA|Tunnel data', 'Tunnel data'), ('TRAFFIC_DATA|Air data', 'Air data'), ('TRAFFIC_DATA|Sea data', 'Sea data'),
+                 ('UNSAMPLED_OOH_DATA|Unsampled data', 'Unsampled data'),
+                 ('PS_SHIFT_DATA|Shift weight summary', 'Shift weight summary'), ('PS_NON_RESPONSE|Non response weight summary', 'Non response weight summary'),
+                 ('PS_MINIMUMS|Minimums weight summary', 'Minimums weight summary'), ('PS_TRAFFIC|Sampled traffic weight summary', 'Sampled traffic weight summary'),
+                 ('PS_UNSAMPLED_OOH|Unsampled traffic weight summary', 'Unsampled traffic weight summary'), ('PS_IMBALANCE|Imbalance weight summary', 'Imbalance weight summary'),
+                 ('PS_FINAL|Final weight summary', 'Final weight summary')]
 
     display_data = SubmitField(label='Display data')
     data_selection = SelectField(label='Select Data', choices=data_list)
