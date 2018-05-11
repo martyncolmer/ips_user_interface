@@ -42,7 +42,7 @@ class DateSelectionForm(FlaskForm):
     e_year = IntegerField(label='Year', validators=[InputRequired(), NumberRange(min=1991, max=now.year + 1)])
 
 
-class WeightSelectionForm(FlaskForm):
+class DataSelectionForm(FlaskForm):
     data_list = [('00', 'Select Data'),
                  ('SHIFT_DATA', 'Shift Data'), ('TRAFFIC_DATA', 'Traffic Data'), ('NON_RESPONSE_DATA', 'Non response data'),
                  ('TRAFFIC_DATA', 'Tunnel data'), ('TRAFFIC_DATA', 'Air data'), ('TRAFFIC_DATA', 'Sea data'),
