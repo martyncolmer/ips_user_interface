@@ -93,7 +93,14 @@
 					<h2 class="pluto grey_text ">Step 5 of 7</h2>				
 				</div>
 				<div>
-					<h2 class="saturn">Manage run </h2>				
+					<h2 class="saturn">Manage  - {{current_run['name']}} ({{current_run['id']}}) </h2>
+					Field Work Start - {{current_run['start_date']}}
+					<br></br>
+					Field Work End - {{current_run['end_date']}}
+					<br></br>
+					Run Status - {{current_run['status']}}
+					<br></br>
+					Run Type - {{current_run['type']}}
 				</div>
 			</div>
 
@@ -101,50 +108,6 @@
 	</div>
 
 </section>
-
-<!--
-
-<section>
-
-	<div class="wrapper">
-		<div class="col-8 top_30_extra_space">
-
-			<form id="run" action="/new_run_5" class="form">
-
-				<div class="field field--radio field--multiplechoice">
-				    <fieldset>
-				        <legend class="field__legend mars buttom_10_extra_space">Do you want to use a exinting template?</legend>
-				        <div class="field__item js-focusable-box">
-				            <input class="input input--radio js-focusable" name="radio-answer" value="yes" id="yes" type="radio">
-				            <label class="label label--inline venus " for="yes">
-				            Yes
-				        </label>
-				        </div>
-				        <div class="field__item js-focusable-box">
-				            <input class="input input--radio js-focusable" name="radio-answer" value="no" id="no" type="radio">
-				            <label class="label label--inline venus " for="no">
-				            No
-				        </label>
-				        </div>
-				    </fieldset>
-				</div>
-
-			    <div class="top_50_extra_space">
-				    <button class="btn btn--primary" type="submit">Save and continue</button>
-				    &nbsp;&nbsp;&nbsp;
-				    <a class="btn btn--secondary btn--border" href="/new_run_3">Back</a>
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-					<label><a href="/dashboard">Cancel</a></label>
-				</div>
-
-			</form>
-
-		</div>
-	</div>
-
-</section>
-
--->
 
 <section>
 

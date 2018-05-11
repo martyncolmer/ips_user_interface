@@ -1,20 +1,22 @@
 
 from flask_wtf import FlaskForm
-from flask_wtf.file import DataRequired, FileField, FileRequired
+from flask_wtf.file import FileField, FileRequired
 from wtforms import IntegerField
 from wtforms import StringField
-from wtforms import SelectField
+from wtforms import SelectField, SubmitField
 from wtforms.validators import InputRequired, NumberRange
 
 
-class SearchForm(FlaskForm):
-    age = IntegerField(label='Search By Age',
-                       validators=[InputRequired()])
-
-
-class AuthorSearchForm(FlaskForm):
-    author = StringField(label='Search By Author',
-                         validators=[InputRequired()])
+class SearchActivityForm(FlaskForm):
+    search_activity = StringField(label='Search activity')
+    search_button = SubmitField(label='Search')
+    advanced_search = SubmitField(label='Advanced search')
+    run_type_list = [('-1', 'All Runs'),
+                     ('0', 'Live'),
+                     ('1', 'Published'),
+                     ('2', 'Test'),
+                     ('3', 'Deleted')]
+    run_type_filter = SelectField(label='RunType', choices=run_type_list)
 
 
 class CreateRunForm(FlaskForm):
@@ -43,12 +45,12 @@ class DateSelectionForm(FlaskForm):
 
 class LoadDataForm(FlaskForm):
 
-    survey_file = FileField(validators=[DataRequired()])
-    shift_file = FileField(validators=[DataRequired()])
-    non_response_file = FileField(validators=[DataRequired()])
-    unsampled_file = FileField(validators=[DataRequired()])
-    tunnel_file = FileField(validators=[DataRequired()])
-    sea_file = FileField(validators=[DataRequired()])
-    air_file = FileField(validators=[DataRequired()])
+    survey_file = FileField(validators=[FileRequired()])
+    shift_file = FileField(validators=[FileRequired()])
+    non_response_file = FileField(validators=[FileRequired()])
+    unsampled_file = FileField(validators=[FileRequired()])
+    tunnel_file = FileField(validators=[FileRequired()])
+    sea_file = FileField(validators=[FileRequired()])
+    air_file = FileField(validators=[FileRequired()])
 
 
