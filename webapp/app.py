@@ -2,6 +2,7 @@ import os
 import csv
 import uuid
 from flask import Flask, render_template, session, current_app, request, url_for, redirect, flash
+from werkzeug.utils import secure_filename
 from webapp import app_methods
 from webapp.forms import CreateRunForm, DateSelectionForm, LoadDataForm
 
@@ -98,21 +99,37 @@ def new_run_3():
     form = LoadDataForm()
 
     if request.method == 'POST':
-        print("ya")
         if(form.validate()==False):
             flash_errors(form)
         else:
-            print("dude")
-            for i in form:
-                if i.name == 'csrf_token':
-                    pass
-                else:
-                    print("Morning" + i.name)
-                    file_data = str(request.files[i.name].read())
-                    #file_data = form.data.file[i.name].read()
-                    f = open('../webapp/resources/' + i.name + '.csv', 'a')
-                    f.write(file_data)
-                    print("printing!")
+            survey_data = form.survey_file.data
+            survey_filename = secure_filename(survey_data.filename)
+            survey_data.save(survey_filename)
+
+            shift_data = form.shift_file.data
+            shift_filename = secure_filename(shift_data.filename)
+            shift_data.save(shift_filename)
+
+            non_response_data = form.non_response_file.data
+            non_response_filename = secure_filename(non_response_data.filename)
+            non_response_data.save(non_response_filename)
+
+            unsampled_data = form.unsampled_file.data
+            unsampled_filename = secure_filename(unsampled_data.filename)
+            unsampled_data.save(unsampled_filename)
+
+            tunnel_data = form.tunnel_file.data
+            tunnel_filename = secure_filename(tunnel_data.filename)
+            tunnel_data.save(tunnel_filename)
+
+            sea_data = form.sea_file.data
+            sea_filename = secure_filename(sea_data.filename)
+            sea_data.save(sea_filename)
+
+            air_data = form.air_file.data
+            air_filename = secure_filename(air_data.filename)
+            air_data.save(air_filename)
+
             return redirect(url_for('new_run_4'))
 
     return render_template('/projects/legacy/john/social/new_run_3.html', form = form)

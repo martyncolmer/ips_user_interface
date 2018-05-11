@@ -114,8 +114,8 @@
 					<br/>
 
 						<span class="label__description pluto">File type accepted is .csv</span></label>
-					{{form.survey_file}}
-					<!--<input type="file" accept=".csv" id="file" name="file" class="input input--upload" aria-describedby="upload">-->
+					<input type="file" accept=".csv" id="file" name="survey_file" class="input input--upload" aria-describedby="upload">
+					{{ form.csrf_token }}
 				</div>
 
 				<br>
@@ -126,7 +126,7 @@
 					<br/>
 					<span class="label__description pluto">File type accepted is .csv </span>
 					</label>
-					<!--<input type="file" accept=".xls,.xlsx,.pdf" id="file" name="file" class="input input--upload" aria-describedby="upload">-->
+
 				</div>
 
 				<br>
@@ -135,7 +135,9 @@
                     <label class="label_venus" for="file" id="upload">Shift data
                     </br>
                     </label>
-                    {{form.shift_file}}
+                    <input type="file" accept=".csv" id="file" name="shift_file" class="input input--upload" aria-describedby="upload">
+
+					{{ form.csrf_token }}
 
                 </div>
 
@@ -145,7 +147,8 @@
                     <label class="label_venus" for="file" id="upload">Non_response data
                     </br>
                     </label>
-                    {{form.non_response_file}}
+                    <input type="file" accept=".csv" id="file" name="non_response_file" class="input input--upload" aria-describedby="upload">
+					{{ form.csrf_token }}
 
                 </div>
 
@@ -155,7 +158,8 @@
                     <label class="label_venus" for="file" id="upload">Unsampled data
                     </br>
                     </label>
-                    {{form.unsampled_file}}
+                    <input type="file" accept=".csv" id="file" name="unsampled_file" class="input input--upload" aria-describedby="upload">
+					{{ form.csrf_token }}
 
                 </div>
 
@@ -165,7 +169,8 @@
                     <label class="label_venus" for="file" id="upload">Tunnel data
                     </br>
                     </label>
-                    {{form.tunnel_file}}
+                    <input type="file" accept=".csv" id="file" name="tunnel_file" class="input input--upload" aria-describedby="upload">
+					{{ form.csrf_token }}
 
                 </div>
 
@@ -175,7 +180,8 @@
                     <label class="label_venus" for="file" id="upload">Sea data
                     </br>
                     </label>
-                    {{form.sea_file}}
+                    <input type="file" accept=".csv" id="file" name="sea_file" class="input input--upload" aria-describedby="upload">
+					{{ form.csrf_token }}
 
                 </div>
 
@@ -185,7 +191,8 @@
                     <label class="label_venus" for="file" id="upload">Air data
                     </br>
                     </label>
-                    {{form.air_file}}
+                    <input type="file" accept=".csv" id="file" name="air_file" class="input input--upload" aria-describedby="upload">
+					{{ form.csrf_token }}
 
                 </div>
 
