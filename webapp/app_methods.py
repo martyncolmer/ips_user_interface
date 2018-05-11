@@ -26,11 +26,6 @@ def create_run(unique_id, run_name, run_description, start_date, end_date, run_s
 
     requests.post("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs", json=new_run)
 
-    # Commented out old csv method as json replaced, once comfortably using json this can be deleted.
-    # new_entry = str(unique_id) + "," + run_name + "," + run_description + "," + start_date + "," + end_date + "," + run_status + "," + run_type + "\n"
-    # f = open('../webapp/resources/run_list.csv', 'a')
-    # f.write(new_entry)
-    # f.close()
 
 
 def get_system_info():
@@ -40,7 +35,7 @@ def get_system_info():
     :return: List of records
     """
 
-    f = open('webapp/resources/ips_system_info.csv', encoding='utf-8')
+    f = open('../webapp/resources/ips_system_info.csv', encoding='utf-8')
     reader = csv.reader(f)
     records = list(reader)
     f.close()
@@ -67,9 +62,9 @@ def get_run(run_id):
 
 def get_display_data(table_name):
 
-    file_path = 'webapp/resources/data/' + table_name + '.csv'
+    file_path = '../webapp/resources/data/' + table_name + '.csv'
     if os.path.exists(file_path):
-        df = pandas.read_csv('webapp/resources/data/' + table_name + '.csv')
+        df = pandas.read_csv('../webapp/resources/data/' + table_name + '.csv')
     else:
         df = pandas.DataFrame()
 
