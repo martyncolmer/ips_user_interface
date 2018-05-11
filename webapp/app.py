@@ -3,7 +3,11 @@ import csv
 import uuid
 from flask import Flask, render_template, session, current_app, request, url_for, redirect
 from webapp import app_methods
-from webapp.forms import CreateRunForm, DateSelectionForm, SearchActivityForm, DataSelectionForm
+from webapp.forms import CreateRunForm
+from webapp.forms import DateSelectionForm
+from webapp.forms import SearchActivityForm
+from webapp.forms import DataSelectionForm
+from webapp.forms import ExportSelectionForm
 import requests
 
 APP_DIR = os.path.dirname(__file__)
@@ -214,18 +218,9 @@ def weights(run_id):
                            current_run=current_run)
 
 
-@app.route('/weights_2')
-def weights_2():
-
-    print(request)
-    table_name = request.values['data_selection']
-    print(table_name)
-    return render_template('/projects/legacy/john/social/weights_2.html')
-
-
 @app.route('/export_data/<run_id>')
 def export_data(run_id):
-    form = DataSelectionForm() # change to export form once you make one
+    form = ExportSelectionForm()  # change to export form once you make one
 
     run = app_methods.get_run(run_id)
 
@@ -239,6 +234,26 @@ def export_data(run_id):
     return render_template('/projects/legacy/john/social/export_data.html',
                            form=form,
                            current_run=current_run)
+
+
+@app.route('/export_data2')
+def export_data2():
+
+    print(request)
+    table_name = request.values['data_selection']
+    print(table_name)
+    return render_template('/projects/legacy/john/social/export_data2.html')
+
+
+
+@app.route('/weights_2')
+def weights_2():
+
+    print(request)
+    table_name = request.values['data_selection']
+    print(table_name)
+    return render_template('/projects/legacy/john/social/weights_2.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True)

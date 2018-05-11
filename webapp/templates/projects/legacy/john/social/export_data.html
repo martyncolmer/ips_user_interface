@@ -90,8 +90,7 @@
 
 			<div class="group top_40_extra_space">
 				<div>
-					<h2 class="saturn">Export data </h2>
-                    {{current_run['id']}}
+					<h2 class="saturn">Export Data for <i>'{{current_run['name']}}'</i></h2>
 				</div>
 			</div>
 
@@ -100,34 +99,24 @@
 
 </section>
 
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-
 <section>
 
 	<div class="wrapper">
-		<div class="group">
+		<div class="col-8 top_40_extra_space">
 
-			<form id="run" action="weights.html" class="form">
+			<!--<form id="run" action="weights.html" class="form">-->
+			<form id="run" action="/export_data2" class="form">
+
+				<div class="field">
+
+					{{ form.data_selection.label(class="label venus ", for="text-input")}}
+					{{ form.data_selection(class="input input--select", type="submit")}}
 
 				<div class="top_50_extra_space">
-					<a class="btn btn--primary" href="example.csv">Generate</a>
-					&nbsp;&nbsp;&nbsp;
-					<a class="btn btn--secondary btn--border" href="new_run_4.html">Back</a>
+					{{ form.display_data(class="btn btn--primary", type="submit") }}
+					<!--<a class="btn btn&#45;&#45;primary" href="example.csv">Generate</a>-->
+					<!--&nbsp;&nbsp;&nbsp;-->
+					<!--<a class="btn btn&#45;&#45;secondary btn&#45;&#45;border" href="new_run_4.html">Back</a>-->
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
 					<label><a href="dashboard.html">Cancel</a></label>
 				</div>
