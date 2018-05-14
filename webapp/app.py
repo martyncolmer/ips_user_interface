@@ -152,6 +152,8 @@ def new_run_3():
 
             if not os.path.exists('input/' + session['current_run_id']):
                 os.mkdir('input/' + session['current_run_id'])
+                
+            print(request.form)
 
             survey_data = form.survey_file.data
             survey_data.save(os.path.join('input/' + session['current_run_id'], 'survey_data.csv'))
