@@ -145,15 +145,18 @@ def new_run_2():
 def new_run_3():
     form = LoadDataForm()
 
+    print(request.values)
+
+    error = False
+
     if request.method == 'POST':
         if(form.validate()==False):
             flash_errors(form)
+            error = True
         else:
 
             if not os.path.exists('input/' + session['current_run_id']):
                 os.mkdir('input/' + session['current_run_id'])
-                
-            print(request.form)
 
             survey_data = form.survey_file.data
             survey_data.save(os.path.join('input/' + session['current_run_id'], 'survey_data.csv'))
@@ -178,7 +181,7 @@ def new_run_3():
 
             return redirect(url_for('new_run_4'))
 
-    return render_template('/projects/legacy/john/social/new_run_3.html', form = form)
+    return render_template('/projects/legacy/john/social/new_run_3.html', form = form, error = error)
 
 
 @app.route('/new_run_4')

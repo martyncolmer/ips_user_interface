@@ -109,46 +109,78 @@
 
 			<form id="run" action="/new_run_3" class="form", method="post", enctype="multipart/form-data">
 
+				{% if error %}
+                <div class="collator-item">
+								<h2 class="collator-title">Error</h2>
+								<!-- Start: @panel--error -->
+								<div class="panel panel--error">
+									<div class="panel__header">
+										<div class="venus">Error</div>
+									</div>
+									<div class="panel__body">
+										<p class="mars">All fields must be filled with .csv files only.</p>
+									</div>
+								</div>
+								<!-- End: @panel--error -->
+                </div>
+                {% endif %}
+
 				<div>
 					<label class="label venus" for="file" id="upload">Survey data
-					<br/>
 
 						<span class="label__description pluto">File type accepted is .csv</span></label>
 					<input type="file" accept=".csv" id="file" name="survey_file" class="input input--upload" aria-describedby="upload">
 					{{ form.csrf_token }}
+
+                    {% if form.survey_file.errors %}
+					<ul>
+						{% for error_message in form.survey_file.errors %}
+						<li style = "color:red;">{{ error_message }}</li>
+						{% endfor %}
+					</ul>
+					{% endif %}
 				</div>
 
-				<br>
-				<br>
+                <br>
 
 				<div>
 					<label class="label venus" for="file" id="upload">External data
-					<br/>
 					<span class="label__description pluto">File type accepted is .csv </span>
 					</label>
 
 				</div>
 
-				<br>
-
                 <div>
                     <label class="label_venus" for="file" id="upload">Shift data
-                    </br>
                     </label>
                     <input type="file" accept=".csv" id="file" name="shift_file" class="input input--upload" aria-describedby="upload">
 
 					{{ form.csrf_token }}
 
+                    {% if form.shift_file.errors %}
+					<ul>
+						{% for error_message in form.shift_file.errors %}
+						<li style = "color:red;">{{ error_message }}</li>
+						{% endfor %}
+					</ul>
+					{% endif %}
                 </div>
 
                 <br>
 
                 <div>
                     <label class="label_venus" for="file" id="upload">Non_response data
-                    </br>
                     </label>
                     <input type="file" accept=".csv" id="file" name="non_response_file" class="input input--upload" aria-describedby="upload">
 					{{ form.csrf_token }}
+
+					{% if form.non_response_file.errors %}
+					<ul>
+						{% for error_message in form.non_response_file.errors %}
+						<li style = "color:red;">{{ error_message }}</li>
+						{% endfor %}
+					</ul>
+					{% endif %}
 
                 </div>
 
@@ -156,10 +188,17 @@
 
                 <div>
                     <label class="label_venus" for="file" id="upload">Unsampled data
-                    </br>
                     </label>
                     <input type="file" accept=".csv" id="file" name="unsampled_file" class="input input--upload" aria-describedby="upload">
 					{{ form.csrf_token }}
+
+                    {% if form.unsampled_file.errors %}
+					<ul>
+						{% for error_message in form.unsampled_file.errors %}
+						<li style = "color:red;">{{ error_message }}</li>
+						{% endfor %}
+					</ul>
+					{% endif %}
 
                 </div>
 
@@ -167,10 +206,17 @@
 
                 <div>
                     <label class="label_venus" for="file" id="upload">Tunnel data
-                    </br>
                     </label>
                     <input type="file" accept=".csv" id="file" name="tunnel_file" class="input input--upload" aria-describedby="upload">
 					{{ form.csrf_token }}
+
+                    {% if form.tunnel_file.errors %}
+					<ul>
+						{% for error_message in form.tunnel_file.errors %}
+						<li style = "color:red;">{{ error_message }}</li>
+						{% endfor %}
+					</ul>
+					{% endif %}
 
                 </div>
 
@@ -178,10 +224,17 @@
 
                 <div>
                     <label class="label_venus" for="file" id="upload">Sea data
-                    </br>
                     </label>
                     <input type="file" accept=".csv" id="file" name="sea_file" class="input input--upload" aria-describedby="upload">
 					{{ form.csrf_token }}
+
+                    {% if form.sea_file.errors %}
+					<ul>
+						{% for error_message in form.sea_file.errors %}
+						<li style = "color:red;">{{ error_message }}</li>
+						{% endfor %}
+					</ul>
+					{% endif %}
 
                 </div>
 
@@ -189,34 +242,23 @@
 
                 <div>
                     <label class="label_venus" for="file" id="upload">Air data
-                    </br>
                     </label>
                     <input type="file" accept=".csv" id="file" name="air_file" class="input input--upload" aria-describedby="upload">
 					{{ form.csrf_token }}
 
+                    {% if form.air_file.errors %}
+					<ul>
+						{% for error_message in form.air_file.errors %}
+						<li style = "color:red;">{{ error_message }}</li>
+						{% endfor %}
+					</ul>
+					{% endif %}
+
                 </div>
 
                 <br>
-                <br>
 
-				<div class="field field--select col-6">
-					<select class="input input--select input--block" id="select-wide" name="select">
-						<option selected disabled>Select source</option>
-						<option value="bart">Bart Simpson</option>
-						<option value="homer">Homer Simpson</option>
-						<option value="marge">Marge Simpson</option>
-						<option value="lisa">Lisa Simpson</option>
-						<option value="ned">Ned Flanders</option>
-						<option value="bugs">Bugs Bunny</option>
-					</select>
-				</div>
 
-				<br>
-				<br>
-
-				<div class="top_15_extra_space">
-					<label><a href="#">Load another file</a></label>
-				</div>
 
 				<!--
 
