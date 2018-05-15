@@ -2,6 +2,13 @@ import os
 import csv
 import requests
 import json
+import subprocess
+import datetime
+import pyodbc
+import os
+import pandas as pd
+import survey_support as ss
+
 
 APP_DIR = os.path.dirname(__file__)
 
@@ -74,3 +81,52 @@ def get_run(run_id):
     for x in runs:
         if x['id'] == run_id:
             return x
+
+
+def get_connection(credentials_file=
+                          r"\\nsdata3\Social_Surveys_team\CASPA\IPS\IPSCredentials_SQLServer.json"):
+    """
+    Author     : thorne1
+    Date       : May 2018
+    Purpose    : Function to connect to database and return connection object
+    Returns    : Connection (Object)
+    Params     : credentials_file is set to default location unless user points elsewhere
+    """
+
+    # Get credentials and decrypt
+    user = ss.get_keyvalue_from_json("User", credentials_file)
+    password = ss.get_keyvalue_from_json("Password", credentials_file)
+    database = ss.get_keyvalue_from_json('Database', credentials_file)
+    server = ss.get_keyvalue_from_json('Server', credentials_file)
+
+    # Attempt to connect to the database
+    try:
+        conn = pyodbc.connect(driver="{SQL Server}", server=server, database=database, uid=user, pwd=password,
+                              autocommit=True)
+    except Exception as err:
+        print(err)
+        return False
+    else:
+        return conn
+
+
+def export_csv(table_name):
+    conn = get_connection()
+    cur = conn.cursor()
+
+    sql = """
+    SELECT * FROM [dbo].[{}]
+    """.format(table_name)
+
+    path = os.getcwd()
+    filename = r"\temp\{}.csv".format(table_name)
+
+    cur.execute(sql)
+
+    with open(path + filename, 'w') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow([i[0] for i in cur.description])
+        writer.writerows(cur.fetchall())
+
+if __name__ == "__main__":
+    export_csv("SURVEY_SUBSAMPLE")

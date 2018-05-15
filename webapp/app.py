@@ -1,13 +1,14 @@
 import os
 import csv
 import uuid
-from flask import Flask, render_template, session, current_app, request, url_for, redirect
+from flask import Flask, render_template, session, current_app, request, url_for, redirect, make_response, Response
 from webapp import app_methods
 from webapp.forms import CreateRunForm
 from webapp.forms import DateSelectionForm
 from webapp.forms import SearchActivityForm
 from webapp.forms import DataSelectionForm
 from webapp.forms import ExportSelectionForm
+from webapp.app_methods import export_csv
 import requests
 
 APP_DIR = os.path.dirname(__file__)
@@ -220,8 +221,7 @@ def weights(run_id):
 
 @app.route('/export_data/<run_id>')
 def export_data(run_id):
-    form = ExportSelectionForm()  # change to export form once you make one
-
+    form = ExportSelectionForm()
     run = app_methods.get_run(run_id)
 
     session['current_run_id'] = run['id']
@@ -238,12 +238,20 @@ def export_data(run_id):
 
 @app.route('/export_data2')
 def export_data2():
-
-    print(request)
+    # print("export_data2()")
+    # print(request)
+    # print(table_name)
     table_name = request.values['data_selection']
-    print(table_name)
-    return render_template('/projects/legacy/john/social/export_data2.html')
+    export_csv(table_name)
+    path = r"webapp/temp/{}.csv".format(table_name)
 
+    # This goes in the CSV. Get export_csv() to return data
+    response = make_response(path)
+    cd = 'attachment; filename={}.csv'.format(table_name)
+    response.headers['Content-Disposition'] = cd
+    response.mimetype='csv'
+
+    return response
 
 
 @app.route('/weights_2')
@@ -257,3 +265,4 @@ def weights_2():
 
 if __name__ == '__main__':
     app.run(debug=True)
+

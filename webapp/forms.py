@@ -58,23 +58,24 @@ class DataSelectionForm(FlaskForm):
 
 class ExportSelectionForm(FlaskForm):
     """Elinor Thorne"""
-    data_list = [("SURVEY_SUB_SAMPLE", "Survey Sub Sample"),
-                 ("FINAL_WEIGHT_SUMMARY", "Final Weight Summary"),
-                 ("SHIFT", "Shift"),
-                 ("NON_RESPONSE", "Non-Response"),
-                 ("SHIFT_WEIGHT_SUMMARY", "Shift Weight Summary"),
-                 ("NON_RESPONSE_WEIGHT_SUMMARY", "Non Response Weight Summary"),
-                 ("MINIMUM_WEIGHT_SUMMARY", "Minimum WeightSummary"),
-                 ("TRAFFIC_WEIGHT_SUMMARY", "Traffic Weight Summary"),
-                 ("UNSAMPLED_TRAFFIC_WT_SUMMARY", "Unsampled Traffic Weight Summary"),
-                 ("IMBALANCE_WEIGHT_SUMMARY", "Imbalance Weight Summary"),
+    data_list = [('00', 'Select Data'),
+                 ("SURVEY_SUBBAMPLE", "Survey Sub Sample"),
+                 ("PS_FINAL", "Final Weight Summary"),
+                 ("PS_SHIFT_DATA", "Shift"),
+                 ("PS_NON_RESPONSE", "Non-Response"),
+                 ("PS_SHIFT_DATA", "Shift Weight Summary"),
+                 ("NON_REPSONSE_DATA", "Non Response Weight Summary"),
+                 ("PS_MINIMUMS", "Minimum Weight Summary"),
+                 ("PS_TRAFFIC", "Traffic Weight Summary"),
+                 ("PS_UNSAMPLED_OOH", "Unsampled Traffic Weight Summary"),
+                 ("PS_IMBALANCE", "Imbalance Weight Summary"),
                  ("ALL_DATA", "All Data"),
-                 ("AIR_MILES", "Air Miles"),
+                 ("SAS_AIR_MILES", "Air Miles"),
                  ("ALCOHOL", "Alcohol"),
                  ("REGIONAL", "Regional"),
                  ("CONTACT", "Contact"),
                  ("MIGRATION", "Migration")]
 
-    display_data = SubmitField(label='Display Data')
+    display_data = SubmitField(label='Export Data')
     data_selection = SelectField(label='Select Data', choices=data_list)
 
