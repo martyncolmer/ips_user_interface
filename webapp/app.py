@@ -98,7 +98,7 @@ def new_run_1():
     if request.method == 'POST' and form.validate():
         if request.form['submit'] == 'create_run':
             unique_id = uuid.uuid4()
-            session['current_run_id'] = str(unique_id)
+            session['id'] = str(unique_id)
             session['run_name'] = request.form['run_name']
             session['run_description'] = request.form['run_description']
             return redirect(url_for('new_run_2'), code=302)
@@ -120,8 +120,20 @@ def flash_errors(form):
 def new_run_2():
     form = DateSelectionForm()
 
+    print(request.values)
+
     # if request is a post
     if request.method == 'POST':
+        session['s_day'] = request.form['s_day']
+        session['s_month'] = request.form['s_month']
+        session['s_year'] = request.form['s_year']
+        session['e_day'] = request.form['e_day']
+        session['e_month'] = request.form['e_month']
+        session['e_year'] = request.form['e_year']
+
+        if 'last_name' in session:
+            last_name = session['last_name']
+
         if form.validate():
             if request.form['submit'] == 'create_run':
                 start_date = request.form['s_day'] + request.form['s_month'] + request.form['s_year']
@@ -130,15 +142,36 @@ def new_run_2():
                 session['start_date'] = start_date
                 session['end_date'] = end_date
 
-                app_methods.create_run(session['current_run_id'], session['run_name'], session['run_description'],
+                app_methods.create_run(session['id'], session['run_name'], session['run_description'],
                                        session['start_date'], session['end_date'])
 
                 return redirect(url_for('new_run_3'), code=302)
         else:
             flash_errors(form)
 
+    last_entry = {}
+
+    if 's_day' in session:
+        last_entry['s_day'] = session['s_day']
+        last_entry['s_month'] = session['s_month']
+        last_entry['s_year'] = session['s_year']
+        last_entry['e_day'] = session['e_day']
+        last_entry['e_month'] = session['e_month']
+        last_entry['e_year'] = session['e_year']
+        print("Found session s_day")
+    else:
+        last_entry['s_day'] = ""
+        last_entry['s_month'] = ""
+        last_entry['s_year'] = ""
+        last_entry['e_day'] = ""
+        last_entry['e_month'] = ""
+        last_entry['e_year'] = ""
+        print("FOUND NOTHING")
+
+
     return render_template('/projects/legacy/john/social/new_run_2.html',
-                           form=form)
+                           form=form,
+                           last_entry=last_entry)
 
 
 @app.route('/new_run_3')
@@ -186,7 +219,7 @@ def reference(run_id):
 
     run = app_methods.get_run(run_id)
 
-    session['current_run_id'] = run['id']
+    session['id'] = run['id']
     session['run_name'] = run['name']
     session['run_description'] = run['desc']
     session['start_date'] = run['start_date']
@@ -197,18 +230,26 @@ def reference(run_id):
                            current_run=current_run)
 
 
-@app.route('/weights/<run_id>')
+@app.route('/weights/<run_id>', methods=['GET', 'POST'])
 def weights(run_id):
     form = DataSelectionForm()
 
     run = app_methods.get_run(run_id)
 
-    session['current_run_id'] = run['id']
+    session['id'] = run['id']
     session['run_name'] = run['name']
     session['run_description'] = run['desc']
     session['start_date'] = run['start_date']
     session['end_date'] = run['end_date']
     current_run = run
+
+    if request.method == 'POST':
+        #print(request.values)
+        table_name, table_title, data_source = request.values['data_selection'].split('|')
+        session['dw_table'] = table_name
+        session['dw_title'] = table_title
+        session['dw_source'] = data_source
+        return redirect(url_for('weights_2'), code=302)
 
     return render_template('/projects/legacy/john/social/weights.html',
                            form=form,
@@ -219,10 +260,10 @@ def weights(run_id):
 def weights_2():
 
     print(request)
-    table_name, table_title = request.values['data_selection'].split('|')
 
-    dataframe = app_methods.get_display_data(table_name)
+    dataframe = app_methods.get_display_data(session['dw_table'], session['dw_source'], session['id'])
 
+    table_title = session['dw_title']
     return render_template('/projects/legacy/john/social/weights_2.html',
                            table_title=table_title,
                            table=dataframe)
@@ -234,7 +275,7 @@ def export_data(run_id):
 
     run = app_methods.get_run(run_id)
 
-    session['current_run_id'] = run['id']
+    session['id'] = run['id']
     session['run_name'] = run['name']
     session['run_description'] = run['desc']
     session['start_date'] = run['start_date']
