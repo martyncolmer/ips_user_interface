@@ -128,5 +128,7 @@ def export_csv(table_name):
         writer.writerow([i[0] for i in cur.description])
         writer.writerows(cur.fetchall())
 
+
+
 if __name__ == "__main__":
     export_csv("SURVEY_SUBSAMPLE")

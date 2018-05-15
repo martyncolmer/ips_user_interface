@@ -59,7 +59,7 @@ class DataSelectionForm(FlaskForm):
 class ExportSelectionForm(FlaskForm):
     """Elinor Thorne"""
     data_list = [('00', 'Select Data'),
-                 ("SURVEY_SUBBAMPLE", "Survey Sub Sample"),
+                 ("SURVEY_SUBSAMPLE", "Survey Subsample"),
                  ("PS_FINAL", "Final Weight Summary"),
                  ("PS_SHIFT_DATA", "Shift"),
                  ("PS_NON_RESPONSE", "Non-Response"),

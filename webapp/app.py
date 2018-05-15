@@ -1,6 +1,7 @@
 import os
 import csv
 import uuid
+import io
 from flask import Flask, render_template, session, current_app, request, url_for, redirect, make_response, Response
 from webapp import app_methods
 from webapp.forms import CreateRunForm
@@ -9,6 +10,7 @@ from webapp.forms import SearchActivityForm
 from webapp.forms import DataSelectionForm
 from webapp.forms import ExportSelectionForm
 from webapp.app_methods import export_csv
+from webapp.app_methods import get_connection
 import requests
 
 APP_DIR = os.path.dirname(__file__)
@@ -242,15 +244,23 @@ def export_data2():
     # print(request)
     # print(table_name)
     table_name = request.values['data_selection']
-    export_csv(table_name)
-    path = r"webapp/temp/{}.csv".format(table_name)
 
-    # This goes in the CSV. Get export_csv() to return data
-    response = make_response(path)
-    cd = 'attachment; filename={}.csv'.format(table_name)
-    response.headers['Content-Disposition'] = cd
-    response.mimetype='csv'
+    si = io.StringIO()
+    cw = csv.writer(si)
+    conn = get_connection()
+    cur = conn.cursor()
 
+    sql = """
+        SELECT * FROM [dbo].[{}]
+        """.format(table_name)
+    cur.execute(sql)
+    rows = cur.fetchall()
+
+    cw.writerow([i[0] for i in cur.description])
+    cw.writerows(rows)
+    response = make_response(si.getvalue())
+    response.headers["Content-Disposition"] = "attachment; filename={}.csv".format(table_name)
+    response.headers["Content-type"] = "text/csv"
     return response
 
 
