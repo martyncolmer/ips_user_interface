@@ -64,7 +64,7 @@ class ExportSelectionForm(FlaskForm):
                  ("PS_SHIFT_DATA", "Shift"),
                  ("PS_NON_RESPONSE", "Non-Response"),
                  ("PS_SHIFT_DATA", "Shift Weight Summary"),
-                 ("NON_REPSONSE_DATA", "Non Response Weight Summary"),
+                 ("NON_RESPONSE_DATA", "Non Response Weight Summary"),
                  ("PS_MINIMUMS", "Minimum Weight Summary"),
                  ("PS_TRAFFIC", "Traffic Weight Summary"),
                  ("PS_UNSAMPLED_OOH", "Unsampled Traffic Weight Summary"),

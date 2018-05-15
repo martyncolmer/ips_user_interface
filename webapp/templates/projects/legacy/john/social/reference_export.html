@@ -29,7 +29,7 @@
 			<div class="group">
 				<div class="col-7">
 					<div class="logo_header">
-						<a href="../hub.html"><img src="../../../../../static/img/logo.svg" alt="Office for National Statistics" class="logo__img"/></a>
+						<a href="../hub.html"><img src="../../../../img/logo.svg" alt="Office for National Statistics" class="logo__img"/></a>
 					</div>
 				</div>
 				<div class="col-5">
@@ -61,14 +61,14 @@
 		            <div class="sitenavigation">
 		              	<div class="sitenavigation">
 		                	<ul class="sitenavigation__list">
-			                    <li class="sitenavigation__listitem">
-			                    	<a href="/dashboard">Dashboard</a>
-			                    </li>
 			                    <li class="sitenavigation__listitem sitenavigation__listitem--active">
-			                    	<a href="#">New run</a>
+			                    	<a href="Dashboard_completed.html">Dashboard</a>
 			                    </li>
 			                    <li class="sitenavigation__listitem">
-			                    	<a href="/system_info">System info</a>
+			                    	<a href="new_run_1.html">New run</a>
+			                    </li>
+			                    <li class="sitenavigation__listitem">
+			                    	<a href="#">System info</a>
 			                    </li>
 			                    <li class="sitenavigation__listitem">
 			                    	<a href="#">Other</a>
@@ -89,15 +89,15 @@
 		<div class="wrapper">
 			<div class="group top_50_extra_space">
 				<div class="col-8">
-					<h2 class="jupiter sml-margin">12345678900 </h2>
-					<h3 class="saturn sml-margin buttom_10_extra_space">Colabra vinculares &nbsp;
+					<h3 class="jupiter sml-margin">{{current_run['id']}}</h3>
+					<h4 class="saturn sml-margin buttom_10_extra_space">{{current_run['name']}}&nbsp;</h4>
 						<em class="badge-status badge--completed">&nbsp;&nbsp;&nbsp;COMPLETED&nbsp;&nbsp;&nbsp;</em></h3>
 					<div>
-						<spam><strong>Description: </strong>&nbsp; Domus pensara trigales</spam>
+						<spam><strong>Description: </strong>&nbsp;{{current_run['desc']}}</spam>
 						<br>
-						<spam><strong>Execution date & time: </strong>&nbsp; 19 10 2017 at 12:05</spam>
+						<spam><strong>Execution date & time: </strong>&nbsp;{{current_run['start_date']}}</spam>
 						<br>
-						<spam><strong>Person: </strong>&nbsp; Edgar Allan Poe</spam>
+						<!--<spam><strong>Person: </strong>&nbsp;Edgar Allan Poe</spam>-->
 					</div>
 				</div>
 			</div>
@@ -108,36 +108,37 @@
 
 <section>
 
-	<div class="wrapper">
-		<div class="col-8 top_40_extra_space">
+	<form id="run" action="/export_data/{{current_run['id']}}" class="form">
 
-			<form id="run" action="#" class="form">
+		<div class="wrapper">
+			<div class="group">
+				<div class="col-7 top_40_extra_space">
 
-				<div class="field">
-			        <label class="label venus " for="text-input">{{table_name}}</label>
-					<h1>CSV file download</h1>
+				<ul class="nav-tabs clearfix u-mb-l" data-tabgroup="first-tab-group">
+				  	<li class="nav-tabs__tab"><a class="tab-label" href="reference.html">Runs (12) </a></li>
+              		<li class="nav-tabs__tab--active"><a class="tab-label" href="#tab2">Exports (0) </a></li>
+				</ul>
 
-					<body>
-					<form action = "http://localhost:5000/uploader" method = "POST"
-						  enctype = "multipart/form-data">
-						<input type = "file" name = "file" />
-					</form>
-
-					<title>Upload an excel file</title>
-			    </div>
-
-				<div class="top_50_extra_space">
-				    <button class="btn btn--primary" type="submit">Export to CSV</button>
-				    <!--
-				    <button class="btn btn--neutral">Cancel</button>
-					-->
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <label><a href="Dashboard_completed.html">Close</a></label>
 				</div>
+			</div>
 
-			</form>
+			<div class="wrapper">
+				<div class="col-8 top_10_extra_space">
+
+						<div class="field">
+					        <label class="label" for="text-input">No data has been exported</label>
+					    </div>
+
+					    <div class="top_30_extra_space">
+						    <button class="btn btn--primary" type="submit">Export data</button>
+						</div>
+
+				</div>
+			</div>
 
 		</div>
-	</div>
+
+	</form>
 
 </section>
 
@@ -163,44 +164,6 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.14/semantic.min.js'></script>
-
-
-<script>
-	jQuery(document).ready(function($) {
-    $(".clickable-row").click(function() {
-        window.location = $(this).data("href");
-    });
-});
-</script>
-
-
-<script>
-$('.ui.dropdown').dropdown();
-</script>
-
-
-<script type="text/javascript">
-
-window.onload = function(){
-
-  var form = document.getElementById("form-sign-in");
-
-  form.onsubmit = function(e) {
-    e.preventDefault();
-    var userInput = document.getElementById('text-input').value;
-
-    if (userInput.includes('123')) {
-
-      window.location = 'contributor.html';
-
-    } else if (userInput.includes('cme')) {
-      window.location = 'search_results.html';
-    }
-    return false;
-  }
-};
-
-</script>​
 
 
 </footer>

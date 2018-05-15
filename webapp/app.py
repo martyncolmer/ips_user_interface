@@ -221,6 +221,20 @@ def weights(run_id):
                            current_run=current_run)
 
 
+@app.route('/reference_export/<run_id>')
+def reference_export(run_id):
+    run = app_methods.get_run(run_id)
+
+    session['current_run_id'] = run['id']
+    session['run_name'] = run['name']
+    session['run_description'] = run['desc']
+    session['start_date'] = run['start_date']
+    current_run = run
+
+    return render_template('/projects/legacy/john/social/reference_export.html',
+                           current_run=current_run)
+
+
 @app.route('/export_data/<run_id>')
 def export_data(run_id):
     form = ExportSelectionForm()
@@ -243,6 +257,9 @@ def export_data2():
     # print("export_data2()")
     # print(request)
     # print(table_name)
+
+    # TODO: Disable 'Export Data' button until correct data selected from dropdown
+    # TODO: Validate table within data, i.e is not empty.
     table_name = request.values['data_selection']
 
     si = io.StringIO()
