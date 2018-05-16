@@ -260,8 +260,7 @@ def weights(run_id):
 def weights_2():
 
     print(request)
-
-    dataframe = app_methods.get_display_data(session['dw_table'], session['dw_source'], session['id'])
+    dataframe = app_methods.get_display_data_json(session['dw_table'], session['id'], session['dw_source'])
 
     table_title = session['dw_title']
     return render_template('/projects/legacy/john/social/weights_2.html',
