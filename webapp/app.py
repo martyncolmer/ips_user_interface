@@ -151,7 +151,9 @@ def new_run_3():
 
     if request.method == 'POST':
         if(form.validate()==False):
+
             flash_errors(form)
+            print(form.errors)
             error = True
         else:
 
