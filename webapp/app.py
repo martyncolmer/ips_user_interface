@@ -12,6 +12,8 @@ from webapp.forms import SearchActivityForm
 from webapp.forms import DataSelectionForm
 from webapp.forms import ExportSelectionForm
 from webapp.app_methods import get_connection
+from webapp.app_methods import export_csv
+from webapp.app_methods import cleanse_temp_foler
 
 APP_DIR = os.path.dirname(__file__)
 app = Flask(__name__)
@@ -267,40 +269,23 @@ def export_data2():
     # print(request)
     # print(table_name)
 
-    # TODO: Disable 'Export Data' button until correct data selected from dropdown
-    # TODO: Validate table within data, i.e is not empty.
-
     table_name = request.values['data_selection']
-    source = "H:\My Documents\Documents\Git Repo\Misc and Admin\Legacy Uplift\Compare\data.csv"
-    file = "data.csv"
-
+    target_filename = request.values['filename']
+    print(target_filename)
+    source = r"..\webapp\temp\{}.csv".format(table_name)
     memory_file = io.BytesIO()
-    zipfile.ZipFile(memory_file, mode='w').write(source, file)
+
+    export_csv(table_name)
+
+    zipfile.ZipFile(memory_file, mode='w').write(source, target_filename+".csv")
     memory_file.seek(0)
+
+    cleanse_temp_foler()
 
     return send_file(memory_file,
                      attachment_filename='data.zip',
                      as_attachment=True)
 
-    # si = io.StringIO()
-    # cw = csv.writer(si)
-    # conn = get_connection()
-    # cur = conn.cursor()
-    #
-    # sql = """
-    #     SELECT * FROM [dbo].[{}]
-    #     """.format(table_name)
-    # cur.execute(sql)
-    # rows = cur.fetchall()
-    #
-    # cw.writerow([i[0] for i in cur.description])
-    # cw.writerows(rows)
-    # response = make_response(si.getvalue())
-    # response.headers["Content-Disposition"] = "attachment; filename={}.csv".format(table_name)
-    # response.headers["Content-type"] = "text/csv"
-    # return response
-
 
 if __name__ == '__main__':
     app.run(debug=True)
-

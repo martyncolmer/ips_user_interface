@@ -3,6 +3,7 @@ from flask_wtf import FlaskForm
 from wtforms import IntegerField
 from wtforms import StringField
 from wtforms import SelectField, SubmitField
+from wtforms import TextField
 from wtforms.validators import InputRequired, NumberRange
 
 
@@ -76,6 +77,8 @@ class ExportSelectionForm(FlaskForm):
                  ("CONTACT", "Contact"),
                  ("MIGRATION", "Migration")]
 
+    filename = TextField('Save as')
     display_data = SubmitField(label='Export Data')
     data_selection = SelectField(label='Select Data', choices=data_list)
+
 

@@ -6,7 +6,7 @@ import subprocess
 import datetime
 import pyodbc
 import os
-import pandas as pd
+import shutil
 import survey_support as ss
 
 
@@ -123,12 +123,21 @@ def export_csv(table_name):
 
     cur.execute(sql)
 
-    with open(path + filename, 'w') as csvfile:
+    with open(path + filename, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow([i[0] for i in cur.description])
         writer.writerows(cur.fetchall())
 
 
+def cleanse_temp_foler():
+    path = r"..\webapp\temp"
 
-if __name__ == "__main__":
-    export_csv("SURVEY_SUBSAMPLE")
+    with os.scandir(path) as entries:
+        for entry in entries:
+            if entry.is_file() or entry.is_symlink():
+                os.remove(entry.path)
+            elif entry.is_dir():
+                shutil.rmtree(entry.path)
+
+
+

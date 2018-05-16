@@ -113,12 +113,14 @@
 
 				</div>
 
+				<div class="field">
+					<label class="label venus " for="text-input">Save file as</label>
+					{{ form.filename(class="input input--text", type="text", id="text-input") }}
+				</div>
+
 				<div class="top_50_extra_space">
 					{{ form.display_data(class="btn btn--primary", type="submit") }}
-					<!--<a class="btn btn&#45;&#45;primary" href="example.csv">Generate</a>-->
-					<!--&nbsp;&nbsp;&nbsp;-->
-					<!--<a class="btn btn&#45;&#45;secondary btn&#45;&#45;border" href="new_run_4.html">Back</a>-->
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<label><a href="dashboard.html">Cancel</a></label>
 				</div>
 
@@ -130,10 +132,10 @@
 </section>
 
 <section>
-	<div class="buttom_70_extra_space buttom_70_extra_space">
+	<div class="buttom_40_extra_space buttom_40_extra_space">
 		<table></table>
 	</div>
-	<div class="buttom_70_extra_space buttom_70_extra_space">
+	<div class="buttom_40_extra_space buttom_40_extra_space">
 		<table></table>
 	</div>
 </section>
@@ -168,26 +170,26 @@ $('.ui.dropdown').dropdown();
 
 
 <script type="text/javascript">
- 
+
 window.onload = function(){
- 
+
   var form = document.getElementById("form-sign-in");
 
   form.onsubmit = function(e) {
     e.preventDefault();
     var userInput = document.getElementById('text-input').value;
-   
+
     if (userInput.includes('123')) {
-   
+
       window.location = 'contributor.html';
-   
+
     } else if (userInput.includes('cme')) {
       window.location = 'search_results.html';
     }
     return false;
   }
 };
- 
+
 </script>​
 
 
