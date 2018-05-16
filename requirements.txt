@@ -15,3 +15,8 @@ pytest-cov==2.5.1
 six==1.11.0
 Werkzeug==0.14.1
 WTForms==2.1
+
+numpy==1.14.3
+pandas==0.22.0
+python-dateutil==2.7.3
+pytz==2018.4
