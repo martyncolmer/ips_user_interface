@@ -145,15 +145,12 @@ def new_run_2():
 def new_run_3():
     form = LoadDataForm()
 
-    print(request.values)
-
     error = False
 
     if request.method == 'POST':
         if(form.validate()==False):
 
             flash_errors(form)
-            print(form.errors)
             error = True
         else:
 
