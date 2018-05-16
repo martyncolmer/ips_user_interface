@@ -3,8 +3,6 @@ import csv
 import requests
 import json
 import pandas
-import pyodbc
-import survey_support as ss
 
 
 def create_run(unique_id, run_name, run_description, start_date, end_date, run_status='0', run_type='6'):
@@ -45,7 +43,6 @@ def get_system_info():
 
 def get_runs():
 
-    requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs")
     response = requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs")
     return json.loads(response.content)
 
@@ -107,19 +104,61 @@ def get_connection(credentials_file=
     Returns    : Connection (Object)
     Params     : credentials_file is set to default location unless user points elsewhere
     """
-
+    pass
     # Get credentials and decrypt
-    user = ss.get_keyvalue_from_json("User", credentials_file)
-    password = ss.get_keyvalue_from_json("Password", credentials_file)
-    database = ss.get_keyvalue_from_json('Database', credentials_file)
-    server = ss.get_keyvalue_from_json('Server', credentials_file)
+    # user = ss.get_keyvalue_from_json("User", credentials_file)
+    # password = ss.get_keyvalue_from_json("Password", credentials_file)
+    # database = ss.get_keyvalue_from_json('Database', credentials_file)
+    # server = ss.get_keyvalue_from_json('Server', credentials_file)
 
+
+    # Commented out due to no longer using pyodbc.
     # Attempt to connect to the database
-    try:
-        conn = pyodbc.connect(driver="{SQL Server}", server=server, database=database, uid=user, pwd=password,
-                              autocommit=True)
-    except Exception as err:
-        print(err)
-        return False
+    # try:
+    #     conn = pyodbc.connect(driver="{SQL Server}", server=server, database=database, uid=user, pwd=password,
+    #                           autocommit=True)
+    # except Exception as err:
+    #     print(err)
+    #     return False
+    # else:
+    #     return conn
+
+
+def get_display_data_json(table_name, run_id=None, data_source=None):
+    column_sets = {'SHIFT_DATA': ['PORTROUTE', 'WEEKDAY', 'ARRIVEDEPART', 'AM_PM_NIGHT', 'TOTAL'],
+                   'TRAFFIC_DATA': ['PORTROUTE', 'PERIODSTART', 'PERIODEND', 'ARRIVEDEPART', 'AM_PM_NIGHT', 'TRAFFICTOTAL', 'HAUL'],
+                   'NON_RESPONSE_DATA': ['PORTROUTE', 'WEEKDAY', 'ARRIVEDEPART', 'AM_PM_NIGHT', 'SAMPINTERVAL', 'MIGTOTAL', 'ORDTOTAL'],
+                   'UNSAMPLED_OOH_DATA': ['PORTROUTE', 'REGION', 'ARRIVEDEPART', 'UNSAMP_TOTAL'],
+                   'PS_SHIFT_DATA': ['SHIFT_PORT_GRP_PV', 'ARRIVEDEPART', 'WEEKDAY_END_PV', 'AM_PM_NIGHT_PV', 'MIGSI',
+                                     'POSS_SHIFT_CROSS', 'SAMP_SHIFT_CROSS', 'MIN_SH_WT', 'MEAN_SH_WT', 'MAX_SH_WT',
+                                     'COUNT_RESPS', 'SUM_SH_WT'],
+                   'PS_NON_RESPONSE': ['NR_PORT_GRP_PV', 'ARRIVEDEPART', 'WEEKDAY_END_PV', 'MEAN_RESPS_SH_WT', 'COUNT_RESPS',
+                                       'PRIOR_SUM', 'GROSS_RESP', 'GNR', 'MEAN_NR_WT'],
+                   'PS_MINIMUMS': ['MINS_PORT_GRP_PV', 'ARRIVEDEPART', 'MINS_CTRY_GRP_PV', 'MINS_NAT_GRP_PV', 'MINS_NAT_GRP_PV',
+                                   'MINS_CTRY_PORT_GRP_PV', 'MINS_CASES', 'FULLS_CASES', 'PRIOR_GROSS_MINS', 'PRIOR_GROSS_FULLS',
+                                   'PRIOR_GROSS_ALL', 'MINS_WT', 'POST_SUM', 'CASES_CARRIED_FWD'],
+                   'PS_TRAFFIC': ['SAMP_PORT_GRP_PV', 'ARRIVEDEPART', 'FOOT_OR_VEHICLE_PV', 'CASES', 'TRAFFICTOTAL',
+                                  'SUM_TRAFFIC_WT', 'TRAFFIC_WT'],
+                   'PS_UNSAMPLED_OOH': ['UNSAMP_PORT_GRP_PV', 'ARRIVEDEPART', 'UNSAMP_REGION_GRP_PV', 'CASES', 'SUM_PRIOR_WT',
+                                        'SUM_UNSAMP_TRAFFIC_WT', 'UNSAMP_TRAFFIC_WT'],
+                   'PS_IMBALANCE': ['FLOW', 'SUM_PRIOR_WT', 'SUM_IMBAL_WT'],
+                   'PS_FINAL': ['SERIAL', 'SHIFT_WT', 'NON_RESPONSE_WT', 'MINS_WT', 'TRAFFIC_WT',
+                                'UNSAMP_TRAFFIC_WT', 'IMBAL_WT', 'FINAL_WT']
+                   }
+
+    address = "http://ips-db.apps.cf1.ons.statistics.gov.uk/" + table_name
+    if run_id:
+        address = address + "/" + run_id
+
+    if data_source:
+        address = address + "/" + data_source
+
+    response = requests.get(address)
+    if response.status_code == 200:
+        data = json.loads(response.content)
+        df = pandas.DataFrame.from_dict(data)
+        df = df[column_sets[table_name]]
     else:
-        return conn
+        df = pandas.DataFrame(columns=column_sets[table_name])
+
+    return df
