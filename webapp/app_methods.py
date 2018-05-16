@@ -159,6 +159,9 @@ def get_display_data_json(table_name, run_id=None, data_source=None):
         df = pandas.DataFrame.from_dict(data)
         df = df[column_sets[table_name]]
     else:
-        df = pandas.DataFrame(columns=column_sets[table_name])
+        if table_name in column_sets:
+            df = pandas.DataFrame(columns=column_sets[table_name])
+        else:
+            df = pandas.DataFrame()
 
     return df

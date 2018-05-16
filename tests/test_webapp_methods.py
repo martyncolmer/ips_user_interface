@@ -51,3 +51,45 @@ def test_get_display_data():
 
     # Dataframe should be empty
     assert df2.empty is True
+
+
+def test_get_display_data_json():
+
+    # Valid table
+    df = app_methods.get_display_data_json('SHIFT_DATA')
+    # Dataframe should not be empty
+    assert df.empty is False
+    assert len(df.index) == 1000
+    assert len(df.index) == 1000
+
+    # Valid table, valid run_id
+    df = app_methods.get_display_data_json('SHIFT_DATA', '9e5c1872-3f8e-4ae5-85dc-c67a602d011e')
+    # Dataframe should not be empty
+    assert df.empty is False
+    assert len(df.index) == 1000
+    assert len(df.index) == 1000
+
+    # Valid table, valid run_id, valid data_source
+    df = app_methods.get_display_data_json('SHIFT_DATA', '9e5c1872-3f8e-4ae5-85dc-c67a602d011e', '4')
+    # Dataframe should not be empty
+    assert df.empty is False
+    assert len(df.index) == 1000
+    assert len(df.index) == 1000
+
+    # Tests below use incorrect data in the function call
+
+    # Valid table, invalid run_id, invalid data_source
+    df = app_methods.get_display_data_json('SHIFT_DATA', '0000', '1')
+    assert df.empty is True
+
+    # Valid table, invalid run_id, valid data_source
+    df = app_methods.get_display_data_json('SHIFT_DATA', '0000', '4')
+    assert df.empty is True
+
+    # Valid table, valid run_id, invalid data_source
+    df = app_methods.get_display_data_json('SHIFT_DATA','9e5c1872-3f8e-4ae5-85dc-c67a602d011e', '1')
+    assert df.empty is True
+
+    # Invalid table
+    df = app_methods.get_display_data_json('FAKE_TABLE')
+    assert df.empty is True
