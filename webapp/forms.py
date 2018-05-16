@@ -39,7 +39,7 @@ class DateSelectionForm(FlaskForm):
 
     e_day = IntegerField(label='Day', validators=[InputRequired(), NumberRange(min=1, max=31)])
     e_month = SelectField(label='Month', choices=months,validators=[InputRequired()])
-    e_year = IntegerField(label='Year', validators=[InputRequired(), NumberRange(min=1991, max=now.year + 1)])
+    e_year = IntegerField(label='Year', validators=[InputRequired(), NumberRange(min=1991, max=now.year + 2)])
 
 
 class DataSelectionForm(FlaskForm):
