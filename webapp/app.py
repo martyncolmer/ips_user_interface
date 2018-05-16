@@ -2,16 +2,16 @@ import os
 import csv
 import uuid
 import io
-from flask import Flask, render_template, session, current_app, request, url_for, redirect, make_response, Response
+import pathlib
+import zipfile
+from flask import Flask, render_template, session, request, url_for, redirect, make_response, send_file, send_from_directory
 from webapp import app_methods
 from webapp.forms import CreateRunForm
 from webapp.forms import DateSelectionForm
 from webapp.forms import SearchActivityForm
 from webapp.forms import DataSelectionForm
 from webapp.forms import ExportSelectionForm
-from webapp.app_methods import export_csv
 from webapp.app_methods import get_connection
-import requests
 
 APP_DIR = os.path.dirname(__file__)
 app = Flask(__name__)
@@ -187,22 +187,6 @@ def new_run_end():
     return render_template('/projects/legacy/john/social/new_run_end.html')
 
 
-@app.route('/reference/<run_id>')
-def reference(run_id):
-
-    run = app_methods.get_run(run_id)
-
-    session['current_run_id'] = run['id']
-    session['run_name'] = run['name']
-    session['run_description'] = run['desc']
-    session['start_date'] = run['start_date']
-    session['end_date'] = run['end_date']
-    current_run = run
-
-    return render_template('/projects/legacy/john/social/reference.html',
-                           current_run=current_run)
-
-
 @app.route('/weights/<run_id>')
 def weights(run_id):
     form = DataSelectionForm()
@@ -218,6 +202,31 @@ def weights(run_id):
 
     return render_template('/projects/legacy/john/social/weights.html',
                            form=form,
+                           current_run=current_run)
+
+
+@app.route('/weights_2')
+def weights_2():
+
+    print(request)
+    table_name = request.values['data_selection']
+    print(table_name)
+    return render_template('/projects/legacy/john/social/weights_2.html')
+
+
+@app.route('/reference/<run_id>')
+def reference(run_id):
+
+    run = app_methods.get_run(run_id)
+
+    session['current_run_id'] = run['id']
+    session['run_name'] = run['name']
+    session['run_description'] = run['desc']
+    session['start_date'] = run['start_date']
+    session['end_date'] = run['end_date']
+    current_run = run
+
+    return render_template('/projects/legacy/john/social/reference.html',
                            current_run=current_run)
 
 
@@ -260,34 +269,36 @@ def export_data2():
 
     # TODO: Disable 'Export Data' button until correct data selected from dropdown
     # TODO: Validate table within data, i.e is not empty.
+
     table_name = request.values['data_selection']
+    source = "H:\My Documents\Documents\Git Repo\Misc and Admin\Legacy Uplift\Compare\data.csv"
+    file = "data.csv"
 
-    si = io.StringIO()
-    cw = csv.writer(si)
-    conn = get_connection()
-    cur = conn.cursor()
+    memory_file = io.BytesIO()
+    zipfile.ZipFile(memory_file, mode='w').write(source, file)
+    memory_file.seek(0)
 
-    sql = """
-        SELECT * FROM [dbo].[{}]
-        """.format(table_name)
-    cur.execute(sql)
-    rows = cur.fetchall()
+    return send_file(memory_file,
+                     attachment_filename='data.zip',
+                     as_attachment=True)
 
-    cw.writerow([i[0] for i in cur.description])
-    cw.writerows(rows)
-    response = make_response(si.getvalue())
-    response.headers["Content-Disposition"] = "attachment; filename={}.csv".format(table_name)
-    response.headers["Content-type"] = "text/csv"
-    return response
-
-
-@app.route('/weights_2')
-def weights_2():
-
-    print(request)
-    table_name = request.values['data_selection']
-    print(table_name)
-    return render_template('/projects/legacy/john/social/weights_2.html')
+    # si = io.StringIO()
+    # cw = csv.writer(si)
+    # conn = get_connection()
+    # cur = conn.cursor()
+    #
+    # sql = """
+    #     SELECT * FROM [dbo].[{}]
+    #     """.format(table_name)
+    # cur.execute(sql)
+    # rows = cur.fetchall()
+    #
+    # cw.writerow([i[0] for i in cur.description])
+    # cw.writerows(rows)
+    # response = make_response(si.getvalue())
+    # response.headers["Content-Disposition"] = "attachment; filename={}.csv".format(table_name)
+    # response.headers["Content-type"] = "text/csv"
+    # return response
 
 
 if __name__ == '__main__':

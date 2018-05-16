@@ -29,7 +29,7 @@
 			<div class="group">
 				<div class="col-7">
 					<div class="logo_header">
-						<a href="../hub.html"><img src="../../../../../static/img/logo.svg" alt="Office for National Statistics" class="logo__img"/></a>
+						<a href="../hub.html"><img src="../../../../img/logo.svg" alt="Office for National Statistics" class="logo__img"/></a>
 					</div>
 				</div>
 				<div class="col-5">
@@ -48,7 +48,7 @@
 		<div class="wrapper">
 			<div class="group">
 				<div class="col-12">
-					<div><h1 class="jupiter main_heading">Social</h1></div>
+					<div><h1 class="jupiter main_heading">Social Surveys</h1></div>
 				</div>
 			</div>
 		</div>
@@ -104,13 +104,14 @@
 	<div class="wrapper">
 		<div class="col-8 top_40_extra_space">
 
-			<!--<form id="run" action="weights.html" class="form">-->
 			<form id="run" action="/export_data2" class="form">
 
 				<div class="field">
 
 					{{ form.data_selection.label(class="label venus ", for="text-input")}}
 					{{ form.data_selection(class="input input--select", type="submit")}}
+
+				</div>
 
 				<div class="top_50_extra_space">
 					{{ form.display_data(class="btn btn--primary", type="submit") }}
