@@ -147,38 +147,19 @@ def new_run_3():
 
     error = False
 
-    if request.method == 'POST':
-        if(form.validate()==False):
+    if(form.validate_on_submit()):
+        # Functionality has been written. Stubbed for now as we are unsure yet as to the location and method
+        # of storing the csv's in a file system. Until we can access DAP and know where to store, this will remain.
+        # The below code shows the method for retrieving the filename and data from the uploaded files.
 
-            flash_errors(form)
-            error = True
-        else:
-
-            if not os.path.exists('input/' + session['current_run_id']):
-                os.mkdir('input/' + session['current_run_id'])
-
-            survey_data = form.survey_file.data
-            survey_data.save(os.path.join('input/' + session['current_run_id'], 'survey_data.csv'))
-
-            shift_data = form.shift_file.data
-            shift_data.save(os.path.join('input/' + session['current_run_id'], 'shift_data.csv'))
-
-            non_response_data = form.non_response_file.data
-            non_response_data.save(os.path.join('input/' + session['current_run_id'], 'non_response_data.csv'))
-
-            unsampled_data = form.unsampled_file.data
-            unsampled_data.save(os.path.join('input/' + session['current_run_id'], 'unsampled_data.csv'))
-
-            tunnel_data = form.tunnel_file.data
-            tunnel_data.save(os.path.join('input/' + session['current_run_id'], 'tunnel_data.csv'))
-
-            sea_data = form.sea_file.data
-            sea_data.save(os.path.join('input/' + session['current_run_id'], 'sea_data.csv'))
-
-            air_data = form.air_file.data
-            air_data.save(os.path.join('input/' + session['current_run_id'], 'air_data.csv'))
-
-            return redirect(url_for('new_run_4'))
+        survey_data = form.survey_file.data
+        survey_filename = form.survey_file.name
+        print("The files have passed validation.")
+        return redirect(url_for('new_run_4'))
+    elif(request.method == 'GET'):
+        pass
+    else:
+        error = True
 
     return render_template('/projects/legacy/john/social/new_run_3.html', form = form, error = error)
 
