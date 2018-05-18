@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en-gb" dir="ltr" class="no-js">
+<html lang="en-gb" dir="ltr" class="no-js"> 
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -70,9 +70,6 @@
 			                    <li class="sitenavigation__listitem">
 			                    	<a href="/system_info">System info</a>
 			                    </li>
-			                    <li class="sitenavigation__listitem">
-			                    	<a href="#">Other</a>
-			                    </li>
 			                </ul>
 		              	</div>
 				  	</div>
@@ -89,16 +86,22 @@
 		<div class="wrapper">
 			<div class="group top_50_extra_space">
 				<div class="col-8">
-					<h2 class="jupiter sml-margin">{{current_run['id']}} </h2>
-					<h3 class="saturn sml-margin buttom_10_extra_space">{{current_run['name']}} &nbsp;
+					<h2 class="jupiter sml-margin">{{current_run['name']}} </h2>
+					<h3 class="saturn sml-margin buttom_10_extra_space">({{current_run['id']}}) &nbsp;
 						<em class="badge-status badge--completed">&nbsp;&nbsp;&nbsp;COMPLETED&nbsp;&nbsp;&nbsp;</em></h3>
 					<div>
 						<spam><strong>Description: </strong>&nbsp; {{current_run['desc']}}</spam>
 						<br>
-						<spam><strong>Creation date & time: </strong>&nbsp; 19 10 2017 at 12:05</spam>
+						<spam><strong>Execution date & time: </strong>&nbsp; 19-10-2017 | 12:05pm</spam>
 						<br>
-						<spam><strong>User: </strong>&nbsp; {{current_run['user']}}</spam>
+						<br>
+						<spam><strong>Field Work dates: </strong>&nbsp; {{current_run['start_date']}} - {{current_run['end_date']}}</spam>
+						<br>
+						<spam><strong>User: </strong>&nbsp; Edgar Allan Poe</spam>
+						<br>
+						<spam><strong>Run Status: </strong>&nbsp; {{current_run['status']}}</spam>
 					</div>
+
 				</div>
 			</div>
 		</div>
@@ -108,48 +111,14 @@
 
 <section>
 
-	<form id="run" action="new_run_6.html" class="form">
-
-
-
-
-
 		<div class="wrapper">
 			<div class="group">
-				<div class="col-7 top_40_extra_space">
+				<div class="grid__col col-7 top_40_extra_space">
 
 				<ul class="nav-tabs clearfix u-mb-l" data-tabgroup="first-tab-group">
-				  	<li class="nav-tabs__tab--active"><a class="tab-label" href="#tab1">Runs </a></li>
-              		<li class="nav-tabs__tab"><a class="tab-label" href="#tab2">Exports </a></li>
-              		<li class="nav-tabs__tab"><a class="tab-label" href="#tab3">Downloads </a></li>
+				  	<li class="nav-tabs__tab--active"><a class="tab-label" href="#">Runs (12) </a></li>
+              		<li class="nav-tabs__tab"><a class="tab-label" href="reference_export.html">Exports (0) </a></li>
 				</ul>
-
-				<!--
-
-				<section id="first-tab-group">
-
-					<div id="tab1">
-
-						1
-
-					</div>
-
-					<div id="tab2">
-
-						2
-
-					</div>
-
-					<div id="tab3">
-
-						3
-
-					</div>
-
-				</section>
-
-			    -->
-
 
 					<table class="table table__dense">
 						<thead class="table--head">
@@ -224,18 +193,23 @@
 		<div class="wrapper">
 			<div class="group">
 
-				<form id="run" action="" class="form">
-					<div class="top_50_extra_space">
-						<a class="btn btn--primary" href="/weights/{{current_run['id']}}">Display weights</a>
-						&nbsp;&nbsp;&nbsp;
-						<a class="btn btn--primary" href="/export_data/{{current_run['id']}}">Export data</a>
-					</div>
-				</form>
+				<div class="grid__col">
+
+					<form id="run" action="/weights/{{current_run['id']}}" class="form">
+
+						<div class="top_50_extra_space">
+							<button class="btn btn--primary" type="submit">Display weights</button>
+							&nbsp;&nbsp;&nbsp;
+							<a class="btn btn--secondary btn--border" href="new_run_edit.html">Edit run</a>
+						</div>
+
+					</form>
+
+				</div>
 
 			</div>
 		</div>
 
-	</form>
 
 </section>
 
@@ -263,7 +237,7 @@
 <script src='https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.14/semantic.min.js'></script>
 
 
-<script>
+<!-- <script>
 	jQuery(document).ready(function($) {
     $(".clickable-row").click(function() {
         window.location = $(this).data("href");
@@ -274,31 +248,31 @@
 
 <script>
 $('.ui.dropdown').dropdown();
-</script>
+</script> -->
 
 
-<script type="text/javascript">
- 
+<!-- <script type="text/javascript">
+
 window.onload = function(){
- 
+
   var form = document.getElementById("form-sign-in");
 
   form.onsubmit = function(e) {
     e.preventDefault();
     var userInput = document.getElementById('text-input').value;
-   
+
     if (userInput.includes('123')) {
-   
+
       window.location = 'contributor.html';
-   
+
     } else if (userInput.includes('cme')) {
       window.location = 'search_results.html';
     }
     return false;
   }
 };
- 
-</script>​
+
+</script>​ -->
 
 
 </footer>
