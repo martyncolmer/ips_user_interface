@@ -147,16 +147,15 @@ def new_run_3():
 
     error = False
 
-    if(form.validate_on_submit()):
+    if form.validate_on_submit():
         # Functionality has been written. Stubbed for now as we are unsure yet as to the location and method
         # of storing the csv's in a file system. Until we can access DAP and know where to store, this will remain.
         # The below code shows the method for retrieving the filename and data from the uploaded files.
 
         survey_data = form.survey_file.data
         survey_filename = form.survey_file.name
-        print("The files have passed validation.")
         return redirect(url_for('new_run_4'))
-    elif(request.method == 'GET'):
+    elif request.method == 'GET':
         pass
     else:
         error = True
