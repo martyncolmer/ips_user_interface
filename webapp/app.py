@@ -26,15 +26,11 @@ def login():
 
 @app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
-    #print(request.method)
     form = SearchActivityForm()
 
     # Get the records and separate the headers and values
-    #records = app_methods.get_runs_csv()
-    records = app_methods.get_runs_json()
+    records = app_methods.get_runs()
     header = ['Run_ID', 'Run_Name', 'Run_Description', 'Start_Date', 'End_Date', 'Run_Status', 'Run Type']
-    #header = records[0]
-    #records = records[1:]
 
     # Setup key value pairs for displaying run information
     run_statuses = {'0': 'Live', '1': 'Published', '2': 'Test', '3': 'Deleted'}

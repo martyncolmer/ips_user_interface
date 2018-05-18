@@ -88,6 +88,22 @@
 	<div class="wrapper">
 		<div class="col-8">
 
+			{% if form.s_day.errors or form.s_month.errors or form.s_year.errors or form.e_day.errors or form.e_month.errors or form.e_year.errors %}
+				<div class="collator-item">
+					<h2 class="collator-title"></h2>
+					<!-- Start: @panel--error -->
+					<div class="panel panel--error">
+						<div class="panel__header">
+							<div class="venus">Error</div>
+						</div>
+						<div class="panel__body">
+							<p class="mars">Please enter valid fieldwork start and end dates.</p>
+						</div>
+					</div>
+					<!-- End: @panel--error -->
+				</div>
+			{% endif %}
+
 			<div class="group top_40_extra_space">
 				<div>
 					<h2 class="pluto grey_text ">Step 2 of 7 </h2>				
@@ -120,7 +136,7 @@
 							{% if form.s_day.errors %}
 							<ul>
 								{% for error_message in form.s_day.errors %}
-								<li>{{ error_message }}</li>
+								<li style = "color:red;">{{ error_message }}</li>
 								{% endfor %}
 							</ul>
 							{% endif %}
@@ -133,7 +149,7 @@
 							{% if form.s_month.errors %}
 							<ul>
 								{% for error_message in form.s_month.errors %}
-								<li>{{ error_message }}</li>
+								<li style = "color:red;">{{ error_message }}</li>
 								{% endfor %}
 							</ul>
 							{% endif %}
@@ -146,7 +162,7 @@
 							{% if form.s_year.errors %}
 							<ul>
 								{% for error_message in form.s_year.errors %}
-								<li>{{ error_message }}</li>
+								<li style = "color:red;">{{ error_message }}</li>
 								{% endfor %}
 							</ul>
 							{% endif %}
@@ -169,7 +185,7 @@
 							{% if form.e_day.errors %}
 							<ul>
 								{% for error_message in form.e_day.errors %}
-								<li>{{ error_message }}</li>
+								<li style = "color:red;">{{ error_message }}</li>
 								{% endfor %}
 							</ul>
 							{% endif %}
@@ -183,7 +199,7 @@
 							{% if form.e_month.errors %}
 							<ul>
 								{% for error_message in form.e_month.errors %}
-								<li>{{ error_message }}</li>
+								<li style = "color:red;">{{ error_message }}</li>
 								{% endfor %}
 							</ul>
 							{% endif %}
@@ -197,7 +213,7 @@
 							{% if form.e_year.errors %}
 							<ul>
 								{% for error_message in form.e_year.errors %}
-								<li>{{ error_message }}</li>
+								<li style = "color:red;">{{ error_message }}</li>
 								{% endfor %}
 							</ul>
 							{% endif %}

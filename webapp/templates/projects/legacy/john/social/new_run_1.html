@@ -96,7 +96,21 @@
 			        </div>
 			    </div>
 			</div>
-
+			{% if form.run_name.errors or form.run_description.errors %}
+				<div class="collator-item">
+					<h2 class="collator-title"></h2>
+					<!-- Start: @panel--error -->
+					<div class="panel panel--error">
+						<div class="panel__header">
+							<div class="venus">Error</div>
+						</div>
+						<div class="panel__body">
+							<p class="mars">Please enter a valid run name and description.</p>
+						</div>
+					</div>
+					<!-- End: @panel--error -->
+				</div>
+			{% endif %}
 			<div class="group top_40_extra_space">
 				<div>
 					<h2 class="pluto grey_text ">Step 1 of 7 </h2>				
@@ -126,7 +140,7 @@
 					{% if form.run_name.errors %}
 					<ul>
 						{% for error_message in form.run_name.errors %}
-						<li>{{ error_message }}</li>
+						<li style = "color:red;">{{ error_message }}</li>
 						{% endfor %}
 					</ul>
 					{% endif %}
@@ -142,7 +156,7 @@
 					{% if form.run_description.errors %}
 					<ul>
 						{% for error_message in form.run_description.errors %}
-						<li>{{ error_message }}</li>
+						<li style = "color:red;">{{ error_message }}</li>
 						{% endfor %}
 					</ul>
 					{% endif %}
