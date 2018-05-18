@@ -1,9 +1,11 @@
 import os
 import csv
 import uuid
-from flask import Flask, render_template, session, current_app, request, url_for, redirect, abort
+from flask import Flask, render_template, session, request, url_for, redirect, abort
+from werkzeug.utils import secure_filename
 from webapp import app_methods
-from webapp.forms import CreateRunForm, DateSelectionForm, SearchActivityForm, DataSelectionForm
+
+from webapp.forms import CreateRunForm, DateSelectionForm, SearchActivityForm, DataSelectionForm, LoadDataForm
 import requests
 import pandas as pd
 
@@ -29,7 +31,7 @@ def dashboard():
 
     # Get the records and separate the headers and values
     #records = app_methods.get_runs_csv()
-    records = app_methods.get_runs()
+    records = app_methods.get_runs_json()
     header = ['Run_ID', 'Run_Name', 'Run_Description', 'Start_Date', 'End_Date', 'Run_Status', 'Run Type']
     #header = records[0]
     #records = records[1:]
@@ -174,9 +176,26 @@ def new_run_2():
                            last_entry=last_entry)
 
 
-@app.route('/new_run_3')
+@app.route('/new_run_3', methods = ['GET', 'POST'])
 def new_run_3():
-    return render_template('/projects/legacy/john/social/new_run_3.html')
+    form = LoadDataForm()
+
+    error = False
+
+    if form.validate_on_submit():
+        # Functionality has been written. Stubbed for now as we are unsure yet as to the location and method
+        # of storing the csv's in a file system. Until we can access DAP and know where to store, this will remain.
+        # The below code shows the method for retrieving the filename and data from the uploaded files.
+
+        survey_data = form.survey_file.data
+        survey_filename = form.survey_file.name
+        return redirect(url_for('new_run_4'))
+    elif request.method == 'GET':
+        pass
+    else:
+        error = True
+
+    return render_template('/projects/legacy/john/social/new_run_3.html', form = form, error = error)
 
 
 @app.route('/new_run_4')

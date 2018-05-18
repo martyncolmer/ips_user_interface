@@ -1,5 +1,6 @@
 
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileField, FileRequired, FileAllowed
 from wtforms import IntegerField
 from wtforms import StringField
 from wtforms import SelectField, SubmitField
@@ -54,4 +55,17 @@ class DataSelectionForm(FlaskForm):
 
     display_data = SubmitField(label='Display data')
     data_selection = SelectField(label='Select Data', choices=data_list,validators=[InputRequired()])
+
+
+
+class LoadDataForm(FlaskForm):
+
+    survey_file = FileField(validators=[FileRequired(), FileAllowed(['csv'], 'File must be a .csv file.')])
+    shift_file = FileField(validators=[FileRequired(), FileAllowed(['csv'], 'File must be a .csv file.')])
+    non_response_file = FileField(validators=[FileRequired(), FileAllowed(['csv'], 'File must be a .csv file.')])
+    unsampled_file = FileField(validators=[FileRequired(), FileAllowed(['csv'], 'File must be a .csv file.')])
+    tunnel_file = FileField(validators=[FileRequired(), FileAllowed(['csv'], 'File must be a .csv file.')])
+    sea_file = FileField(validators=[FileRequired(), FileAllowed(['csv'], 'File must be a .csv file.')])
+    air_file = FileField(validators=[FileRequired(), FileAllowed(['csv'], 'File must be a .csv file.')])
+
 
