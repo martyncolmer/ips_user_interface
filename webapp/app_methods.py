@@ -48,7 +48,6 @@ def get_system_info():
 
     return records
 
-
 def get_runs_json():
 
     requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs")
