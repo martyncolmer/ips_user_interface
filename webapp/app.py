@@ -1,7 +1,7 @@
 import os
 import csv
 import uuid
-from flask import Flask, render_template, session, current_app, request, url_for, redirect
+from flask import Flask, render_template, session, current_app, request, url_for, redirect, abort
 from webapp import app_methods
 from webapp.forms import CreateRunForm, DateSelectionForm, SearchActivityForm, DataSelectionForm
 import requests
@@ -231,41 +231,53 @@ def reference(run_id):
 
 
 @app.route('/weights/<run_id>', methods=['GET', 'POST'])
-def weights(run_id):
+def weights(run_id=None):
     form = DataSelectionForm()
 
     run = app_methods.get_run(run_id)
+    if(run):
+        session['id'] = run['id']
+        session['run_name'] = run['name']
+        session['run_description'] = run['desc']
+        session['start_date'] = run['start_date']
+        session['end_date'] = run['end_date']
+        current_run = run
 
-    session['id'] = run['id']
-    session['run_name'] = run['name']
-    session['run_description'] = run['desc']
-    session['start_date'] = run['start_date']
-    session['end_date'] = run['end_date']
-    current_run = run
-
-    if request.method == 'POST':
-        #print(request.values)
-        table_name, table_title, data_source = request.values['data_selection'].split('|')
-        session['dw_table'] = table_name
-        session['dw_title'] = table_title
-        session['dw_source'] = data_source
-        return redirect(url_for('weights_2'), code=302)
-
-    return render_template('/projects/legacy/john/social/weights.html',
-                           form=form,
-                           current_run=current_run)
+        if request.method == 'POST':
+            if form.validate():
+                #print(request.values)
+                table_name, table_title, data_source = request.values['data_selection'].split('|')
+                session['dw_table'] = table_name
+                session['dw_title'] = table_title
+                session['dw_source'] = data_source
+                return redirect(url_for('weights_2', table=table_name, id=run['id'], source=data_source, table_title=table_title), code=302)
+            else:
+                flash_errors(form)
+        return render_template('/projects/legacy/john/social/weights.html',
+                               form=form,
+                               current_run=current_run)
+    else:
+        abort(404)
 
 
-@app.route('/weights_2')
-def weights_2():
+@app.route('/weights_2/<id>', methods=['GET','POST'])
+@app.route('/weights_2/<id>/<table>/<table_title>/<source>', methods=['GET','POST'])
+def weights_2(id, table=None, table_title=None, source=None):
 
     print(request)
-    dataframe = app_methods.get_display_data_json(session['dw_table'], session['id'], session['dw_source'])
 
-    table_title = session['dw_title']
-    return render_template('/projects/legacy/john/social/weights_2.html',
-                           table_title=table_title,
-                           table=dataframe)
+    if id:
+        if table:
+            dataframe = app_methods.get_display_data_json(table, id, source)
+
+            return render_template('/projects/legacy/john/social/weights_2.html',
+                                   table_title=table_title,
+                                   table=dataframe,
+                                   run_id=id)
+        else:
+            return redirect(url_for('weights', run_id=id), code=302)
+    else:
+        abort(404)
 
 
 @app.route('/export_data/<run_id>')

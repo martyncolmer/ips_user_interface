@@ -104,13 +104,13 @@
 	<div class="wrapper">
 		<div class="col-8 top_40_extra_space">
 
-			<form id="run" action="#" class="form">
+			<form id="run" action="/weights_2/{{run_id}}" class="form" method="POST">
 
 				<div class="field">
 			        <label class="label venus " for="text-input">{{table_title}} </label>
 
 			        <table class="table table__dense">
-						{% if table.columns.values.any() %}
+						{% if table.values.any() %}
 							<thead class="table--head">
 								{% for column in table.columns.values %}
 									<th class="table--header--cell"> {{ column | replace('_', ' ') | title }} </th>
@@ -129,9 +129,6 @@
 							<div class="top_50_extra_space">
 								<div class="panel panel--simple panel--info">
 									<div class="panel__body">
-										<!--
-										<strong class="u-mb-s u-d-b">Simple info panel - separate</strong>
-										-->
 										<p class="mars">No Records to show... </p>
 										<p></p>
 									</div>
@@ -169,7 +166,7 @@
 				    <!--
 				    <button class="btn btn--neutral">Cancel</button>
 					-->
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <label><a href="Dashboard_completed.html">Close</a></label>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <label><a href="/weights/{{run_id}}">Close</a></label>
 				</div>
 
 			</form>
