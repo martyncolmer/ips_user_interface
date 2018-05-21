@@ -30,11 +30,11 @@ def dashboard():
 
     # Get the records and separate the headers and values
     records = app_methods.get_runs()
-    header = ['Run_ID', 'Run_Name', 'Run_Description', 'Start_Date', 'End_Date', 'Run_Status', 'Run Type']
+    header = ['Run_ID', 'Run_Name', 'Run_Description', 'Start_Date', 'End_Date', 'Type', 'Status']
 
     # Setup key value pairs for displaying run information
-    run_statuses = {'0': 'Live', '1': 'Published', '2': 'Test', '3': 'Deleted'}
-    run_types = {'1': 'MainRun', '2': 'ShiftRun', '5': 'IPSRun', '3': 'NonRespRUN', '6': 'IPSRunFR02'}
+    run_types = {'0': 'Test', '1': 'Live', '2': 'Deleted'}
+    run_statuses = {'0': 'Ready', '1': 'In Progress', '2': 'Completed', '3': 'Failed'}
 
     # Reformat values to be displayed on the UI
     for record in records:
@@ -52,7 +52,6 @@ def dashboard():
         if 'search_button' in request.form:
             search_activity = request.form['search_activity']
             filter_value = request.form['run_type_filter']
-
             # If the filer is -1 then no filter to apply otherwise filter using the run_status value
             if request.form['run_type_filter'] != '-1':
                 records = [x for x in records
@@ -61,7 +60,7 @@ def dashboard():
                                search_activity.lower() in x['desc'].lower() or
                                search_activity.lower() in x['start_date'].lower() or
                                search_activity.lower() in x['end_date'].lower()) and
-                           run_statuses[filter_value].lower() == x['status'].lower()]
+                           run_types[filter_value].lower() == x['type'].lower()]
             else:
                 records = [x for x in records
                            if search_activity.lower() in x['id'].lower() or

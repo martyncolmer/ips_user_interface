@@ -12,10 +12,9 @@ class SearchActivityForm(FlaskForm):
     search_button = SubmitField(label='Search')
     advanced_search = SubmitField(label='Advanced search')
     run_type_list = [('-1', 'All Runs'),
-                     ('0', 'Live'),
-                     ('1', 'Published'),
-                     ('2', 'Test'),
-                     ('3', 'Deleted')]
+                     ('0', 'Test'),
+                     ('1', 'Live'),
+                     ('2', 'Deleted')]
     run_type_filter = SelectField(label='RunType', choices=run_type_list)
 
 
