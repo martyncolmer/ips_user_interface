@@ -2,8 +2,7 @@ import os
 import csv
 import requests
 import json
-
-APP_DIR = os.path.dirname(__file__)
+import pandas
 
 
 def create_run(unique_id, run_name, run_description, start_date, end_date, run_status='0', run_type='6'):
@@ -24,14 +23,7 @@ def create_run(unique_id, run_name, run_description, start_date, end_date, run_s
     new_run['end_date'] = end_date
     new_run['status'] = run_status
     new_run['type'] = run_type
-
     requests.post("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs", json=new_run)
-
-    # Commented out old csv method as json replaced, once comfortably using json this can be deleted.
-    # new_entry = str(unique_id) + "," + run_name + "," + run_description + "," + start_date + "," + end_date + "," + run_status + "," + run_type + "\n"
-    # f = open('../webapp/resources/run_list.csv', 'a')
-    # f.write(new_entry)
-    # f.close()
 
 
 def get_system_info():
@@ -41,28 +33,18 @@ def get_system_info():
     :return: List of records
     """
 
-    f = open(os.path.join(APP_DIR, '../webapp/resources/ips_system_info.csv'), encoding='utf-8')
+    f = open('../webapp/resources/ips_system_info.csv', encoding='utf-8')
     reader = csv.reader(f)
     records = list(reader)
     f.close()
 
     return records
 
-def get_runs_json():
 
-    requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs")
+def get_runs():
+
     response = requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs")
     return json.loads(response.content)
-
-
-def get_runs_csv():
-    """Read csv and return as a list of lists."""
-
-    f = open(os.path.join(APP_DIR, '../webapp/resources/run_list.csv'), encoding='utf-8')
-    reader = csv.reader(f)
-    records = list(reader)
-
-    return records
 
 
 def get_run(run_id):
@@ -73,3 +55,113 @@ def get_run(run_id):
     for x in runs:
         if x['id'] == run_id:
             return x
+
+
+def get_display_data(table_name, source, run_id):
+
+    column_sets = {'SHIFT_DATA': ['PORTROUTE', 'WEEKDAY', 'ARRIVEDEPART', 'AM_PM_NIGHT', 'TOTAL'],
+                   'TRAFFIC_DATA': ['PORTROUTE', 'PERIODSTART', 'PERIODEND', 'ARRIVEDEPART', 'AM_PM_NIGHT', 'TRAFFICTOTAL', 'HAUL'],
+                   'NON_RESPONSE_DATA': ['PORTROUTE', 'WEEKDAY', 'ARRIVEDEPART', 'AM_PM_NIGHT', 'SAMPINTERVAL', 'MIGTOTAL', 'ORDTOTAL'],
+                   'UNSAMPLED_OOH_DATA': ['PORTROUTE', 'REGION', 'ARRIVEDEPART', 'UNSAMP_TOTAL'],
+                   'PS_SHIFT_DATA': ['SHIFT_PORT_GRP_PV', 'ARRIVEDEPART', 'WEEKDAY_END_PV', 'AM_PM_NIGHT_PV', 'MIGSI',
+                                     'POSS_SHIFT_CROSS', 'SAMP_SHIFT_CROSS', 'MIN_SH_WT', 'MEAN_SH_WT', 'MAX_SH_WT',
+                                     'COUNT_RESPS', 'SUM_SH_WT'],
+                   'PS_NON_RESPONSE': ['NR_PORT_GRP_PV', 'ARRIVEDEPART', 'WEEKDAY_END_PV', 'MEAN_RESPS_SH_WT', 'COUNT_RESPS',
+                                       'PRIOR_SUM', 'GROSS_RESP', 'GNR', 'MEAN_NR_WT'],
+                   'PS_MINIMUMS': ['MINS_PORT_GRP_PV', 'ARRIVEDEPART', 'MINS_CTRY_GRP_PV', 'MINS_NAT_GRP_PV', 'MINS_NAT_GRP_PV',
+                                   'MINS_CTRY_PORT_GRP_PV', 'MINS_CASES', 'FULLS_CASES', 'PRIOR_GROSS_MINS', 'PRIOR_GROSS_FULLS',
+                                   'PRIOR_GROSS_ALL', 'MINS_WT', 'POST_SUM', 'CASES_CARRIED_FWD'],
+                   'PS_TRAFFIC': ['SAMP_PORT_GRP_PV', 'ARRIVEDEPART', 'FOOT_OR_VEHICLE_PV', 'CASES', 'TRAFFICTOTAL',
+                                  'SUM_TRAFFIC_WT', 'TRAFFIC_WT'],
+                   'PS_UNSAMPLED_OOH': ['UNSAMP_PORT_GRP_PV', 'ARRIVEDEPART', 'UNSAMP_REGION_GRP_PV', 'CASES', 'SUM_PRIOR_WT',
+                                        'SUM_UNSAMP_TRAFFIC_WT', 'UNSAMP_TRAFFIC_WT'],
+                   'PS_IMBALANCE': ['FLOW', 'SUM_PRIOR_WT', 'SUM_IMBAL_WT'],
+                   'PS_FINAL': ['SERIAL', 'SHIFT_WT', 'NON_RESPONSE_WT', 'MINS_WT', 'TRAFFIC_WT',
+                                'UNSAMP_TRAFFIC_WT', 'IMBAL_WT', 'FINAL_WT']
+                   }
+
+    connection = get_connection()
+
+    columns = ','.join(column_sets[table_name])
+
+    sql_command = "SELECT " + columns + " FROM " + table_name + " WHERE RUN_ID = '" + run_id + "'"
+
+    if int(source) > 0:
+        sql_command += " AND DATA_SOURCE_ID = " + source
+
+    print(sql_command)
+    df = pandas.read_sql(sql_command, connection)
+
+    return df
+
+
+def get_connection(credentials_file=
+                          r"\\nsdata3\Social_Surveys_team\CASPA\IPS\IPSCredentials_SQLServer.json"):
+    """
+    Author     : thorne1
+    Date       : May 2018
+    Purpose    : Function to connect to database and return connection object
+    Returns    : Connection (Object)
+    Params     : credentials_file is set to default location unless user points elsewhere
+    """
+    pass
+    # Get credentials and decrypt
+    # user = ss.get_keyvalue_from_json("User", credentials_file)
+    # password = ss.get_keyvalue_from_json("Password", credentials_file)
+    # database = ss.get_keyvalue_from_json('Database', credentials_file)
+    # server = ss.get_keyvalue_from_json('Server', credentials_file)
+
+
+    # Commented out due to no longer using pyodbc.
+    # Attempt to connect to the database
+    # try:
+    #     conn = pyodbc.connect(driver="{SQL Server}", server=server, database=database, uid=user, pwd=password,
+    #                           autocommit=True)
+    # except Exception as err:
+    #     print(err)
+    #     return False
+    # else:
+    #     return conn
+
+
+def get_display_data_json(table_name, run_id=None, data_source=None):
+    column_sets = {'SHIFT_DATA': ['PORTROUTE', 'WEEKDAY', 'ARRIVEDEPART', 'AM_PM_NIGHT', 'TOTAL'],
+                   'TRAFFIC_DATA': ['PORTROUTE', 'PERIODSTART', 'PERIODEND', 'ARRIVEDEPART', 'AM_PM_NIGHT', 'TRAFFICTOTAL', 'HAUL'],
+                   'NON_RESPONSE_DATA': ['PORTROUTE', 'WEEKDAY', 'ARRIVEDEPART', 'AM_PM_NIGHT', 'SAMPINTERVAL', 'MIGTOTAL', 'ORDTOTAL'],
+                   'UNSAMPLED_OOH_DATA': ['PORTROUTE', 'REGION', 'ARRIVEDEPART', 'UNSAMP_TOTAL'],
+                   'PS_SHIFT_DATA': ['SHIFT_PORT_GRP_PV', 'ARRIVEDEPART', 'WEEKDAY_END_PV', 'AM_PM_NIGHT_PV', 'MIGSI',
+                                     'POSS_SHIFT_CROSS', 'SAMP_SHIFT_CROSS', 'MIN_SH_WT', 'MEAN_SH_WT', 'MAX_SH_WT',
+                                     'COUNT_RESPS', 'SUM_SH_WT'],
+                   'PS_NON_RESPONSE': ['NR_PORT_GRP_PV', 'ARRIVEDEPART', 'WEEKDAY_END_PV', 'MEAN_RESPS_SH_WT', 'COUNT_RESPS',
+                                       'PRIOR_SUM', 'GROSS_RESP', 'GNR', 'MEAN_NR_WT'],
+                   'PS_MINIMUMS': ['MINS_PORT_GRP_PV', 'ARRIVEDEPART', 'MINS_CTRY_GRP_PV', 'MINS_NAT_GRP_PV', 'MINS_NAT_GRP_PV',
+                                   'MINS_CTRY_PORT_GRP_PV', 'MINS_CASES', 'FULLS_CASES', 'PRIOR_GROSS_MINS', 'PRIOR_GROSS_FULLS',
+                                   'PRIOR_GROSS_ALL', 'MINS_WT', 'POST_SUM', 'CASES_CARRIED_FWD'],
+                   'PS_TRAFFIC': ['SAMP_PORT_GRP_PV', 'ARRIVEDEPART', 'FOOT_OR_VEHICLE_PV', 'CASES', 'TRAFFICTOTAL',
+                                  'SUM_TRAFFIC_WT', 'TRAFFIC_WT'],
+                   'PS_UNSAMPLED_OOH': ['UNSAMP_PORT_GRP_PV', 'ARRIVEDEPART', 'UNSAMP_REGION_GRP_PV', 'CASES', 'SUM_PRIOR_WT',
+                                        'SUM_UNSAMP_TRAFFIC_WT', 'UNSAMP_TRAFFIC_WT'],
+                   'PS_IMBALANCE': ['FLOW', 'SUM_PRIOR_WT', 'SUM_IMBAL_WT'],
+                   'PS_FINAL': ['SERIAL', 'SHIFT_WT', 'NON_RESPONSE_WT', 'MINS_WT', 'TRAFFIC_WT',
+                                'UNSAMP_TRAFFIC_WT', 'IMBAL_WT', 'FINAL_WT']
+                   }
+
+    address = "http://ips-db.apps.cf1.ons.statistics.gov.uk/" + table_name
+    if run_id:
+        address = address + "/" + run_id
+
+    if data_source:
+        address = address + "/" + data_source
+
+    response = requests.get(address)
+    if response.status_code == 200:
+        data = json.loads(response.content)
+        df = pandas.DataFrame.from_dict(data)
+        df = df[column_sets[table_name]]
+    else:
+        if table_name in column_sets:
+            df = pandas.DataFrame(columns=column_sets[table_name])
+        else:
+            df = pandas.DataFrame()
+
+    return df

@@ -27,7 +27,7 @@ class CreateRunForm(FlaskForm):
 
 
 class DateSelectionForm(FlaskForm):
-    months = [('00', 'Select Month'),
+    months = [('', 'Select Month'),
               ('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'),
               ('05', 'May'), ('06', 'June'), ('07', 'July'), ('08', 'August'),
               ('09', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')]
@@ -39,8 +39,23 @@ class DateSelectionForm(FlaskForm):
     s_year = IntegerField(label='Year', validators=[InputRequired(), NumberRange(min=1991, max=now.year + 1)])
 
     e_day = IntegerField(label='Day', validators=[InputRequired(), NumberRange(min=1, max=31)])
-    e_month = SelectField(label='Month', choices=months)
-    e_year = IntegerField(label='Year', validators=[InputRequired(), NumberRange(min=1991, max=now.year + 1)])
+    e_month = SelectField(label='Month', choices=months,validators=[InputRequired()])
+    e_year = IntegerField(label='Year', validators=[InputRequired(), NumberRange(min=1991, max=now.year + 2)])
+
+
+class DataSelectionForm(FlaskForm):
+    data_list = [('', 'Select Data'),
+                 ('SHIFT_DATA|Shift Data|0', 'Shift Data'), ('TRAFFIC_DATA|Traffic Data|0', 'Traffic Data'), ('NON_RESPONSE_DATA|Non response data|0', 'Non response data'),
+                 ('TRAFFIC_DATA|Tunnel data|3', 'Tunnel data'), ('TRAFFIC_DATA|Air data|2', 'Air data'), ('TRAFFIC_DATA|Sea data|1', 'Sea data'),
+                 ('UNSAMPLED_OOH_DATA|Unsampled data|0', 'Unsampled data'),
+                 ('PS_SHIFT_DATA|Shift weight summary|0', 'Shift weight summary'), ('PS_NON_RESPONSE|Non response weight summary|0', 'Non response weight summary'),
+                 ('PS_MINIMUMS|Minimums weight summary|0', 'Minimums weight summary'), ('PS_TRAFFIC|Sampled traffic weight summary|0', 'Sampled traffic weight summary'),
+                 ('PS_UNSAMPLED_OOH|Unsampled traffic weight summary|0', 'Unsampled traffic weight summary|0'), ('PS_IMBALANCE|Imbalance weight summary|0', 'Imbalance weight summary'),
+                 ('PS_FINAL|Final weight summary|0', 'Final weight summary')]
+
+    display_data = SubmitField(label='Display data')
+    data_selection = SelectField(label='Select Data', choices=data_list,validators=[InputRequired()])
+
 
 
 class LoadDataForm(FlaskForm):
