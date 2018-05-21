@@ -5,7 +5,7 @@ import json
 import pandas
 
 
-def create_run(unique_id, run_name, run_description, start_date, end_date, run_status='0', run_type='6'):
+def create_run(unique_id, run_name, run_description, start_date, end_date, run_type='0', run_status='0'):
     """
     Purpose: Creates a new run and adds it to the current list of runs (.csv currently but will be to database).
 
@@ -21,8 +21,8 @@ def create_run(unique_id, run_name, run_description, start_date, end_date, run_s
     new_run['desc'] = run_description
     new_run['start_date'] = start_date
     new_run['end_date'] = end_date
-    new_run['status'] = run_status
     new_run['type'] = run_type
+    new_run['status'] = run_status
     requests.post("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs", json=new_run)
 
 
@@ -163,5 +163,21 @@ def get_display_data_json(table_name, run_id=None, data_source=None):
             df = pandas.DataFrame(columns=column_sets[table_name])
         else:
             df = pandas.DataFrame()
+
+    return df
+
+
+def get_run_status(run_id):
+    address = "http://ips-db.apps.cf1.ons.statistics.gov.uk/run_status/" + run_id
+    if run_id:
+        address = address + "/" + run_id
+
+    response = requests.get(address)
+
+    if response.status_code == 200:
+        data = json.loads(response.content)
+        df = pandas.DataFrame.from_dict(data)
+    else:
+        df = pandas.DataFrame()
 
     return df
