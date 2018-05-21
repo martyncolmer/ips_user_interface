@@ -18,7 +18,7 @@ def test_create_run():
     Purpose: Tests the create_run method's functionality.
     """
     runs = app_methods.get_runs()
-    app_methods.create_run("AUTOMATED-TEST-RUN-ID", "AUTOMATED_TEST_NAME", "This is an **AUTOMATED** test. - DO NOT RUN", "01012018", "01012018", '2', '6')
+    app_methods.create_run("AUTOMATED-TEST-RUN-ID", "AUTOMATED_TEST_NAME", "This is an **AUTOMATED** test. - DO NOT RUN", "01012018", "01012018", '0', '0')
     new_runs = app_methods.get_runs()
 
     # Check no new run has been created (Creation should be declined due to the primary key constraint)
