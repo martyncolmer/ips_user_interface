@@ -231,6 +231,8 @@ def new_run_end():
 @app.route('/reference/<run_id>')
 def reference(run_id):
 
+    status_values = {'0': 'Ready', '1': 'Complete', '2': 'Failed'}
+
     run = app_methods.get_run(run_id)
 
     session['id'] = run['id']
@@ -240,8 +242,14 @@ def reference(run_id):
     session['end_date'] = run['end_date']
     current_run = run
 
+    run_status = app_methods.get_run_status(run['id'])
+
+    for step in run_status:
+        step['STATUS'] = status_values[step['STATUS']]
+
     return render_template('/projects/legacy/john/social/reference.html',
-                           current_run=current_run)
+                           current_run=current_run,
+                           run_status=run_status)
 
 
 @app.route('/weights/<run_id>', methods=['GET', 'POST'])

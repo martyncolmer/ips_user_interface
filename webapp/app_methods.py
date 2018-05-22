@@ -169,15 +169,12 @@ def get_display_data_json(table_name, run_id=None, data_source=None):
 
 def get_run_status(run_id):
     address = "http://ips-db.apps.cf1.ons.statistics.gov.uk/run_status/" + run_id
-    if run_id:
-        address = address + "/" + run_id
 
     response = requests.get(address)
 
     if response.status_code == 200:
-        data = json.loads(response.content)
-        df = pandas.DataFrame.from_dict(data)
+        values = json.loads(response.content)
     else:
-        df = pandas.DataFrame()
+        values = []
 
-    return df
+    return values
