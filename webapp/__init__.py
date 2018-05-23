@@ -15,12 +15,13 @@ def create_app(test_config=None):
         app.config.from_mapping(test_config)
 
     # Register Blueprints
-    from . import dashboard
+    from . import dashboard, system_info
     app.register_blueprint(dashboard.bp)
+    app.register_blueprint(system_info.bp)
 
     # Register Simple Index Page
     @app.route('/')
     def index():
-        return render_template('index.html')
+        return redirect(url_for('dashboard.dashboard_view'))
 
     return app
