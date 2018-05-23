@@ -9,9 +9,8 @@ from webapp.forms import CreateRunForm, DateSelectionForm, SearchActivityForm, D
 import requests
 import pandas as pd
 
-APP_DIR = os.path.dirname(__file__)
 app = Flask(__name__)
-app.secret_key = 'D1GG2I5C00L'
+
 
 
 @app.route('/')
