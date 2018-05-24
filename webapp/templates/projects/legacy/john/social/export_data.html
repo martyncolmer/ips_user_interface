@@ -104,10 +104,10 @@
 	<div class="wrapper">
 		<div class="col-8 top_40_extra_space">
 
-			<form id="run" action="/export_data2" class="form">
+			<form id="run" action="/export_data/{{current_run['id']}}" class="form" method="post">
 
 				<div class="field">
-
+					{{ form.csrf_token }}
 					{{ form.data_selection.label(class="label venus ", for="text-input")}}
 					{{ form.data_selection(class="input input--select", type="submit")}}
 

@@ -1,13 +1,9 @@
-import os
 import csv
 import requests
 import json
-import subprocess
-import datetime
 import pyodbc
 import os
 import shutil
-import survey_support as ss
 
 
 APP_DIR = os.path.dirname(__file__)
@@ -56,6 +52,12 @@ def get_system_info():
     return records
 
 
+def get_runs():
+
+    response = requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs")
+    return json.loads(response.content)
+
+
 def get_runs_json():
 
     requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs")
@@ -83,27 +85,30 @@ def get_run(run_id):
             return x
 
 
-def get_connection(credentials_file=
-                          r"\\nsdata3\Social_Surveys_team\CASPA\IPS\IPSCredentials_SQLServer.json"):
+def get_connection():
     """
-    Author     : thorne1
-    Date       : May 2018
-    Purpose    : Function to connect to database and return connection object
-    Returns    : Connection (Object)
-    Params     : credentials_file is set to default location unless user points elsewhere
+    Author       : Thomas Mahoney
+    Date         : 03 / 04 / 2018
+    Purpose      : Establishes a connection to the SQL Server database and returns the connection object.
+    Parameters   : in_table_name - the IPS survey records for the period.
+                   credentials_file  - file containing the server and login credentials used for connection.
+    Returns      : pyodbc connection object
+    Requirements : NA
+    Dependencies : NA
     """
 
     # Get credentials and decrypt
-    user = ss.get_keyvalue_from_json("User", credentials_file)
-    password = ss.get_keyvalue_from_json("Password", credentials_file)
-    database = ss.get_keyvalue_from_json('Database', credentials_file)
-    server = ss.get_keyvalue_from_json('Server', credentials_file)
+    username = os.getenv("DB_USER_NAME")
+    password = os.getenv("DB_PASSWORD")
+    database = os.getenv("DB_NAME")
+    server = os.getenv("DB_SERVER")
 
     # Attempt to connect to the database
     try:
-        conn = pyodbc.connect(driver="{SQL Server}", server=server, database=database, uid=user, pwd=password,
+        conn = pyodbc.connect(driver="{SQL Server}", server=server, database=database, uid=username, pwd=password,
                               autocommit=True)
     except Exception as err:
+        # database_logger().error(err, exc_info = True)
         print(err)
         return False
     else:
@@ -138,6 +143,3 @@ def cleanse_temp_foler():
                 os.remove(entry.path)
             elif entry.is_dir():
                 shutil.rmtree(entry.path)
-
-
-

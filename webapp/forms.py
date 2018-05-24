@@ -1,10 +1,13 @@
-
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileField, FileRequired, FileAllowed
 from wtforms import IntegerField
 from wtforms import StringField
-from wtforms import SelectField, SubmitField
-from wtforms import TextField
-from wtforms.validators import InputRequired, NumberRange
+from wtforms import SelectField
+from wtforms import SubmitField
+from wtforms import validators
+from wtforms.validators import InputRequired
+from wtforms.validators import NumberRange
+from wtforms.validators import DataRequired
 
 
 class SearchActivityForm(FlaskForm):
@@ -43,6 +46,18 @@ class DateSelectionForm(FlaskForm):
     e_year = IntegerField(label='Year', validators=[InputRequired(), NumberRange(min=1991, max=now.year + 1)])
 
 
+class LoadDataForm(FlaskForm):
+
+    survey_file = FileField(validators=[FileRequired(), FileAllowed(['csv'], 'File must be a .csv file.')])
+    shift_file = FileField(validators=[FileRequired(), FileAllowed(['csv'], 'File must be a .csv file.')])
+    non_response_file = FileField(validators=[FileRequired(), FileAllowed(['csv'], 'File must be a .csv file.')])
+    unsampled_file = FileField(validators=[FileRequired(), FileAllowed(['csv'], 'File must be a .csv file.')])
+    tunnel_file = FileField(validators=[FileRequired(), FileAllowed(['csv'], 'File must be a .csv file.')])
+    sea_file = FileField(validators=[FileRequired(), FileAllowed(['csv'], 'File must be a .csv file.')])
+    air_file = FileField(validators=[FileRequired(), FileAllowed(['csv'], 'File must be a .csv file.')])
+
+
+
 class DataSelectionForm(FlaskForm):
     data_list = [('00', 'Select Data'),
                  ('SHIFT_DATA', 'Shift Data'), ('TRAFFIC_DATA', 'Traffic Data'), ('NON_RESPONSE_DATA', 'Non response data'),
@@ -77,8 +92,7 @@ class ExportSelectionForm(FlaskForm):
                  ("CONTACT", "Contact"),
                  ("MIGRATION", "Migration")]
 
-    filename = TextField('Save as')
+    filename = StringField('Save as', [validators.Length(min=4, max=25)])
+    # # data_selection = SelectField(label='Select Data', choices=data_list, [validators.DataRequired()])
     display_data = SubmitField(label='Export Data')
     data_selection = SelectField(label='Select Data', choices=data_list)
-
-
