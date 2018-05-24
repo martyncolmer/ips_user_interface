@@ -74,7 +74,7 @@ class DataSelectionForm(FlaskForm):
 
 class ExportSelectionForm(FlaskForm):
     """Elinor Thorne"""
-    data_list = [('00', 'Select Data'),
+    data_list = [('', ''),
                  ("SURVEY_SUBSAMPLE", "Survey Subsample"),
                  ("PS_FINAL", "Final Weight Summary"),
                  ("PS_SHIFT_DATA", "Shift"),
@@ -92,7 +92,8 @@ class ExportSelectionForm(FlaskForm):
                  ("CONTACT", "Contact"),
                  ("MIGRATION", "Migration")]
 
-    filename = StringField('Save as', [validators.Length(min=4, max=25)])
-    # # data_selection = SelectField(label='Select Data', choices=data_list, [validators.DataRequired()])
+    filename = StringField('Save as', [validators.Length(min=4, max=25), validators.DataRequired()])
+    data_selection = SelectField([validators.NoneOf("")], label='Select Data',
+                                 choices=data_list)
     display_data = SubmitField(label='Export Data')
     data_selection = SelectField(label='Select Data', choices=data_list)
