@@ -1,5 +1,6 @@
 
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileField, FileRequired, FileAllowed
 from wtforms import IntegerField
 from wtforms import StringField
 from wtforms import SelectField, SubmitField
@@ -41,6 +42,18 @@ class DateSelectionForm(FlaskForm):
     e_day = IntegerField(label='Day', validators=[InputRequired(), NumberRange(min=1, max=31)])
     e_month = SelectField(label='Month', choices=months)
     e_year = IntegerField(label='Year', validators=[InputRequired(), NumberRange(min=1991, max=now.year + 1)])
+
+
+class LoadDataForm(FlaskForm):
+
+    survey_file = FileField(validators=[FileRequired(), FileAllowed(['csv'], 'File must be a .csv file.')])
+    shift_file = FileField(validators=[FileRequired(), FileAllowed(['csv'], 'File must be a .csv file.')])
+    non_response_file = FileField(validators=[FileRequired(), FileAllowed(['csv'], 'File must be a .csv file.')])
+    unsampled_file = FileField(validators=[FileRequired(), FileAllowed(['csv'], 'File must be a .csv file.')])
+    tunnel_file = FileField(validators=[FileRequired(), FileAllowed(['csv'], 'File must be a .csv file.')])
+    sea_file = FileField(validators=[FileRequired(), FileAllowed(['csv'], 'File must be a .csv file.')])
+    air_file = FileField(validators=[FileRequired(), FileAllowed(['csv'], 'File must be a .csv file.')])
+
 
 
 class DataSelectionForm(FlaskForm):
