@@ -217,6 +217,7 @@ def new_run_2(run_id=None):
                            run_id=run_id)
 
 
+# TODO: Implement edit run functionality when how we're dealing with files is determined.
 @app.route('/new_run_3', methods=['GET', 'POST'])
 @app.route('/new_run_3/<run_id>', methods=['GET', 'POST'])
 def new_run_3(run_id=None):
