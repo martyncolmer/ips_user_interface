@@ -56,7 +56,6 @@ class DataSelectionForm(FlaskForm):
     data_selection = SelectField(label='Select Data', choices=data_list,validators=[InputRequired()])
 
 
-
 class LoadDataForm(FlaskForm):
 
     survey_file = FileField(validators=[FileRequired(), FileAllowed(['csv'], 'File must be a .csv file.')])
@@ -68,3 +67,7 @@ class LoadDataForm(FlaskForm):
     air_file = FileField(validators=[FileRequired(), FileAllowed(['csv'], 'File must be a .csv file.')])
 
 
+class ManageRunForm(FlaskForm):
+    run_button = SubmitField(label='Run Selected')
+    edit_button = SubmitField(label='Edit Run')
+    display_button = SubmitField(label='Display Weights')
