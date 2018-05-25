@@ -117,19 +117,28 @@
 
 				<ul class="nav-tabs clearfix u-mb-l" data-tabgroup="first-tab-group">
 				  	<li class="nav-tabs__tab--active"><a class="tab-label" href="#">Manage Run </a></li>
-              		<li class="nav-tabs__tab"><a class="tab-label" href="reference_export.html">Exports (0) </a></li>
+              		<li class="nav-tabs__tab"><a class="tab-label" href="/export_data/{{current_run['id']}}">Exports (0) </a></li>
 				</ul>
-
 					<table class="table table__dense">
 						<thead class="table--head">
-							<th width="70%" class="table--header--cell">&nbsp;&nbsp; Steps</th>
+							<th width="20%" class="table--header--cell">&nbsp;&nbsp;&nbsp; <input type="checkbox" onClick="toggle(this)" />&nbsp;&nbsp;All</th>
+							<th width="60%" class="table--header--cell">&nbsp;&nbsp; Steps</th>
 							<th width="20%" class="table--header--cell">Status</th>
 						</thead>
 						<tbody>
 							{% for step in run_status %}
 								<tr class="table--row">
+									<td width="10%" class="table--cell field__item2">
+										<input class="input--checkbox2" name="step_checkbox" type="checkbox">
+									</td>
 									<td width="70%" class="table--cell">&nbsp; {{step['NUMBER']}}. {{ step['NAME'] }}</td>
-									<td width="20%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ step['STATUS'] }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
+									{% if step['STATUS'] == 'Ready' %}
+										<td width="20%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ step['STATUS'] }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
+									{% elif step['STATUS'] == 'Completed' %}
+										<td width="20%" class="table--cell"><em class="badge-status badge--completed">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ step['STATUS'] }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
+									{% elif step['STATUS'] == 'Failed' %}
+										<td width="20%" class="table--cell"><em class="badge-status badge--pending">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ step['STATUS'] }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
+									{% endif %}
 								</tr>
 							{% endfor %}
 						</tbody>
@@ -144,12 +153,17 @@
 
 				<div class="grid__col">
 
-					<form id="run" action="/weights/{{current_run['id']}}" class="form">
+					<form id="run" class="form", method="POST">
 
 						<div class="top_50_extra_space">
-							<button class="btn btn--primary" type="submit">Display weights</button>
+							{{ form.csrf_token }}
+							{% if current_run['status'] == '2'%}
+								{{ form.display_button(class="btn btn--primary", type="submit") }}
+							{% else %}
+								{{ form.run_button(class="btn btn--primary", type="submit") }}
+							{% endif %}
 							&nbsp;&nbsp;&nbsp;
-							<a class="btn btn--secondary btn--border" href="new_run_edit.html">Edit run</a>
+							{{ form.edit_button(class="btn btn--secondary btn--border", type="submit") }}
 						</div>
 
 					</form>
@@ -185,6 +199,14 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.14/semantic.min.js'></script>
 
+<script language="JavaScript">
+function toggle(source) {
+  checkboxes = document.getElementsByName('step_checkbox');
+  for(var i=0, n=checkboxes.length;i<n;i++) {
+    checkboxes[i].checked = source.checked;
+  }
+}
+</script>
 
 <!-- <script>
 	jQuery(document).ready(function($) {
