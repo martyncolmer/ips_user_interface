@@ -5,7 +5,7 @@ import uuid
 bp = Blueprint('new_run', __name__, url_prefix='/new_run', static_folder='static')
 
 
-@bp.route('_1', methods=['GET', 'POST'])
+@bp.route('/new_run_1', methods=['GET', 'POST'])
 def new_run_1():
     print(request.method)
     form = CreateRunForm()
