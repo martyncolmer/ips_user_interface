@@ -11,7 +11,7 @@ from webapp.forms import DataSelectionForm
 from webapp.forms import ExportSelectionForm
 from webapp.forms import LoadDataForm
 from webapp.app_methods import export_csv
-from webapp.app_methods import cleanse_temp_foler
+from webapp.app_methods import cleanse_temp_folder
 
 APP_DIR = os.path.dirname(__file__)
 app = Flask(__name__)
@@ -346,7 +346,7 @@ def export_data(run_id):
         memory_file.seek(0)
 
         # Remove CSV from temp folder
-        cleanse_temp_foler()
+        # cleanse_temp_folder()
 
         return send_file(memory_file,
                          attachment_filename='data.zip',

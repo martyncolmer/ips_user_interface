@@ -115,10 +115,12 @@
 
 				<div class="field">
 					<label class="label venus " for="text-input">Save file as</label>
+					{{ form.csrf_token }}
 					{{ form.filename(class="input input--text", type="text", id="text-input") }}
 				</div>
 
 				<div class="top_50_extra_space">
+					{{ form.csrf_token }}
 					{{ form.display_data(class="btn btn--primary", type="submit") }}
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<label><a href="dashboard.html">Cancel</a></label>

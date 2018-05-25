@@ -4,6 +4,8 @@ import json
 import pyodbc
 import os
 import shutil
+import pandas as pd
+import sys
 
 
 APP_DIR = os.path.dirname(__file__)
@@ -103,6 +105,12 @@ def get_connection():
     database = os.getenv("DB_NAME")
     server = os.getenv("DB_SERVER")
 
+    # My environment variables keep disappearing >:-|
+    print("Username: {}".format(username))
+    print("Password: {}".format(password))
+    print("Database: {}".format(database))
+    print("Server: {}".format(server))
+
     # Attempt to connect to the database
     try:
         conn = pyodbc.connect(driver="{SQL Server}", server=server, database=database, uid=username, pwd=password,
@@ -134,7 +142,7 @@ def export_csv(table_name):
         writer.writerows(cur.fetchall())
 
 
-def cleanse_temp_foler():
+def cleanse_temp_folder():
     path = r"..\webapp\temp"
 
     with os.scandir(path) as entries:
@@ -143,3 +151,67 @@ def cleanse_temp_foler():
                 os.remove(entry.path)
             elif entry.is_dir():
                 shutil.rmtree(entry.path)
+
+
+def insert_clob(run_id):
+    # Retrieve and convert file to BLOB
+    file = r'C:\Users\thorne1\PycharmProjects\ips_user_interface\webapp\temp\COLUMN_LOOKUP.csv'
+    with open(file, 'r') as f:
+        data = f.read()
+
+    # Create and execute SQL query
+    sql = """
+    INSERT INTO EXPORT_DATA_DOWNLOAD
+    VALUES('{}', '{}')
+    """.format(run_id, data)
+
+    try:
+        conn = get_connection()
+        cur = conn.cursor()
+        cur.execute(sql)
+    except Exception as err:
+        print(err)
+
+
+def export_clob(run_id):
+
+    sql = """
+    SELECT DOWNLOADABLE_DATA
+    FROM EXPORT_DATA_DOWNLOAD
+    WHERE ED_ID = '{}'
+    """.format(run_id)
+
+    try:
+        conn = get_connection()
+        cur = conn.cursor()
+        cur.execute(sql)
+        data = cur.fetchall()
+    except Exception as err:
+        print(err)
+    else:
+        # Retrieve string from SQL and cleanse
+        stringy = str((data[0]))
+        stringy = stringy.replace(" ", "").replace("(", "").replace(")", "").replace("'", "").replace("'", "").replace(
+            "\\n", " ")
+
+        # Convert string to list and remove last empty item
+        listy = stringy.split(" ")
+        listy.pop()
+
+        # Export list to csv
+        with open(r"\\nsdata3\Social_Surveys_team\CASPA\IPS\El's Temp VDI Folder\exporty.csv", "w",
+                  newline="") as csvfile:
+            writer = csv.writer(csvfile)
+            for item in listy:
+                # Create row of data from each item in list and commit to CSV
+                row = item.split(",")
+                writer.writerow(row)
+
+
+if __name__ == "__main__":
+    bad_run_id = "9e5c1872-3f8e-4ae5-85dc-c67a602d011e"
+    good_run_id = "9c67a602d011e"
+    # insert_clob(run_id)
+
+    # table_name = "COLUMN_LOOKUP"
+    export_clob(bad_run_id)
