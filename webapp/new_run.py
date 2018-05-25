@@ -1,5 +1,5 @@
 from flask import request, render_template, Blueprint, session, redirect, url_for
-from .forms import CreateRunForm, DateSelectionForm
+from .forms import CreateRunForm, DateSelectionForm, LoadDataForm
 from . import app_methods
 import uuid
 
@@ -79,3 +79,60 @@ def new_run_2():
     return render_template('/projects/legacy/john/social/new_run_2.html',
                            form=form,
                            last_entry=last_entry)
+
+
+@bp.route('/new_run_3', methods = ['GET', 'POST'])
+def new_run_3():
+    form = LoadDataForm()
+
+    error = False
+
+    if form.validate_on_submit():
+        # Functionality has been written. Stubbed for now as we are unsure yet as to the location and method
+        # of storing the csv's in a file system. Until we can access DAP and know where to store, this will remain.
+        # The below code shows the method for retrieving the filename and data from the uploaded files.
+
+        survey_data = form.survey_file.data
+        survey_filename = form.survey_file.name
+        return redirect(url_for('new_run.new_run_4'))
+    elif request.method == 'GET':
+        pass
+    else:
+        error = True
+
+    return render_template('/projects/legacy/john/social/new_run_3.html', form = form, error = error)
+
+
+@bp.route('/new_run_4')
+def new_run_4():
+    return render_template('/projects/legacy/john/social/new_run_4.html')
+
+
+@bp.route('/new_run_5')
+def new_run_5():
+    return render_template('/projects/legacy/john/social/new_run_5.html')
+
+
+@bp.route('/new_run_6')
+def new_run_6():
+    return render_template('/projects/legacy/john/social/new_run_6.html')
+
+
+@bp.route('/new_run_7')
+def new_run_7():
+    return render_template('/projects/legacy/john/social/new_run_7.html')
+
+
+@bp.route('/new_run_8', methods=['GET', 'POST'])
+def new_run_8():
+    return render_template('/projects/legacy/john/social/new_run_8.html')
+
+
+@bp.route('/new_run_9')
+def new_run_9():
+    return render_template('/projects/legacy/john/social/new_run_9.html')
+
+
+@bp.route('/new_run_end')
+def new_run_end():
+    return render_template('/projects/legacy/john/social/new_run_end.html')
