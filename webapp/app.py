@@ -16,7 +16,7 @@ app.secret_key = 'D1GG2I5C00L'
 
 @app.route('/')
 def index():
-    return redirect(url_for('dashboard'), code=302)
+    return redirect(url_for('dashboard'), code = 302)
 
 
 @app.route('/login')
@@ -165,7 +165,6 @@ def new_run_2():
         last_entry['e_year'] = ""
         print("FOUND NOTHING")
 
-
     return render_template('/projects/legacy/john/social/new_run_2.html',
                            form=form,
                            last_entry=last_entry)
@@ -193,9 +192,15 @@ def new_run_3():
     return render_template('/projects/legacy/john/social/new_run_3.html', form = form, error = error)
 
 
+@app.route('/new_run_process_variables')
+def new_run_process_variables():
+    return render_template('/projects/legacy/john/social/new_run_process_variables.html')
+
+
 @app.route('/new_run_4')
 def new_run_4():
-    return render_template('/projects/legacy/john/social/new_run_4.html')
+    df = pd.read_excel('S:\CASPA\IPS\Testing\ProcessVariables\Process_Variables_Py.xlsx', sheet_name='Sheet1')
+    return render_template('/projects/legacy/john/social/new_run_4.html', table = df)
 
 
 @app.route('/new_run_5')

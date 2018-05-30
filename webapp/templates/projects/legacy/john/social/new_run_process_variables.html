@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en-gb" dir="ltr" class="no-js"> 
+<html lang="en-gb" dir="ltr" class="no-js">
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -90,10 +90,10 @@
 
 			<div class="group top_40_extra_space">
 				<div>
-					<h2 class="pluto grey_text ">Step 4 of 7</h2>				
+					<h2 class="pluto grey_text ">Step 4 of 7</h2>
 				</div>
 				<div>
-					<h2 class="saturn">Select process variables </h2>				
+					<h2 class="saturn">Select process variables set </h2>
 				</div>
 			</div>
 
@@ -133,7 +133,7 @@
 				    <button class="btn btn--primary" type="submit">Save and continue</button>
 				    &nbsp;&nbsp;&nbsp;
 				    <a class="btn btn--secondary btn--border" href="/new_run_3">Back</a>
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<label><a href="/dashboard">Cancel</a></label>
 				</div>
 
@@ -157,34 +157,96 @@
 					<div class="group">
 						<div class="col-8 top_40_extra_space">
 							<table class="table table__dense">
-						{% if table.values.any() %}
-							<thead class="table--head">
-									<th width="30%" class="table--header--cell">{{table.columns.values[3]}}</th>
-									<th width="50%" class="table--header--cell">{{table.columns.values[5]}}</th>
-							</thead>
-							<tbody>
-								{% for index, row in table.iterrows() %}
+								<thead class="table--head">
+									<th width="10%" class="table--header--cell">&nbsp;&nbsp; Select</th>
+									<th width="30%" class="table--header--cell">Name</th>
+									<th width="50%" class="table--header--cell">Description</th>
+									<th width="10%" class="table--header--cell"> </th>
+								</thead>
+								<tbody>
 									<tr class="table--row">
-
-                                        <td><div style="width:150px; height:40px; overflow:hidden">&nbsp;&nbsp;{{row[3]}}</div></td>
-                                        <td><div style="width:150px; height:40px; overflow:hidden">&nbsp;&nbsp;{{row[5]}}</div></td>
-
+										<td width="10%" class="table--cell field__item2">
+											<input class="input--radio2" type="radio">
+										</td>
+										<td width="30%" class="table--cell">{{Name}}</td>
+										<td width="50%" class="table--cell">Use a blank template</td>
+										<td width="10%" class="table--cell"><a href="#"></a></td>
 									</tr>
-								{% endfor %}
-							</tbody>
-						{%else%}
-							<div class="top_50_extra_space">
-								<div class="panel panel--simple panel--info">
-									<div class="panel__body">
-										<p class="mars">No Records to show... </p>
-										<p></p>
-									</div>
-								</div>
-							</div>
+									<tr class="table--row">
+										<td width="10%" class="table--cell field__item2">
+											<input class="input--radio2" type="radio">
+										</td>
+										<td width="30%" class="table--cell">Lorum ipsum</td>
+										<td width="50%" class="table--cell">Colabra tentare sempre et vinculas supra </td>
+									</tr>
+									<tr class="table--row">
+										<td width="10%" class="table--cell field__item2">
+											<input class="input--radio2" type="radio">
+										</td>
+										<td width="30%" class="table--cell">Roman et senatus </td>
+										<td width="50%" class="table--cell">Caesar retrosas dolore causare </td>
+									</tr>
+									<tr class="table--row">
+										<td width="10%" class="table--cell field__item2">
+											<input class="input--radio2" type="radio">
+										</td>
+										<td width="30%" class="table--cell">Caesar dolore sumus</td>
+										<td width="50%" class="table--cell">Tentare vinculas supra domus populare </td>
+									</tr>
+									<tr class="table--row">
+										<td width="10%" class="table--cell field__item2">
+											<input class="input--radio2" type="radio">
+										</td>
+										<td width="30%" class="table--cell">Simulas pulcras</td>
+										<td width="50%" class="table--cell">Doloris et corpus sintuas </td>
+									</tr>
+									<tr class="table--row">
+										<td width="10%" class="table--cell field__item2">
+											<input class="input--radio2" type="radio">
+										</td>
+										<td width="30%" class="table--cell">Aliquam bondare</td>
+										<td width="50%" class="table--cell">Senatus oblicuas sempre et donates </td>
+									</tr>
+									<tr class="table--row">
+										<td width="10%" class="table--cell field__item2">
+											<input class="input--radio2" type="radio">
+										</td>
+										<td width="30%" class="table--cell">Sumus petrorianus</td>
+										<td width="50%" class="table--cell">Illum provocare sempre aquas est </td>
+									</tr>
+									<tr class="table--row">
+										<td width="10%" class="table--cell field__item2">
+											<input class="input--radio2" type="radio">
+										</td>
+										<td width="30%" class="table--cell">Dolori et mantore</td>
+										<td width="50%" class="table--cell">Populas sempre senatus contevas voluminas </td>
+									</tr>
+									<tr class="table--row">
+										<td width="10%" class="table--cell field__item2">
+											<input class="input--radio2" type="radio">
+										</td>
+										<td width="30%" class="table--cell">Colabra pentas supra</td>
+										<td width="50%" class="table--cell">Iluminas donatus aliquam colabra sempre </td>
+									</tr>
+									<tr class="table--row">
+										<td width="10%" class="table--cell field__item2">
+											<input class="input--radio2" type="radio">
+										</td>
+										<td width="30%" class="table--cell">Ipsum bondu domus</td>
+										<td width="50%" class="table--cell">Dolore reoman senatus causare totus </td>
+									</tr>
+									<tr class="table--row">
+										<td width="10%" class="table--cell field__item2">
+											<input class="input--radio2" type="radio">
+										</td>
+										<td width="30%" class="table--cell">Vinculas sempre</td>
+										<td width="50%" class="table--cell">Ambiguas tentare et dolore provocas </td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
 
-						{%endif%}
 
-			        	</table>
 					</div>
 
 					<div class="wrapper">
@@ -197,7 +259,7 @@
 									<a href="#">4</a>&nbsp;
 									<a href="#">5</a>&nbsp;
 									<a href="#">6</a>&nbsp;
-									<a href="#">7</a>&nbsp; 
+									<a href="#">7</a>&nbsp;
 									<a href="#">8</a>&nbsp;
 									<a href="#">9</a>&nbsp;
 									<a href="#">10</a>&nbsp;
@@ -213,7 +275,7 @@
 					<button class="btn btn--primary" type="submit">Save and continue</button>
 					&nbsp;&nbsp;&nbsp;
 					<a class="btn btn--secondary btn--border" href="/new_run_3">Back</a>
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<label><a href="/dashboard">Cancel</a></label>
 				</div>
 
@@ -263,26 +325,26 @@ $('.ui.dropdown').dropdown();
 
 
 <script type="text/javascript">
- 
+
 window.onload = function(){
- 
+
   var form = document.getElementById("form-sign-in");
 
   form.onsubmit = function(e) {
     e.preventDefault();
     var userInput = document.getElementById('text-input').value;
-   
+
     if (userInput.includes('123')) {
-   
+
       window.location = 'contributor.html';
-   
+
     } else if (userInput.includes('cme')) {
       window.location = 'search_results.html';
     }
     return false;
   }
 };
- 
+
 </script>​
 
 
