@@ -1,7 +1,5 @@
 import os
 import uuid
-import io
-import zipfile
 from flask import Flask, render_template, session, request, url_for, redirect, send_file, abort, flash
 from webapp import app_methods
 from webapp.forms import CreateRunForm
@@ -12,8 +10,6 @@ from webapp.forms import ExportSelectionForm
 from webapp.forms import LoadDataForm
 from webapp.app_methods import export_csv
 from webapp.app_methods import insert_clob
-from webapp.app_methods import cleanse_temp_folder
-from webapp.app_methods import export_clob
 
 APP_DIR = os.path.dirname(__file__)
 app = Flask(__name__)
@@ -341,59 +337,10 @@ def export_data(run_id):
         # Insert data to clob
         insert_clob(table_name, run_id)
 
-        # Create CSV from CLOB
-        # export_clob(session['current_run_id'], target_filename)
-
-        # Zip it
-        # source = r"\\nsdata3\Social_Surveys_team\CASPA\IPS\El's Temp VDI Folder\{}.csv".format(target_filename)
-        # memory_file = io.BytesIO()
-        # zipfile.ZipFile(memory_file, mode='w').write(source, target_filename + ".csv")
-        # memory_file.seek(0)
-
-        # Cleanse temp folder
-        # cleanse_temp_folder()
-
         # Return new listy page
         return render_template('/projects/legacy/john/social/reference_export.html',
                                current_run=current_run)
-        # return redirect(url_for('reference_export'), run_id=run['id'], code=302)
-
-        # return send_file(memory_file,
-        #                  attachment_filename='data.zip',
-        #                  as_attachment=True)
     return render_template('/projects/legacy/john/social/export_data.html', form=form, current_run=current_run)
-
-
-# @app.route('/export_data2')
-# def export_data2():
-#     # print("export_data2()")
-#     # print(request)
-#     # print(table_name)
-#
-#     # Get values from front end
-#     table_name = request.values['data_selection']
-#     target_filename = request.values['filename']
-#     # print(target_filename)
-#
-#     # TODO: Create temp folder in export_csv
-#     # Create file and memory locations
-#     source = r"..\webapp\temp\{}.csv".format(table_name)
-#     memory_file = io.BytesIO()
-#
-#     # Create CSV
-#     export_csv(table_name)
-#
-#     # Zip it
-#     zipfile.ZipFile(memory_file, mode='w').write(source, target_filename+".csv")
-#     memory_file.seek(0)
-#
-#     # Remove CSV from temp folder
-#     cleanse_temp_foler()
-#
-#     return send_file(memory_file,
-#                      attachment_filename='data.zip',
-#                      as_attachment=True)
-
 
 
 if __name__ == '__main__':
