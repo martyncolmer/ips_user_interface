@@ -166,8 +166,8 @@
 								{% for index, row in table.iterrows() %}
 									<tr class="table--row">
 
-                                        <td><div style="width:150px; height:40px; overflow:hidden">&nbsp;&nbsp;{{row[3]}}</div></td>
-                                        <td><div style="width:150px; height:40px; overflow:hidden">&nbsp;&nbsp;{{row[5]}}</div></td>
+                                        <td><div style="width:150px; height:40px; text_overflow: ellipsis; overflow:hidden">&nbsp;&nbsp;{{row[3]}}</div></td>
+                                        <td><div style="width:150px; height:40px; text_overflow: ellipsis; overflow:hidden">&nbsp;&nbsp;{{row[5]}}</div></td>
 
 									</tr>
 								{% endfor %}
@@ -209,14 +209,14 @@
 
 				</div>
 
-				<div class="top_50_extra_space">
-					<button class="btn btn--primary" type="submit">Save and continue</button>
-					&nbsp;&nbsp;&nbsp;
-					<a class="btn btn--secondary btn--border" href="/new_run_3">Back</a>
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-					<label><a href="/dashboard">Cancel</a></label>
-				</div>
-
+                    <div class="top_50_extra_space">
+                        <button class="btn btn--primary" type="submit">Save and continue</button>
+                        &nbsp;&nbsp;&nbsp;
+                        <a class="btn btn--secondary btn--border" href="/new_run_3">Back</a>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <label><a href="/dashboard">Cancel</a></label>
+                    </div>
+                </div>
 			</form>
 
 		</div>
