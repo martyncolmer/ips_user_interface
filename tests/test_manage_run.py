@@ -95,7 +95,7 @@ def test_manage_run_press_manage_run_tab(client):
     assert b'This field is required.' not in res.data
 
 
-def test_manage_run_press_manage_run_tab(client):
+def test_manage_run_press_export_tab(client):
 
     with app.test_request_context():
         # Setup form submission information
