@@ -291,8 +291,13 @@ def reference(run_id):
     form = ManageRunForm();
 
     status_values = {'0': 'Ready', '1': 'Completed', '2': 'Failed'}
+    run_types = {'0': 'Test', '1': 'Live', '2': 'Deleted'}
+    run_statuses = {'0': 'Ready', '1': 'In Progress', '2': 'Completed', '3': 'Failed'}
 
     run = app_methods.get_run(run_id)
+
+    if not run:
+        abort(404)
 
     session['id'] = run['id']
     session['run_name'] = run['name']
@@ -301,6 +306,13 @@ def reference(run_id):
     session['end_date'] = run['end_date']
     current_run = run
 
+    current_run['start_date'] = current_run['start_date'][:2] + "-" + current_run['start_date'][2:4] + "-" + current_run['start_date'][4:]
+    current_run['end_date'] = current_run['end_date'][:2] + "-" + current_run['end_date'][2:4] + "-" + current_run['end_date'][4:]
+    current_run['status'] = run_statuses[current_run['status']]
+    current_run['type'] = run_types[current_run['type']]
+
+    form.validate()
+    flash_errors(form=form)
     # If this is a post then validate if needed
     if request.method == 'POST' and form.validate():
             print(request.form)
@@ -311,6 +323,10 @@ def reference(run_id):
                 return redirect('/weights/' + current_run['id'], code=302)
             elif 'edit_button' in request.form:
                 return redirect('/new_run_1/' + current_run['id'], code=302)
+            elif 'export_button' in request.form:
+                return redirect('/export_data/' + current_run['id'], code=302)
+            elif 'manage_run_button' in request.form:
+                return redirect('/reference/' + current_run['id'], code=302)
 
     run_status = app_methods.get_run_steps(run['id'])
 
