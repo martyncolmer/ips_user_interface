@@ -1,8 +1,9 @@
-from webapp.app import app
 import pytest
 from webapp.forms import LoadDataForm
 from werkzeug.datastructures import FileStorage
+import webapp as web
 
+app = web.create_app()
 
 @pytest.fixture()
 def test_client():
@@ -19,21 +20,21 @@ def test_client():
 
 # Test that the standard page renders correctly.
 def test_new_run_3(test_client):
-    res = test_client.get('/new_run_3')
+    res = test_client.get('/new_run/new_run_3')
     assert res.status_code == 200
     assert b'File type accepted is .csv' in res.data
 
 
 # Test that no error messages display when first seeing the basic page.
 def test_no_errors_new_run_3(test_client):
-    res = test_client.get('/new_run_3')
+    res = test_client.get('/new_run/new_run_3')
     assert b'This field is required.' not in res.data
     assert b'All fields must be filled with .csv files only.' not in res.data
 
 
 # Test that an error is displayed if no files are given.
 def test_missing_files_error_new_run_3(test_client):
-    res = test_client.post('/new_run_3')
+    res = test_client.post('/new_run/new_run_3')
     assert res.status_code == 200
     assert b'This field is required.' in res.data
 
@@ -51,6 +52,6 @@ def test_no_error_new_run_3_files(test_client):
                             sea_file=dummy_file,
                             air_file=dummy_file)
 
-        res = test_client.post('/new_run_3', data=form.data, follow_redirects=True)
+        res = test_client.post('/new_run/new_run_3', data=form.data, follow_redirects=True)
     assert res.status_code == 200
     assert b'Select process variables' in res.data

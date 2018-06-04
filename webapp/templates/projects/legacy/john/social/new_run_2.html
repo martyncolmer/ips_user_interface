@@ -134,9 +134,9 @@
 	<div class="wrapper">
 		<div class="col-8 top_40_extra_space">
 			{% if run_id %}
-			<form id="run" action="/new_run_2/{{run_id}}" class="form" method="post">
+			<form id="run" action="/new_run/new_run_2/{{run_id}}" class="form" method="post">
 			{% else %}
-			<form id="run" action="/new_run_2" class="form" method="post">
+			<form id="run" action="/new_run/new_run_2" class="form" method="post">
 			{% endif %}
 
 				<fieldset class="fieldgroup fieldgroup--date" data-qa="widget-date">
@@ -159,7 +159,7 @@
 				        <div class="field field--select field--month">
 							{{ form.csrf_token }}
 							{{ form.s_month.label(class="label mercury", for="input-date-range-from-month")}}
-							{{ form.s_month(class="input input--select", value= last_entry['s_month'])}}
+							{{ form.s_month(class="input input--select", value = last_entry['s_month'])}}
 							{% if form.s_month.errors %}
 							<ul>
 								{% for error_message in form.s_month.errors %}
@@ -208,7 +208,7 @@
 				        <div class="field field--select field--month">
 							{{ form.csrf_token }}
 							{{ form.e_month.label(class="label mercury", for="input-date-range-from-month")}}
-							{{ form.e_month(class="input input--select", value= last_entry['e_month'])}}
+							{{ form.e_month(class="input input--select", value = last_entry['e_month'])}}
 
 							{% if form.e_month.errors %}
 							<ul>
@@ -240,9 +240,9 @@
 			    <div class="top_60_extra_space">
 				    <button class="btn btn--primary" type="submit" name="submit" value="create_run">Save and continue</button>
 				    &nbsp;&nbsp;&nbsp;
-				    <a class="btn btn--secondary btn--border" href="/new_run_1">Back</a>
+				    <a class="btn btn--secondary btn--border" href="/new_run/new_run_1">Back</a>
 					{% if run_id %}
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <label><a href="/reference/{{run_id}}">Cancel</a></label>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <label><a href="/manage_run/{{run_id}}">Cancel</a></label>
 					{% else %}
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <label><a href="/dashboard">Cancel</a></label>
 					{% endif %}

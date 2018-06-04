@@ -57,7 +57,7 @@ def get_system_info():
     :return: List of records
     """
 
-    f = open('../webapp/resources/ips_system_info.csv', encoding='utf-8')
+    f = open('webapp/resources/ips_system_info.csv', encoding='utf-8')
     reader = csv.reader(f)
     records = list(reader)
     f.close()
