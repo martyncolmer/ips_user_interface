@@ -109,7 +109,7 @@
 	<div class="wrapper">
 		<div class="col-8 top_40_extra_space">
 
-			<form id="run" action="/weights/{{current_run['id']}}" class="form" method = 'POST'>
+			<form id="run" action="/manage_run/weights/{{current_run['id']}}" class="form" method = 'POST'>
 
 				{% if form.data_selection.errors %}
 					<div class="collator-item">
@@ -167,7 +167,7 @@
 				    <!--
 				    <button class="btn btn--neutral">Cancel</button>
 					-->
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <label><a href="/reference/{{current_run['id']}}">Cancel</a></label>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <label><a href="/manage_run/{{current_run['id']}}">Cancel</a></label>
 				</div>
 
 			</form>

@@ -1,11 +1,8 @@
-import os
-from webapp.app import app
-import unittest
-import tempfile
-from werkzeug.datastructures import FileStorage
 from webapp.forms import DataSelectionForm
 import pytest
+import webapp as web
 
+app = web.create_app()
 
 @pytest.fixture()
 def client():
@@ -24,14 +21,14 @@ def client():
 
 def test_weights_get(client):
 
-    res = client.get('/weights')
+    res = client.get('/manage_run/weights')
     assert res.status_code == 404
 
-    res = client.get('/weights/9e5c1872-3f8e-4ae5-85dc-c67a602d011e')
+    res = client.get('/manage_run/weights/9e5c1872-3f8e-4ae5-85dc-c67a602d011e')
     assert res.status_code == 200
     assert b'9e5c1872-3f8e-4ae5-85dc-c67a602d011e' in res.data
 
-    res = client.get('/weights/0000')
+    res = client.get('/manage_run/weights/0000')
     assert res.status_code == 404
     assert b'Not Found' in res.data
 
@@ -42,7 +39,7 @@ def test_weights_post(client):
         # Setup form submission information
         form = DataSelectionForm(data_selection='SHIFT_DATA|Shift Data|0')
         # Post to weights with valid form data
-        res = client.post('/weights/9e5c1872-3f8e-4ae5-85dc-c67a602d011e', data=form.data)
+        res = client.post('/manage_run/weights/9e5c1872-3f8e-4ae5-85dc-c67a602d011e', data=form.data)
 
     # Ensure redirect target found
     assert res.status_code == 302
@@ -57,7 +54,7 @@ def test_weights_post(client):
         # Setup form submission information
         form = DataSelectionForm(data_selection='')
         # Post to weights with invalid form data
-        res = client.post('/weights/9e5c1872-3f8e-4ae5-85dc-c67a602d011e', data=form.data)
+        res = client.post('/manage_run/weights/9e5c1872-3f8e-4ae5-85dc-c67a602d011e', data=form.data)
 
     # Ensure status_code is 200 (OK)
     assert res.status_code == 200

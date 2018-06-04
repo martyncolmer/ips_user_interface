@@ -1,7 +1,4 @@
-import os
-import csv
 from webapp import app_methods
-
 
 def test_get_system_info():
     """
