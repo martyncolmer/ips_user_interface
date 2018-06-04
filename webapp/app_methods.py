@@ -25,6 +25,30 @@ def create_run(unique_id, run_name, run_description, start_date, end_date, run_t
     new_run['status'] = run_status
     requests.post("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs", json=new_run)
 
+    create_run_steps(new_run['id'])
+
+
+def edit_run(run_id, run_name, run_description, start_date, end_date, run_type='0', run_status='0'):
+    """
+    Purpose: Modifies an already existing run through a PUT request.
+
+    :return: NA
+    """
+
+    response = requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs")
+
+    file = json.loads(response.content)
+    run = file[0]
+
+    run['name'] = run_name
+    run['desc'] = run_description
+    run['start_date'] = start_date
+    run['end_date'] = end_date
+    run['type'] = run_type
+    run['status'] = run_status
+    requests.put("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs/"+run_id, json=run)
+
+
 
 def get_system_info():
     """
@@ -167,17 +191,39 @@ def get_display_data_json(table_name, run_id=None, data_source=None):
     return df
 
 
-def get_run_status(run_id):
-    address = "http://ips-db.apps.cf1.ons.statistics.gov.uk/run_status/" + run_id
-    if run_id:
-        address = address + "/" + run_id
+def create_run_steps(run_id):
+    """
+    Purpose: Creates a new set of run steps for a newly generated run.
+
+    :return: NA
+    """
+    route = "http://ips-db.apps.cf1.ons.statistics.gov.uk/run_steps/" + run_id
+
+    requests.post(route)
+
+
+def get_run_steps(run_id):
+    address = "http://ips-db.apps.cf1.ons.statistics.gov.uk/run_steps/" + run_id
 
     response = requests.get(address)
 
     if response.status_code == 200:
-        data = json.loads(response.content)
-        df = pandas.DataFrame.from_dict(data)
+        values = json.loads(response.content)
     else:
-        df = pandas.DataFrame()
+        values = []
 
-    return df
+    return values
+
+
+def edit_run_step_status(run_id, value, step_number=None):
+    """
+    Purpose: Modifies an already existing run's steps through a PUT request.
+
+    :return: NA
+    """
+    route = "http://ips-db.apps.cf1.ons.statistics.gov.uk/run_steps/"+run_id+"/"+value
+
+    if step_number:
+        route = route + "/" + step_number
+
+    requests.put(route)

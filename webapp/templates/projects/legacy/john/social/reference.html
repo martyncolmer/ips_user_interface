@@ -88,8 +88,16 @@
 				<div class="col-8">
 					<h2 class="jupiter sml-margin">{{current_run['name']}} </h2>
 					<h3 class="saturn sml-margin buttom_10_extra_space">({{current_run['id']}}) &nbsp;
-						<em class="badge-status badge--completed">&nbsp;&nbsp;&nbsp;COMPLETED&nbsp;&nbsp;&nbsp;</em></h3>
-					<div>
+                        {% if current_run['status'] == 'Ready' %}
+						    <em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;{{current_run['status']}}&nbsp;&nbsp;&nbsp;</em></h3>
+                    	{% elif current_run['status'] == 'In Progress' %}
+						    <em class="badge-status badge--pending">&nbsp;&nbsp;&nbsp;{{current_run['status']}}&nbsp;&nbsp;&nbsp;</em></h3>
+                    	{% elif current_run['status'] == 'Completed' %}
+						    <em class="badge-status badge--completed">&nbsp;&nbsp;&nbsp;{{current_run['status']}}&nbsp;&nbsp;&nbsp;</em></h3>
+                    	{% elif current_run['status'] == 'Failed' %}
+						    <em class="badge-status badge--pending">&nbsp;&nbsp;&nbsp;{{current_run['status']}}&nbsp;&nbsp;&nbsp;</em></h3>
+					    {% endif %}
+                    <div>
 						<spam><strong>Description: </strong>&nbsp; {{current_run['desc']}}</spam>
 						<br>
 						<spam><strong>Execution date & time: </strong>&nbsp; 19-10-2017 | 12:05pm</spam>
@@ -113,79 +121,43 @@
 
 		<div class="wrapper">
 			<div class="group">
-				<div class="grid__col col-7 top_40_extra_space">
+				<form id="tabs" class="form", method="POST">
+					{{ form.csrf_token }}
+					<div class="grid__col col-7 top_40_extra_space">
 
-				<ul class="nav-tabs clearfix u-mb-l" data-tabgroup="first-tab-group">
-				  	<li class="nav-tabs__tab--active"><a class="tab-label" href="#">Runs (12) </a></li>
-              		<li class="nav-tabs__tab"><a class="tab-label" href="reference_export.html">Exports (0) </a></li>
-				</ul>
+					<ul class="nav-tabs clearfix u-mb-l" data-tabgroup="first-tab-group">
+						<!--<li class="nav-tabs__tab&#45;&#45;active"><a class="tab-label" href="#">Manage Run </a></li>-->
+						<!--<li class="nav-tabs__tab"><a class="tab-label" href="/export_data/{{current_run['id']}}">Exports (0) </a></li>-->
+						<li class="nav-tabs__tab--active">{{ form.manage_run_button(class="tab-label", type="submit") }}</li>
+						<li class="nav-tabs__tab">{{ form.export_button(class="tab-label", type="submit") }}</li>
 
-					<table class="table table__dense">
-						<thead class="table--head">
-							<th width="70%" class="table--header--cell">&nbsp;&nbsp; Steps</th>
-							<th width="20%" class="table--header--cell">Status</th>
-						</thead>
-						<tbody>
-							<tr class="table--row">
-								<td width="70%" class="table--cell">&nbsp; 1. Calculate shift weight</td>
-								<td width="20%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SUCCESS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
-							</tr>
-							<tr class="table--row">
-								<td width="70%" class="table--cell">&nbsp; 2. Calculate non response weight</td>
-								<td width="20%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SUCCESS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
-							</tr>
-							<tr class="table--row">
-								<td width="70%" class="table--cell">&nbsp; 3. Calculate minimums weight</td>
-								<td width="20%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SUCCESS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
-							</tr>
-							<tr class="table--row">
-								<td width="70%" class="table--cell">&nbsp; 4. Calculate traffic weight</td>
-								<td width="20%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SUCCESS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
-							</tr>
-							<tr class="table--row">
-								<td width="70%" class="table--cell">&nbsp; 5. Calculate unsampled weight</td>
-								<td width="20%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SUCCESS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
-							</tr>
-							<tr class="table--row">
-								<td width="70%" class="table--cell">&nbsp; 6. Calculate imbalance weight</td>
-								<td width="20%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SUCCESS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
-							</tr>
-							<tr class="table--row">
-								<td width="70%" class="table--cell">&nbsp; 7. Calculate final weight</td>
-								<td width="20%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SUCCESS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
-							</tr>
-							<tr class="table--row">
-								<td width="70%" class="table--cell">&nbsp; 8. Stay imputation</td>
-								<td width="20%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SUCCESS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
-							</tr>
-							<tr class="table--row">
-								<td width="70%" class="table--cell">&nbsp; 9. Fares imputation</td>
-								<td width="20%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SUCCESS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
-							</tr>
-							<tr class="table--row">
-								<td width="=70%" class="table--cell">&nbsp; 10. Spend imputation</td>
-								<td width="20%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SUCCESS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
-							</tr>
-							<tr class="table--row">
-								<td width="70%" class="table--cell">&nbsp; 11. Rail imputation</td>
-								<td width="20%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SUCCESS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
-							</tr>
-							<tr class="table--row">
-								<td width="70%" class="table--cell">&nbsp; 12. Regional weight</td>
-								<td width="20%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SUCCESS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
-							</tr>
-							<tr class="table--row">
-								<td width="70%" class="table--cell grey_text">&nbsp; 13. Town stay and expenditure imputation</td>
-								<td width="20%" class="table--cell"><em class="badge-status badge--pending">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FAILED&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
-							</tr>
-							<tr class="table--row">
-								<td width="70%" class="table--cell grey_text">&nbsp; 14. Air miles</td>
-								<td width="20%" class="table--cell"><em class="badge-status badge--grey">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PENDING&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
-							</tr>
-
-						</tbody>
-					</table>
-				</div>
+					</ul>
+						<table class="table table__dense">
+							<thead class="table--head">
+								<th width="20%" class="table--header--cell">&nbsp;&nbsp;&nbsp; <input type="checkbox" onClick="toggle(this)" />&nbsp;&nbsp;All</th>
+								<th width="60%" class="table--header--cell">&nbsp;&nbsp; Steps</th>
+								<th width="20%" class="table--header--cell">Status</th>
+							</thead>
+							<tbody>
+								{% for step in run_status %}
+									<tr class="table--row">
+										<td width="10%" class="table--cell field__item2">
+											<input class="input--checkbox2" name="step_checkbox" type="checkbox">
+										</td>
+										<td width="70%" class="table--cell">&nbsp; {{step['NUMBER']}}. {{ step['NAME'] }}</td>
+										{% if step['STATUS'] == 'Ready' %}
+											<td width="20%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ step['STATUS'] }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
+										{% elif step['STATUS'] == 'Completed' %}
+											<td width="20%" class="table--cell"><em class="badge-status badge--completed">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ step['STATUS'] }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
+										{% elif step['STATUS'] == 'Failed' %}
+											<td width="20%" class="table--cell"><em class="badge-status badge--pending">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ step['STATUS'] }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
+										{% endif %}
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</form>
 			</div>
 
 		</div>
@@ -195,12 +167,17 @@
 
 				<div class="grid__col">
 
-					<form id="run" action="/weights/{{current_run['id']}}" class="form">
+					<form id="run" class="form", method="POST">
 
 						<div class="top_50_extra_space">
-							<button class="btn btn--primary" type="submit">Display weights</button>
+							{{ form.csrf_token }}
+							{% if current_run['status'] == '2'%}
+								{{ form.display_button(class="btn btn--primary", type="submit") }}
+							{% else %}
+								{{ form.run_button(class="btn btn--primary", type="submit") }}
+							{% endif %}
 							&nbsp;&nbsp;&nbsp;
-							<a class="btn btn--secondary btn--border" href="new_run_edit.html">Edit run</a>
+							{{ form.edit_button(class="btn btn--secondary btn--border", type="submit") }}
 						</div>
 
 					</form>
@@ -236,6 +213,14 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.14/semantic.min.js'></script>
 
+<script language="JavaScript">
+function toggle(source) {
+  checkboxes = document.getElementsByName('step_checkbox');
+  for(var i=0, n=checkboxes.length;i<n;i++) {
+    checkboxes[i].checked = source.checked;
+  }
+}
+</script>
 
 <!-- <script>
 	jQuery(document).ready(function($) {

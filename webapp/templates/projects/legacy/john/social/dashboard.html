@@ -142,15 +142,23 @@
 				        </thead>
 				        <tbody>
 							<!-- for each record, render each data value -->
-							{% for record in records %}
+							{% for record in records|reverse %}
 							<tr class="table--row">
 								<td width="26%" class="table--cell">&nbsp; <a href="/reference/{{record['id']}}">{{record['id']}}</a></td>
 				        		<td width="12%" class="table--cell">{{record['name']}} </td>
-				        		<td width="40%" class="table--cell">{{record['desc']}} </td>
-				        		<td width="8%" class="table--cell"><em class="badge-status badge--pending">&nbsp;&nbsp;&nbsp;{{record['start_date']}}&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
-				        		<td width="8%" class="table--cell"><em class="badge-status badge--completed">&nbsp;&nbsp;&nbsp;{{record['end_date']}}&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
-				        		<td width="10%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;{{record['type']}}&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
-				        		<td width="10%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;{{record['status']}}&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
+				        		<td width="29%" class="table--cell">{{record['desc']}} </td>
+				        		<td width="9%" class="table--cell">&nbsp;{{record['start_date']}}&nbsp;</td>
+				        		<td width="9%" class="table--cell">&nbsp;{{record['end_date']}}&nbsp;</td>
+				        		<td width="6%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;{{record['type']}}&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
+								{% if record['status'] == 'Ready' %}
+				        		<td width="9%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;{{record['status']}}&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
+								{% elif record['status'] == 'In Progress' %}
+				        		<td width="9%" class="table--cell"><em class="badge-status badge--pending">&nbsp;&nbsp;&nbsp;{{record['status']}}&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
+								{% elif record['status'] == 'Completed' %}
+				        		<td width="9%" class="table--cell"><em class="badge-status badge--completed">&nbsp;&nbsp;&nbsp;{{record['status']}}&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
+								{% elif record['status'] == 'Failed' %}
+				        		<td width="9%" class="table--cell"><em class="badge-status badge--pending">&nbsp;&nbsp;&nbsp;{{record['status']}}&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
+								{% endif %}
 							</tr>
 							{% endfor %}
 				        </tbody>
