@@ -5,7 +5,7 @@ from flask import Flask, render_template, session, request, url_for, redirect, a
 from werkzeug.utils import secure_filename
 from webapp import app_methods
 
-from webapp.forms import CreateRunForm, DateSelectionForm, SearchActivityForm, DataSelectionForm, LoadDataForm
+from webapp.forms import CreateRunForm, DateSelectionForm, SearchActivityForm, DataSelectionForm, LoadDataForm, ManageRunForm
 import requests
 import pandas as pd
 
@@ -45,9 +45,8 @@ def dashboard():
     # If this is a post then validate if needed
     if request.method == 'POST' and form.validate():
         print(request.form)
-        flash_errors(form)
 
-        # If the search button is selected filter hte results on the run status and the searched word.
+        # If the search button is selected filter the results on the run status and the searched word.
         if 'search_button' in request.form:
             search_activity = request.form['search_activity']
             filter_value = request.form['run_type_filter']
@@ -87,20 +86,43 @@ def system_info():
 
 
 @app.route('/new_run_1', methods=['GET', 'POST'])
-def new_run_1():
+@app.route('/new_run_1/<run_id>', methods=['GET', 'POST'])
+def new_run_1(run_id=None):
     print(request.method)
     form = CreateRunForm()
     # if request is a post
     if request.method == 'POST' and form.validate():
         if request.form['submit'] == 'create_run':
-            unique_id = uuid.uuid4()
-            session['id'] = str(unique_id)
+
             session['run_name'] = request.form['run_name']
             session['run_description'] = request.form['run_description']
-            return redirect(url_for('new_run_2'), code=302)
+
+            if run_id:
+                run = app_methods.get_run(run_id)
+
+                run['name'] = request.form['run_name']
+                run['desc'] = request.form['run_description']
+                # Update run name and description
+                app_methods.edit_run(run_id=run_id, run_name=run['name'], run_description=run['desc'],
+                                     start_date=run['start_date'], end_date=run['end_date'], run_type=run['type'],
+                                     run_status='0')
+
+                return redirect('/new_run_2/'+run_id, code=302)
+            else:
+                # Generate new run id and store name and description to be used in run creation
+                unique_id = uuid.uuid4()
+                session['id'] = str(unique_id)
+                return redirect('/new_run_2', code=302)
+    else:
+        if run_id:
+            run = app_methods.get_run(run_id)
+            form.run_name.default = run['name']
+            form.run_description.default = run['desc']
+            pass
 
     return render_template('/projects/legacy/john/social/new_run_1.html',
-                           form=form)
+                           form=form,
+                           run_id=run_id)
 
 
 def flash_errors(form):
@@ -113,7 +135,8 @@ def flash_errors(form):
 
 
 @app.route('/new_run_2', methods=['GET', 'POST'])
-def new_run_2():
+@app.route('/new_run_2/<run_id>', methods=['GET', 'POST'])
+def new_run_2(run_id=None):
     form = DateSelectionForm()
 
     print(request.values)
@@ -132,19 +155,29 @@ def new_run_2():
 
         if form.validate():
             if request.form['submit'] == 'create_run':
+
                 start_date = request.form['s_day'] + request.form['s_month'] + request.form['s_year']
                 end_date = request.form['e_day'] + request.form['e_month'] + request.form['e_year']
 
                 session['start_date'] = start_date
                 session['end_date'] = end_date
 
-                app_methods.create_run(session['id'], session['run_name'], session['run_description'],
-                                       session['start_date'], session['end_date'])
+                if run_id:
+                    # Update run start and end dates
+                    run = app_methods.get_run(run_id)
+                    run['start_date'] = start_date
+                    run['end_date'] = end_date
+                    app_methods.edit_run(run_id=run_id, run_name=run['name'], run_description=run['desc'], start_date=run['start_date'], end_date=run['end_date'], run_type=run['type'], run_status='0')
 
-                return redirect(url_for('new_run_3'), code=302)
+                    return redirect('/new_run_3/' + run_id, code=302)
+                    pass
+                else:
+                    app_methods.create_run(session['id'], session['run_name'], session['run_description'],
+                                           session['start_date'], session['end_date'])
+
+                    return redirect(url_for('new_run_3'), code=302)
         else:
             flash_errors(form)
-
     last_entry = {}
 
     if 's_day' in session:
@@ -164,22 +197,46 @@ def new_run_2():
         last_entry['e_year'] = ""
         print("FOUND NOTHING")
 
+    if run_id:
+        run = app_methods.get_run(run_id)
+        last_entry['s_day'] = run['start_date'][:2]
+        last_entry['s_month'] = run['start_date'][2:4]
+        last_entry['s_year'] = run['start_date'][4:8]
+        last_entry['e_day'] = run['end_date'][:2]
+        last_entry['e_month'] = run['end_date'][2:4]
+        last_entry['e_year'] = run['end_date'][4:8]
+
+        form.s_month.default = run['start_date'][2:4]
+        form.e_month.default = run['end_date'][2:4]
+        form.process()
 
     return render_template('/projects/legacy/john/social/new_run_2.html',
                            form=form,
-                           last_entry=last_entry)
+                           last_entry=last_entry,
+                           run_id=run_id)
 
 
-@app.route('/new_run_3', methods = ['GET', 'POST'])
-def new_run_3():
+# TODO: Implement edit run functionality when how we're dealing with files is determined.
+@app.route('/new_run_3', methods=['GET', 'POST'])
+@app.route('/new_run_3/<run_id>', methods=['GET', 'POST'])
+def new_run_3(run_id=None):
     form = LoadDataForm()
 
     error = False
+
+    print(request.values)
+    print(request.form)
 
     if form.validate_on_submit():
         # Functionality has been written. Stubbed for now as we are unsure yet as to the location and method
         # of storing the csv's in a file system. Until we can access DAP and know where to store, this will remain.
         # The below code shows the method for retrieving the filename and data from the uploaded files.
+        if run_id:
+            # if a run_id is present in html call, run steps to replace existing files (if any)
+            pass
+        else:
+            # if no run_id present in html call, run steps to add files to run (in whatever way this will be done)
+            pass
 
         survey_data = form.survey_file.data
         survey_filename = form.survey_file.name
@@ -189,7 +246,7 @@ def new_run_3():
     else:
         error = True
 
-    return render_template('/projects/legacy/john/social/new_run_3.html', form = form, error = error)
+    return render_template('/projects/legacy/john/social/new_run_3.html', form=form, error=error)
 
 
 @app.route('/new_run_4')
@@ -227,10 +284,19 @@ def new_run_end():
     return render_template('/projects/legacy/john/social/new_run_end.html')
 
 
-@app.route('/reference/<run_id>')
+@app.route('/reference/<run_id>', methods=['GET', 'POST'])
 def reference(run_id):
 
+    form = ManageRunForm();
+
+    status_values = {'0': 'Ready', '1': 'Completed', '2': 'Failed'}
+    run_types = {'0': 'Test', '1': 'Live', '2': 'Deleted'}
+    run_statuses = {'0': 'Ready', '1': 'In Progress', '2': 'Completed', '3': 'Failed'}
+
     run = app_methods.get_run(run_id)
+
+    if not run:
+        abort(404)
 
     session['id'] = run['id']
     session['run_name'] = run['name']
@@ -239,8 +305,37 @@ def reference(run_id):
     session['end_date'] = run['end_date']
     current_run = run
 
+    current_run['start_date'] = current_run['start_date'][:2] + "-" + current_run['start_date'][2:4] + "-" + current_run['start_date'][4:]
+    current_run['end_date'] = current_run['end_date'][:2] + "-" + current_run['end_date'][2:4] + "-" + current_run['end_date'][4:]
+    current_run['status'] = run_statuses[current_run['status']]
+    current_run['type'] = run_types[current_run['type']]
+
+    form.validate()
+    flash_errors(form=form)
+    # If this is a post then validate if needed
+    if request.method == 'POST' and form.validate():
+            print(request.form)
+            # If the run button is selected run the calculation steps
+            if 'run_button' in request.form:
+                pass
+            elif 'display_button' in request.form:
+                return redirect('/weights/' + current_run['id'], code=302)
+            elif 'edit_button' in request.form:
+                return redirect('/new_run_1/' + current_run['id'], code=302)
+            elif 'export_button' in request.form:
+                return redirect('/export_data/' + current_run['id'], code=302)
+            elif 'manage_run_button' in request.form:
+                return redirect('/reference/' + current_run['id'], code=302)
+
+    run_status = app_methods.get_run_steps(run['id'])
+
+    for step in run_status:
+        step['STATUS'] = status_values[step['STATUS']]
+
     return render_template('/projects/legacy/john/social/reference.html',
-                           current_run=current_run)
+                           form=form,
+                           current_run=current_run,
+                           run_status=run_status)
 
 
 @app.route('/weights/<run_id>', methods=['GET', 'POST'])
@@ -309,6 +404,7 @@ def export_data(run_id):
     return render_template('/projects/legacy/john/social/export_data.html',
                            form=form,
                            current_run=current_run)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
