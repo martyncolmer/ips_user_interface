@@ -115,10 +115,27 @@
 				<div class="col-7 top_40_extra_space">
 
 				<ul class="nav-tabs clearfix u-mb-l" data-tabgroup="first-tab-group">
-				  	<li class="nav-tabs__tab"><a class="tab-label" href="reference.html">Runs (12) </a></li>
-              		<li class="nav-tabs__tab--active"><a class="tab-label" href="#tab2">Exports (0) </a></li>
+				  	<li class="nav-tabs__tab"><a class="tab-label" href="reference.html">Runs</a></li>
+              		<li class="nav-tabs__tab--active"><a class="tab-label" href="#tab2">Exports</a></li>
 				</ul>
+					<table class="table table__dense">
+						<thead class="table--head">
+							<th width="30%" class="table--header--cell">&nbsp;&nbsp;Filename</th>
+							<th width="30%" class="table--header--cell">&nbsp;&nbsp;Source Data</th>
+						</thead>
+					<tbody>
+						{% for value in rows %}
+						<tr class="table--row">
+							<td width="30%" class="table--cell">&nbsp; <a href="/download_data/current_run['id']">{{ value.split(',')[0] }}.csv</a></td>
+							<!--<td width="30%" class="table&#45;&#45;cell">  {{ value.split(',')[0] }}.csv </td>-->
+							<td width="30%" class="table--cell">  {{ value.split(',')[1] }}</td>
+					    </tr>
+						{% endfor %}
+					</tbody>
 
+
+
+					</table>
 				</div>
 			</div>
 
@@ -126,11 +143,11 @@
 				<div class="col-8 top_10_extra_space">
 
 						<div class="field">
-					        <label class="label" for="text-input">No data has been exported</label>
+					        <!--<label class="label" for="text-input">No data has been exported</label>-->
 					    </div>
 
 					    <div class="top_30_extra_space">
-						    <button class="btn btn--primary" type="submit">Export data</button>
+						    <button class="btn btn--primary" type="submit">Generate New Export</button>
 						</div>
 
 				</div>

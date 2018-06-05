@@ -3,12 +3,15 @@ import requests
 import json
 import pyodbc
 import os
+import glob
 import shutil
+import json
 import zipfile
 import pandas as pd
 from io import BytesIO
 from io import StringIO
 import sys
+from pprint import pprint
 
 
 APP_DIR = os.path.dirname(__file__)
@@ -108,10 +111,10 @@ def get_connection():
     server = os.getenv("DB_SERVER")
 
     # My environment variables keep disappearing >:-|
-    print("Username: {}".format(username))
-    print("Password: {}".format(password))
-    print("Database: {}".format(database))
-    print("Server: {}".format(server))
+    # print("Username: {}".format(username))
+    # print("Password: {}".format(password))
+    # print("Database: {}".format(database))
+    # print("Server: {}".format(server))
 
     # Attempt to connect to the database
     try:
@@ -125,7 +128,7 @@ def get_connection():
         return conn
 
 
-def export_csv(table_name):
+def export_csv(table_name, run_id):
     """
     Author: Elinor Thorne
     Purpose: Exports table from database to CSV in temporary location
@@ -137,11 +140,12 @@ def export_csv(table_name):
 
     sql = """
     SELECT * FROM [dbo].[{}]
-    """.format(table_name)
+    WHERE [RUN_ID] = '{}'
+    """.format(table_name, run_id)
 
     path = os.getcwd()
     filename = r"\temp\{}.csv".format(table_name)
-    print(filename)
+    # print(filename)
 
     cur.execute(sql)
 
@@ -150,10 +154,10 @@ def export_csv(table_name):
         writer.writerow([i[0] for i in cur.description])
         writer.writerows(cur.fetchall())
 
-    print("CSV Created")
+    # print("CSV Created")
 
 
-def insert_clob(table_name, run_id):
+def insert_clob(table_name, run_id, target_filename):
     """
     Author: Elinor Thorne
     Purpose: Extracts data from temporary CSV and inserts to table as CLOB
@@ -171,8 +175,8 @@ def insert_clob(table_name, run_id):
     # Create and execute SQL query
     sql = """
     INSERT INTO EXPORT_DATA_DOWNLOAD
-    VALUES('{}', '{}')
-    """.format(run_id, data)
+    VALUES('{}', '{}', '{}', '{}')
+    """.format(run_id, data, target_filename, table_name)
 
     try:
         conn = get_connection()
@@ -192,17 +196,24 @@ def cleanse_temp_folder():
 
     path = r"..\webapp\temp"
 
-    with os.scandir(path) as entries:
-        for entry in entries:
-            if entry.is_file() or entry.is_symlink():
-                os.remove(entry.path)
-            elif entry.is_dir():
-                shutil.rmtree(entry.path)
-                cleanse_temp_folder()
-            pass
+    fileList = os.listdir(path)
+    for fileName in fileList:
+        os.remove(path + "/" + fileName)
+
+    # for files in path:
+    #     os.remove(files)
+    #
+    # with os.scandir(path) as entries:
+    #     for entry in entries:
+    #         if entry.is_file() or entry.is_symlink():
+    #             os.remove(entry.path)
+    #         elif entry.is_dir():
+    #             shutil.rmtree(entry.path)
+    #             cleanse_temp_folder()
+    #         pass
 
 
-def export_clob(run_id, filename):
+def export_clob(filename):
     """
     Author: Elinor Thorne
     Purpose: Exports CLOB from database to CSV
@@ -213,8 +224,9 @@ def export_clob(run_id, filename):
     sql = """
     SELECT DOWNLOADABLE_DATA
     FROM EXPORT_DATA_DOWNLOAD
-    WHERE ED_ID = '{}'
-    """.format(run_id)
+    WHERE SOURCE_TABLE = '{}'
+    """.format(filename)
+
 
     try:
         conn = get_connection()
@@ -234,14 +246,45 @@ def export_clob(run_id, filename):
         output.pop()
 
         # Export list to csv
+        path = os.getcwd()
+        filename = r"\temp\{}.csv".format(filename)
         # TODO: Change file location
-        with open(r"\\nsdata3\Social_Surveys_team\CASPA\IPS\El's Temp VDI Folder\{}.csv".format(filename), "w",
-                  newline="") as csvfile:
+        with open(path+filename, "w", newline="") as csvfile:
             writer = csv.writer(csvfile)
             for item in output:
                 # Create row of data from each item in list and commit to CSV
                 row = item.split(",")
                 writer.writerow(row)
+
+
+def get_export_data_table(run_id):
+    # Connection variables
+    conn = get_connection()
+    cur = conn.cursor()
+
+    # SQL query and execute
+    sql = """
+    SELECT [ED_NAME]
+      ,[SOURCE_TABLE]
+    FROM [EXPORT_DATA_DOWNLOAD]
+    WHERE ED_ID = '{}'
+    """.format(run_id)
+    cur.execute(sql)
+
+    # Extract row headers - NO LONGER REQUIRED
+    # row_headers = [x[0] for x in cur.description]
+
+    # Extract rows
+    rows = cur.fetchall()
+
+    data = []
+    for row in rows:
+        row = str(row)
+        row = row.replace("(", "").replace("'", "").replace(")", "")
+        data.append(row)
+
+    return data
+
 
 if __name__ == "__main__":
     # table_name = "COLUMN_LOOKUP"
@@ -249,4 +292,4 @@ if __name__ == "__main__":
     # good_run_id = "9c67a602d011e"
     # new_run_id = "40c7fbcc-c0d8-4fee-898e-9eeacf99cb66"
 
-    cleanse_temp_folder()
+    get_export_data_table('f144ec22-921f-43ff-a93c-189695336580')

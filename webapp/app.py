@@ -1,5 +1,7 @@
 import os
 import uuid
+import io
+import zipfile
 from flask import Flask, render_template, session, request, url_for, redirect, send_file, abort, flash
 from webapp import app_methods
 from webapp.forms import CreateRunForm
@@ -10,6 +12,9 @@ from webapp.forms import ExportSelectionForm
 from webapp.forms import LoadDataForm
 from webapp.app_methods import export_csv
 from webapp.app_methods import insert_clob
+from webapp.app_methods import export_clob
+from webapp.app_methods import cleanse_temp_folder
+from webapp.app_methods import get_export_data_table
 
 APP_DIR = os.path.dirname(__file__)
 app = Flask(__name__)
@@ -298,6 +303,10 @@ def weights_2(id, table=None, table_title=None, source=None):
 
 @app.route('/reference_export/<run_id>')
 def reference_export(run_id):
+    # TODO: get the below variables from UI - Create form for this:
+    filename = "testfile"
+    step = "testCalc"
+
     run = app_methods.get_run(run_id)
 
     session['current_run_id'] = run['id']
@@ -306,11 +315,14 @@ def reference_export(run_id):
     session['start_date'] = run['start_date']
     current_run = run
 
+    # Table stuff
+    rows = app_methods.get_export_data_table(run_id)
+
     return render_template('/projects/legacy/john/social/reference_export.html',
-                           current_run=current_run)
+                           current_run=current_run,
+                           rows=rows)
 
 
-# TODO need more identifiable information in EXPORT_DATA_DOWNLOAD table, i.e original table_name AND user's filename???
 @app.route('/export_data/<run_id>', methods=['GET', 'POST'])
 def export_data(run_id):
     form = ExportSelectionForm()
@@ -332,15 +344,46 @@ def export_data(run_id):
         target_filename = request.values['filename']
 
         # Export table to temporary CSV
-        export_csv(table_name)
+        export_csv(table_name, run_id)
 
         # Insert data to clob
-        insert_clob(table_name, run_id)
+        insert_clob(table_name, run_id, target_filename)
 
         # Return new listy page
-        return render_template('/projects/legacy/john/social/reference_export.html',
-                               current_run=current_run)
+        return redirect('/reference_export/' + run_id)
+    # TODO: Flashy error messages on below page
     return render_template('/projects/legacy/john/social/export_data.html', form=form, current_run=current_run)
+
+
+# @app.route('/reference_export/<run_id>', methods=['GET', 'POST'])
+@app.route('/download_data/<run_id>')
+def download_data(run_id):
+    print("download_data")
+    # TODO: get these variables
+    filename = "PS_SHIFT_DATA"
+    step = "SHIFT_DATA"
+
+    # if request.method == 'POST':
+
+    # Remove files from temp folder
+    cleanse_temp_folder()
+
+    # Export CLOB to CSV
+    export_clob(filename)
+
+    # Assign variables
+    source = r"\temp\{}.csv".format(filename)
+    print(source)
+    memory_file = io.BytesIO()
+
+    # Zip file
+    zipfile.ZipFile(memory_file, mode='w').write(source, filename+".csv")
+    memory_file.seek(0)
+
+    # Remove files from temp folder
+    cleanse_temp_folder()
+
+    return send_file(memory_file, attachment_filename='{}.zip'.format(step))
 
 
 if __name__ == '__main__':

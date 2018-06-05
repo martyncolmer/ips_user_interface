@@ -137,20 +137,21 @@
 					<table class="table table__dense">
 				        <thead class="table--head">
 							{% for column in header %}
-								<th class="table--header--cell"> {{ column | replace('_', ' ') | title }} </th>
+								<!--<th class="table&#45;&#45;header&#45;&#45;cell"> {{ column | replace('_', ' ') | title }} </th>-->
+								<th class="table--header--cell"> {{ column | replace('_', ' ') }} </th>
 							{% endfor %}
 				        </thead>
 				        <tbody>
 							<!-- for each record, render each data value -->
 							{% for record in records %}
 							<tr class="table--row">
-								<td width="28%" class="table--cell">&nbsp; <a href="/reference/{{record['id']}}">{{record['id']}}</a></td>
+								<td width="26%" class="table--cell">&nbsp; <a href="/reference/{{record['id']}}">{{record['id']}}</a></td>
 				        		<td width="12%" class="table--cell">{{record['name']}} </td>
-				        		<td width="25%" class="table--cell">{{record['desc']}} </td>
+				        		<td width="40%" class="table--cell">{{record['desc']}} </td>
 				        		<td width="8%" class="table--cell"><em class="badge-status badge--pending">&nbsp;&nbsp;&nbsp;{{record['start_date']}}&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
 				        		<td width="8%" class="table--cell"><em class="badge-status badge--completed">&nbsp;&nbsp;&nbsp;{{record['end_date']}}&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
+				        		<td width="10%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;{{record['type']}}&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
 				        		<td width="10%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;{{record['status']}}&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
-				        		<td width="18%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;{{record['type']}}&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
 							</tr>
 							{% endfor %}
 				        </tbody>
@@ -158,25 +159,25 @@
 			</div>
 		</div>
 
-		<div class="wrapper">
-			<div class="group">
-				<div class="col-6 table-pagination-extra-padding">
-			  		<span>
-						 1 to 10 of 267 &nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;
-						 <a href="#">2</a>&nbsp;
-						 <a href="#">3</a>&nbsp;
-						 <a href="#">4</a>&nbsp;
-						 <a href="#">5</a>&nbsp;
-						 <a href="#">6</a>&nbsp;
-						 <a href="#">7</a>&nbsp; 
-						 <a href="#">8</a>&nbsp;
-						 <a href="#">9</a>&nbsp;
-						 <a href="#">10</a>&nbsp;
-						 <a href="#">Next</a>&nbsp;
-			  		</span>
-	  			</div>
-	  		</div>
-	  	</div>
+		<!--<div class="wrapper">-->
+			<!--<div class="group">-->
+				<!--<div class="col-6 table-pagination-extra-padding">-->
+			  		<!--<span>-->
+						 <!--1 to 10 of 267 &nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;-->
+						 <!--<a href="#">2</a>&nbsp;-->
+						 <!--<a href="#">3</a>&nbsp;-->
+						 <!--<a href="#">4</a>&nbsp;-->
+						 <!--<a href="#">5</a>&nbsp;-->
+						 <!--<a href="#">6</a>&nbsp;-->
+						 <!--<a href="#">7</a>&nbsp; -->
+						 <!--<a href="#">8</a>&nbsp;-->
+						 <!--<a href="#">9</a>&nbsp;-->
+						 <!--<a href="#">10</a>&nbsp;-->
+						 <!--<a href="#">Next</a>&nbsp;-->
+			  		<!--</span>-->
+	  			<!--</div>-->
+	  		<!--</div>-->
+	  	<!--</div>-->
 
 	</div>
 
@@ -221,26 +222,26 @@ $('.ui.dropdown').dropdown();
 
 
 <script type="text/javascript">
- 
+
 window.onload = function(){
- 
+
   var form = document.getElementById("form-sign-in");
 
   form.onsubmit = function(e) {
     e.preventDefault();
     var userInput = document.getElementById('text-input').value;
-   
+
     if (userInput.includes('123')) {
-   
+
       window.location = 'contributor.html';
-   
+
     } else if (userInput.includes('cme')) {
       window.location = 'search_results.html';
     }
     return false;
   }
 };
- 
+
 </script>​
 
 
