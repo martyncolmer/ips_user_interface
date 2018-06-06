@@ -258,15 +258,51 @@ def get_export_data_table(run_id):
     # Extract rows
     rows = cur.fetchall()
 
+    print(rows)
+
     # Append rows to list
-    data = []
+    result = []
     for row in rows:
         row = str(row)
         row = row.replace("(", "").replace("'", "").replace(")", "")
-        data.append(row)
+        result.append(row)
 
-    return(data)
+    # Pull data apart to change table_names and re-create new data
+    fnames = []
+    table_names = []
+    table_string = {"SURVEY_SUBSAMPLE": "Survey Subsample",
+                    "PS_FINAL": "Final Weight Summary",
+                    "PS_SHIFT_DATA": "Shift",
+                    "PS_NON_RESPONSE": "Non-Response",
+                    "PS_SHIFT_DATA": "Shift Weight Summary",
+                    "NON_RESPONSE_DATA": "Non Response Weight Summary",
+                    "PS_MINIMUMS": "Minimum Weight Summary",
+                    "PS_TRAFFIC": "Traffic Weight Summary",
+                    "PS_UNSAMPLED_OOH": "Unsampled Traffic Weight Summary",
+                    "PS_IMBALANCE": "Imbalance Weight Summary",
+                    "ALL_DATA": "All Data",
+                    "SAS_AIR_MILES": "Air Miles",
+                    "ALCOHOL": "Alcohol",
+                    "REGIONAL": "Regional",
+                    "CONTACT": "Contact",
+                    "MIGRATION": "Migration",
+                    "None": "None"}
+    for item in result:
+        # Create filenames list
+        fnames.append(item.split(", ")[0])
 
+        # Get table name from current data
+        table = item.split(", ")[1]
+
+        # Replace it
+        table_names.append(table_string[table])
+
+    data = []
+
+    for f, t in zip(fnames, table_names):
+        data.append(f+", "+t)
+
+    return data
 
 if __name__ == "__main__":
     # table_name = "COLUMN_LOOKUP"
