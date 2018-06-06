@@ -1,17 +1,9 @@
 import csv
 import requests
-import json
 import pyodbc
 import os
-import glob
-import shutil
 import json
-import zipfile
-import pandas as pd
-from io import BytesIO
-from io import StringIO
-import sys
-from pprint import pprint
+import datetime
 
 
 APP_DIR = os.path.dirname(__file__)
@@ -128,36 +120,36 @@ def get_connection():
         return conn
 
 
-def export_csv(table_name, run_id):
+def export_csv(sql_table, run_id):
     """
     Author: Elinor Thorne
     Purpose: Exports table from database to CSV in temporary location
 
     :return: NA
     """
+    # Connection variables
     conn = get_connection()
     cur = conn.cursor()
 
+    # Create and execute SQL query
     sql = """
     SELECT * FROM [dbo].[{}]
     WHERE [RUN_ID] = '{}'
-    """.format(table_name, run_id)
-
-    path = os.getcwd()
-    filename = r"\temp\{}.csv".format(table_name)
-    # print(filename)
-
+    """.format(sql_table, run_id)
     cur.execute(sql)
 
+    # HARD-CODED file locations
+    path = os.getcwd()
+    filename = r"\temp\{}.csv".format(sql_table)
+
+    # Write data to CSV
     with open(path + filename, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow([i[0] for i in cur.description])
         writer.writerows(cur.fetchall())
 
-    # print("CSV Created")
 
-
-def insert_clob(table_name, run_id, target_filename):
+def insert_clob(sql_table, run_id, target_filename):
     """
     Author: Elinor Thorne
     Purpose: Extracts data from temporary CSV and inserts to table as CLOB
@@ -165,9 +157,9 @@ def insert_clob(table_name, run_id, target_filename):
     :return: NA
     """
 
-    # Retrieve and convert file to CLOB
+    # Retrieve temporary CSV and convert to CLOB
     path = os.getcwd()
-    file = r"\temp\{}.csv".format(table_name)
+    file = r"\temp\{}.csv".format(sql_table)
     dir = path + file
     with open(dir, 'r') as f:
         data = f.read()
@@ -175,8 +167,8 @@ def insert_clob(table_name, run_id, target_filename):
     # Create and execute SQL query
     sql = """
     INSERT INTO EXPORT_DATA_DOWNLOAD
-    VALUES('{}', '{}', '{}', '{}')
-    """.format(run_id, data, target_filename, table_name)
+    VALUES('{}', '{}', '{}', '{}', (SELECT GETDATE()))
+    """.format(run_id, data, target_filename, sql_table)
 
     try:
         conn = get_connection()
@@ -194,26 +186,16 @@ def cleanse_temp_folder():
     :return: NA
     """
 
+    # HARD-CODED FILE LOCATION
     path = r"..\webapp\temp"
 
+    # Iterate through file and delete every object
     fileList = os.listdir(path)
     for fileName in fileList:
         os.remove(path + "/" + fileName)
 
-    # for files in path:
-    #     os.remove(files)
-    #
-    # with os.scandir(path) as entries:
-    #     for entry in entries:
-    #         if entry.is_file() or entry.is_symlink():
-    #             os.remove(entry.path)
-    #         elif entry.is_dir():
-    #             shutil.rmtree(entry.path)
-    #             cleanse_temp_folder()
-    #         pass
 
-
-def export_clob(filename):
+def export_clob(run_id, file_name):
     """
     Author: Elinor Thorne
     Purpose: Exports CLOB from database to CSV
@@ -221,12 +203,13 @@ def export_clob(filename):
     :return: NA
     """
 
+    # Create and execute SQL query
     sql = """
     SELECT DOWNLOADABLE_DATA
     FROM EXPORT_DATA_DOWNLOAD
-    WHERE SOURCE_TABLE = '{}'
-    """.format(filename)
-
+    WHERE ED_ID = '{}'
+    AND ED_NAME = '{}'
+    """.format(run_id, file_name)
 
     try:
         conn = get_connection()
@@ -237,6 +220,7 @@ def export_clob(filename):
         print(err)
     else:
         # Retrieve string from SQL and cleanse
+        print(data)
         data = str((data[0]))
         data = data.replace(" ", "").replace("(", "").replace(")", "").replace("'", "").replace("'", "").replace(
             "\\n", " ")
@@ -245,10 +229,9 @@ def export_clob(filename):
         output = data.split(" ")
         output.pop()
 
-        # Export list to csv
+        # Export list to csv in HARD-CODED FILE LOCATION
         path = os.getcwd()
-        filename = r"\temp\{}.csv".format(filename)
-        # TODO: Change file location
+        filename = r"\temp\{}.csv".format(file_name)
         with open(path+filename, "w", newline="") as csvfile:
             writer = csv.writer(csvfile)
             for item in output:
@@ -264,26 +247,25 @@ def get_export_data_table(run_id):
 
     # SQL query and execute
     sql = """
-    SELECT [ED_NAME]
+    SELECT [FILENAME]
       ,[SOURCE_TABLE]
     FROM [EXPORT_DATA_DOWNLOAD]
-    WHERE ED_ID = '{}'
+    WHERE RUN_ID = '{}'
+    ORDER BY [DATE_CREATED] DESC
     """.format(run_id)
     cur.execute(sql)
-
-    # Extract row headers - NO LONGER REQUIRED
-    # row_headers = [x[0] for x in cur.description]
 
     # Extract rows
     rows = cur.fetchall()
 
+    # Append rows to list
     data = []
     for row in rows:
         row = str(row)
         row = row.replace("(", "").replace("'", "").replace(")", "")
         data.append(row)
 
-    return data
+    return(data)
 
 
 if __name__ == "__main__":
@@ -292,4 +274,4 @@ if __name__ == "__main__":
     # good_run_id = "9c67a602d011e"
     # new_run_id = "40c7fbcc-c0d8-4fee-898e-9eeacf99cb66"
 
-    get_export_data_table('f144ec22-921f-43ff-a93c-189695336580')
+    get_export_data_table('9e5c1872-3f8e-4ae5-85dc-c67a602d011e')

@@ -110,12 +110,29 @@
 					{{ form.csrf_token }}
 					{{ form.data_selection.label(class="label venus ", for="text-input")}}
 					{{ form.data_selection(class="input input--select", type="submit")}}
+
+					{% if form.data_selection.errors %}
+					<ul>
+						{% for error_message in form.data_selection.errors %}
+						<li>{{ error_message }}</li>
+						{% endfor %}
+					</ul>
+					{% endif %}
+
 				</div>
 
 				<div class="field">
-					<label class="label venus " for="text-input">Save file as</label>
 					{{ form.csrf_token }}
+					{{ form.filename.label(class="label venus ", for="text-input") }}
 					{{ form.filename(class="input input--text", type="text", id="text-input") }}
+
+					{% if form.filename.errors %}
+					<ul>
+						{% for error_message in form.filename.errors %}
+						<li>{{ error_message }}</li>
+						{% endfor %}
+					</ul>
+					{% endif %}
 				</div>
 
 				<div class="top_50_extra_space">

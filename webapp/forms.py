@@ -8,6 +8,8 @@ from wtforms import validators
 from wtforms.validators import InputRequired
 from wtforms.validators import NumberRange
 from wtforms.validators import DataRequired
+from webapp.app_methods import get_export_data_table
+from webapp.app_methods import get_connection
 
 
 class SearchActivityForm(FlaskForm):
@@ -57,7 +59,6 @@ class LoadDataForm(FlaskForm):
     air_file = FileField(validators=[FileRequired(), FileAllowed(['csv'], 'File must be a .csv file.')])
 
 
-
 class DataSelectionForm(FlaskForm):
     data_list = [('00', 'Select Data'),
                  ('SHIFT_DATA', 'Shift Data'), ('TRAFFIC_DATA', 'Traffic Data'), ('NON_RESPONSE_DATA', 'Non response data'),
@@ -92,8 +93,8 @@ class ExportSelectionForm(FlaskForm):
                  ("CONTACT", "Contact"),
                  ("MIGRATION", "Migration")]
 
-    filename = StringField('Save as', [validators.Length(min=4, max=25), validators.DataRequired()])
-    data_selection = SelectField([validators.NoneOf("")], label='Select Data',
-                                 choices=data_list)
+    # filename = StringField('Save as', [validators.Length(min=4, max=25), validators.DataRequired()])
+
+    filename = StringField(label='Save file as', validators=[InputRequired()])
+    data_selection = SelectField(label='Select Data', choices=data_list, validators=[InputRequired()])
     display_data = SubmitField(label='Export Data')
-    data_selection = SelectField(label='Select Data', choices=data_list)

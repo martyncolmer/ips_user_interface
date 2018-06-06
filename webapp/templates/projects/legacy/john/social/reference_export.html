@@ -108,7 +108,7 @@
 
 <section>
 
-	<form id="run" action="/export_data/{{current_run['id']}}" class="form">
+	<form id="run" action="/reference_export/{{current_run['id']}}" class="form" method="POST">
 
 		<div class="wrapper">
 			<div class="group">
@@ -124,10 +124,9 @@
 							<th width="30%" class="table--header--cell">&nbsp;&nbsp;Source Data</th>
 						</thead>
 					<tbody>
-						{% for value in rows %}
+						{% for value in data %}
 						<tr class="table--row">
-							<td width="30%" class="table--cell">&nbsp; <a href="/download_data/current_run['id']">{{ value.split(',')[0] }}.csv</a></td>
-							<!--<td width="30%" class="table&#45;&#45;cell">  {{ value.split(',')[0] }}.csv </td>-->
+							<td width="30%" class="table--cell">&nbsp; <a href="/download_data/{{current_run['id']}}/{{value.split(',')[0]}}">{{ value.split(',')[0] }}.csv</a></td>
 							<td width="30%" class="table--cell">  {{ value.split(',')[1] }}</td>
 					    </tr>
 						{% endfor %}
