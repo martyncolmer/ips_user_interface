@@ -3,6 +3,8 @@ from .forms import CreateRunForm, DateSelectionForm, LoadDataForm
 from . import app_methods
 import uuid
 
+import pandas as pd
+
 bp = Blueprint('new_run', __name__, url_prefix='/new_run', static_folder='static')
 
 
@@ -89,7 +91,7 @@ def new_run_2(run_id=None):
 
                     return redirect('/new_run/new_run_3', code=302)
         else:
-            flash_errors(form)
+            pass
     last_entry = {}
 
     if 's_day' in session:
@@ -128,7 +130,7 @@ def new_run_2(run_id=None):
                            run_id=run_id)
 
 
-# TODO: Implement edit run functionality when how we're dealing with files is determined.
+#TODO: Implement edit run functionality when how we're dealing with files is determined.
 @bp.route('/new_run_3', methods=['GET', 'POST'])
 @bp.route('/new_run_3/<run_id>', methods=['GET', 'POST'])
 def new_run_3(run_id=None):
@@ -161,9 +163,20 @@ def new_run_3(run_id=None):
     return render_template('/projects/legacy/john/social/new_run_3.html', form=form, error=error)
 
 
-@bp.route('/new_run_4')
+@bp.route('/new_run_process_variables')
+def new_run_process_variables():
+    return render_template('/projects/legacy/john/social/new_run_process_variables.html')
+
+
+@bp.route('/edit')
+def edit(row=None):
+    return render_template('/projects/legacy/john/social/edit.html', row=row)
+
+
+@bp.route('/new_run_4', methods=['GET', 'POST'])
 def new_run_4():
-    return render_template('/projects/legacy/john/social/new_run_4.html')
+    df = pd.read_excel('S:\CASPA\IPS\Testing\ProcessVariables\Process_Variables_Py.xlsx', sheet_name='Sheet1')
+    return render_template('/projects/legacy/john/social/new_run_4.html', table = df)
 
 
 @bp.route('/new_run_5')
