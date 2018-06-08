@@ -86,6 +86,43 @@
 <section>
 
 	<div>
+		{% if new_export == "1"%}
+			</div>
+				<div class="collator-item">
+    				<h2 class="collator-title">Success</h2>
+
+					<!-- Start: @panel--success -->
+					<div class="panel panel--success">
+						<div class="panel__header">
+							<div class="venus">Success</div>
+						</div>
+						<div class="panel__body">
+							<div>{{msg}}</div>
+						</div>
+					</div>
+		{% endif %}
+
+		{% if new_export == "2"%}
+			<div class="collator-item">
+				<h2 class="collator-title">Error</h2>
+
+				<!-- Start: @panel--error -->
+				<div class="panel panel--error">
+					<div class="panel__header">
+						<div class="venus">Error</div>
+					</div>
+					<div class="panel__body">
+						<p class="mars">{{msg}}</p>
+						<!--<ul class="list list&#45;&#45;bare">-->
+							<!--<li class="list__item mars">-->
+								<!--1) <a class="js-inpagelink" href="#1">Select an answer to continue.</a>-->
+							<!--</li>-->
+						<!--</ul>-->
+					</div>
+				</div>
+			</div>
+    <!-- End: @panel--error -->
+		{% endif %}
 		<div class="wrapper">
 			<div class="group top_50_extra_space">
 				<div class="col-8">

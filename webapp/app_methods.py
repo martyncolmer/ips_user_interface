@@ -127,26 +127,32 @@ def export_csv(sql_table, run_id):
 
     :return: NA
     """
-    # Connection variables
-    conn = get_connection()
-    cur = conn.cursor()
-
-    # Create and execute SQL query
-    sql = """
-    SELECT * FROM [dbo].[{}]
-    WHERE [RUN_ID] = '{}'
-    """.format(sql_table, run_id)
-    cur.execute(sql)
-
     # HARD-CODED file locations
     path = os.getcwd()
     filename = r"\temp\{}.csv".format(sql_table)
 
-    # Write data to CSV
-    with open(path + filename, 'w', newline='') as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerow([i[0] for i in cur.description])
-        writer.writerows(cur.fetchall())
+    # Connection variables
+    conn = get_connection()
+    cur = conn.cursor()
+
+    # Create SQL query
+    sql = """
+    SELECT * FROM [dbo].[{}]
+    WHERE [RUN_ID] = '{}'
+    """.format(sql_table, run_id)
+
+    try:
+        cur.execute(sql)
+    except Exception as err:
+        print(err)
+        return 2, err
+    else:
+        # Write data to CSV
+        with open(path + filename, 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow([i[0] for i in cur.description])
+            writer.writerows(cur.fetchall())
+        return 1, ""
 
 
 def insert_clob(sql_table, run_id, target_filename):
@@ -161,10 +167,14 @@ def insert_clob(sql_table, run_id, target_filename):
     path = os.getcwd()
     file = r"\temp\{}.csv".format(sql_table)
     dir = path + file
-    with open(dir, 'r') as f:
-        data = f.read()
 
-    # Create and execute SQL query
+    try:
+        with open(dir, 'r') as f:
+            data = f.read()
+    except Exception as err:
+        print(err)
+
+    # Construct SQL query
     sql = """
     INSERT INTO EXPORT_DATA_DOWNLOAD
     VALUES('{}', '{}', '{}', '{}', (SELECT GETDATE()))
@@ -189,10 +199,16 @@ def cleanse_temp_folder():
     # HARD-CODED FILE LOCATION
     path = r"..\webapp\temp"
 
-    # Iterate through file and delete every object
+    # Assign variables
     fileList = os.listdir(path)
-    for fileName in fileList:
-        os.remove(path + "/" + fileName)
+
+
+    try:
+        # Iterate through file and delete every object
+        for fileName in fileList:
+            os.remove(path + "/" + fileName)
+    except Exception as err:
+        print(err)
 
 
 def export_clob(run_id, file_name):
@@ -220,7 +236,7 @@ def export_clob(run_id, file_name):
         print(err)
     else:
         # Retrieve string from SQL and cleanse
-        print(data)
+        # print(data)
         data = str((data[0]))
         data = data.replace(" ", "").replace("(", "").replace(")", "").replace("'", "").replace("'", "").replace(
             "\\n", " ")
@@ -241,33 +257,7 @@ def export_clob(run_id, file_name):
 
 
 def get_export_data_table(run_id):
-    # Connection variables
-    conn = get_connection()
-    cur = conn.cursor()
-
-    # SQL query and execute
-    sql = """
-    SELECT [FILENAME]
-      ,[SOURCE_TABLE]
-    FROM [EXPORT_DATA_DOWNLOAD]
-    WHERE RUN_ID = '{}'
-    ORDER BY [DATE_CREATED] DESC
-    """.format(run_id)
-    cur.execute(sql)
-
-    # Extract rows
-    rows = cur.fetchall()
-
-    print(rows)
-
-    # Append rows to list
-    result = []
-    for row in rows:
-        row = str(row)
-        row = row.replace("(", "").replace("'", "").replace(")", "")
-        result.append(row)
-
-    # Pull data apart to change table_names and re-create new data
+    # Data variables
     fnames = []
     table_names = []
     table_string = {"SURVEY_SUBSAMPLE": "Survey Subsample",
@@ -287,20 +277,49 @@ def get_export_data_table(run_id):
                     "CONTACT": "Contact",
                     "MIGRATION": "Migration",
                     "None": "None"}
-    for item in result:
-        # Create filenames list
-        fnames.append(item.split(", ")[0])
-
-        # Get table name from current data
-        table = item.split(", ")[1]
-
-        # Replace it
-        table_names.append(table_string[table])
-
     data = []
 
-    for f, t in zip(fnames, table_names):
-        data.append(f+", "+t)
+    # Connection variables
+    conn = get_connection()
+    cur = conn.cursor()
+
+    # Construct SQL query
+    sql = """
+    SELECT [FILENAME]
+      ,[SOURCE_TABLE]
+    FROM [EXPORT_DATA_DOWNLOAD]
+    WHERE RUN_ID = '{}'
+    ORDER BY [DATE_CREATED] DESC
+    """.format(run_id)
+
+    try:
+        cur.execute(sql)
+    except Exception as err:
+        print(err)
+    else:
+        # Extract rows
+        rows = cur.fetchall()
+
+        # Append rows to list
+        result = []
+        for row in rows:
+            row = str(row)
+            row = row.replace("(", "").replace("'", "").replace(")", "")
+            result.append(row)
+
+        # Pull data apart to change table_names and re-create new data
+        for item in result:
+            # Create filenames list
+            fnames.append(item.split(", ")[0])
+
+            # Get table name from current data
+            table = item.split(", ")[1]
+
+            # Replace it
+            table_names.append(table_string[table])
+
+        for f, t in zip(fnames, table_names):
+            data.append(f+", "+t)
 
     return data
 

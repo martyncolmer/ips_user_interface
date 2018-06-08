@@ -138,8 +138,8 @@
 				<div class="top_50_extra_space">
 					{{ form.csrf_token }}
 					{{ form.display_data(class="btn btn--primary", type="submit") }}
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<label><a href="dashboard.html">Cancel</a></label>
+					&nbsp;&nbsp;&nbsp;&nbsp;
+					{{ form.cancel_button(class="btn btn--secondary", type="submit") }}
 				</div>
 
 			</form>

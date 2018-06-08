@@ -4,12 +4,10 @@ from wtforms import IntegerField
 from wtforms import StringField
 from wtforms import SelectField
 from wtforms import SubmitField
-from wtforms import validators
 from wtforms.validators import InputRequired
 from wtforms.validators import NumberRange
-from wtforms.validators import DataRequired
-from webapp.app_methods import get_export_data_table
-from webapp.app_methods import get_connection
+from wtforms.validators import NoneOf
+from wtforms.validators import Regexp
 
 
 class SearchActivityForm(FlaskForm):
@@ -85,16 +83,18 @@ class ExportSelectionForm(FlaskForm):
                  ("PS_MINIMUMS", "Minimum Weight Summary"),
                  ("PS_TRAFFIC", "Traffic Weight Summary"),
                  ("PS_UNSAMPLED_OOH", "Unsampled Traffic Weight Summary"),
-                 ("PS_IMBALANCE", "Imbalance Weight Summary"),
-                 ("ALL_DATA", "All Data"),
-                 ("SAS_AIR_MILES", "Air Miles"),
-                 ("ALCOHOL", "Alcohol"),
-                 ("REGIONAL", "Regional"),
-                 ("CONTACT", "Contact"),
-                 ("MIGRATION", "Migration")]
+                 ("PS_IMBALANCE", "Imbalance Weight Summary")]
+                 # ("ALL_DATA", "All Data"),
+                 # ("SAS_AIR_MILES", "Air Miles"),
+                 # ("ALCOHOL", "Alcohol"),
+                 # ("REGIONAL", "Regional"),
+                 # ("CONTACT", "Contact"),
+                 # ("MIGRATION", "Migration")]
 
     # filename = StringField('Save as', [validators.Length(min=4, max=25), validators.DataRequired()])
 
-    filename = StringField(label='Save file as', validators=[InputRequired()])
+    filename = StringField(label='Save file as',
+                           validators=[InputRequired(), Regexp(r'^[\w+-]+$'), NoneOf([" ", ".", ",", "'"])])
     data_selection = SelectField(label='Select Data', choices=data_list, validators=[InputRequired()])
     display_data = SubmitField(label='Export Data')
+    cancel_button = SubmitField(label='Cancel')

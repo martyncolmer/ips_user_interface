@@ -301,9 +301,9 @@ def weights_2(id, table=None, table_title=None, source=None):
     else:
         abort(404)
 
-
 @app.route('/reference_export/<run_id>', methods=['GET', 'POST'])
-def reference_export(run_id):
+@app.route('/reference_export/<run_id>/<new_export>/<msg>', methods=['GET', 'POST'])
+def reference_export(run_id, new_export="0", msg=""):
     # Retrieve run information
     run = app_methods.get_run(run_id)
 
@@ -314,15 +314,22 @@ def reference_export(run_id):
     current_run = run
 
     # Retrieve table data
-    data = get_export_data_table(run_id)
+    try:
+        data = get_export_data_table(run_id)
+    except Exception as err:
+        print(err)
 
     # Generate New Export button
     if request.method == 'POST':
         return redirect('/export_data/' + run_id)
 
+    print(type(msg))
+
     return render_template('/projects/legacy/john/social/reference_export.html',
                            current_run=current_run,
-                           data=data)
+                           data=data,
+                           new_export=str(new_export),
+                           msg=str(msg))
 
 
 @app.route('/export_data/<run_id>', methods=['GET', 'POST'])
@@ -338,37 +345,43 @@ def export_data(run_id):
 
     current_run = run
 
-    form.validate()
-    flash_errors(form)
     if request.method == 'POST' and form.validate():
         # Get values from front end
         sql_table = request.values['data_selection']
         target_filename = request.values['filename']
 
-        # Export table to temporary CSV
-        export_csv(sql_table, run_id)
+        # Export table to temporary CSV and return success code
+        results = export_csv(sql_table, run_id)
+        new_export = results[0]
+        msg = results[1]
+        msg = str(msg)
+
+        if msg == "":
+            msg = "Export was stored successfully.  See below to download."
 
         # Insert data to clob
         insert_clob(sql_table, run_id, target_filename)
 
-        # Return new listy page
-        return redirect('/reference_export/' + run_id)
-    # TODO: Flashy error messages on below page
+        return redirect('/reference_export/' + run_id + '/' + str(new_export) + '/' + msg)
+    elif request.method == 'POST':
+        if 'cancel_button' in request.form:
+            return redirect('/reference_export/' + current_run['id'], code=302)
+
     return render_template('/projects/legacy/john/social/export_data.html', form=form, current_run=current_run)
 
 
 @app.route('/download_data/<run_id>/<file_name>')
 def download_data(run_id, file_name):
+    # Assign variables
+    path = os.getcwd()
+    source = r"\temp\{}.csv".format(file_name)
+    memory_file = io.BytesIO()
+
     # Remove files from temp folder
     cleanse_temp_folder()
 
     # Export CLOB to CSV
     export_clob(run_id, file_name)
-
-    # Assign variables
-    path = os.getcwd()
-    source = r"\temp\{}.csv".format(file_name)
-    memory_file = io.BytesIO()
 
     # Zip file (# source = file to be zipped. file_name = zip name)
     zipfile.ZipFile(memory_file, mode='w').write(path+source, file_name+".csv")
