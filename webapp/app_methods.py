@@ -81,6 +81,11 @@ def get_run(run_id):
             return x
 
 
+def get_process_variables():
+
+    response = requests.get('http://ips-db.apps.cf1.ons.statistics.gov.uk/process_variables')
+    return json.loads(response.content)
+
 def get_display_data(table_name, source, run_id):
 
     column_sets = {'SHIFT_DATA': ['PORTROUTE', 'WEEKDAY', 'ARRIVEDEPART', 'AM_PM_NIGHT', 'TOTAL'],

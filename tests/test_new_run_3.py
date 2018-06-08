@@ -32,6 +32,7 @@ def test_no_errors_new_run_3(test_client):
     assert b'All fields must be filled with .csv files only.' not in res.data
 
 
+# TODO: ensure that the test gives the expected number of these error messages
 # Test that an error is displayed if no files are given.
 def test_missing_files_error_new_run_3(test_client):
     res = test_client.post('/new_run/new_run_3')

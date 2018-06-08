@@ -130,7 +130,7 @@ def new_run_2(run_id=None):
                            run_id=run_id)
 
 
-#TODO: Implement edit run functionality when how we're dealing with files is determined.
+# TODO: Implement edit run functionality when how we're dealing with files is determined.
 @bp.route('/new_run_3', methods=['GET', 'POST'])
 @bp.route('/new_run_3/<run_id>', methods=['GET', 'POST'])
 def new_run_3(run_id=None):
@@ -174,9 +174,13 @@ def edit(row=None):
 
 
 @bp.route('/new_run_4', methods=['GET', 'POST'])
-def new_run_4():
+def new_run_4(row=None):
+
+    if request.method == 'POST' and row:
+        return render_template('/projects/legacy/john/social/edit.html', row=row)
+
     df = pd.read_excel('S:\CASPA\IPS\Testing\ProcessVariables\Process_Variables_Py.xlsx', sheet_name='Sheet1')
-    return render_template('/projects/legacy/john/social/new_run_4.html', table = df)
+    return render_template('/projects/legacy/john/social/new_run_4.html', table=df)
 
 
 @bp.route('/new_run_5')
