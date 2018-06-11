@@ -1,5 +1,6 @@
 from webapp import app_methods
 
+
 def test_get_system_info():
     """
     Purpose: Tests the get_system_info method's functionality.

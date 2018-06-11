@@ -19,14 +19,14 @@ def test_client():
 
 
 # Test that the standard page renders correctly.
-def test_page_new_run_3_renders_correctly_with_expected_text(test_client):
+def test_default_page_new_run_3_renders_correctly_with_expected_text_from_get_request(test_client):
     res = test_client.get('/new_run/new_run_3')
     assert res.status_code == 200
     assert b'File type accepted is .csv' in res.data
 
 
 # Test that no error messages display when first seeing the basic page.
-def test_no_error_messages_on_page_new_run_3(test_client):
+def test_no_error_messages_on_default_page_new_run_3_from_get_request(test_client):
     res = test_client.get('/new_run/new_run_3')
     assert b'This field is required.' not in res.data
     assert b'All fields must be filled with .csv files only.' not in res.data
@@ -41,7 +41,7 @@ def test_missing_files_error_new_run_3(test_client):
 
 
 # Test that the new_run_4 page is rendered correctly when all fields are filled with csv files
-def test_progress_correctly_to_new_run_4_page_when_all_file_fields_are_filled_corrrectly_with_csv_files(test_client):
+def test_progress_correctly_to_new_run_4_page_when_all_file_fields_are_filled_correctly_with_csv_files(test_client):
     # Given
     with app.test_request_context():
         dummy_file = FileStorage(filename='data.csv')
