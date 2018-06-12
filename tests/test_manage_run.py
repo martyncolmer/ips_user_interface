@@ -197,7 +197,7 @@ class TestManageRun:
 
     # Run button
     @pytest.mark.skip(reason="Functionality Not Implemented.")
-    def test_manage_run_press_run_selected(self, client):
+    def test_pressing_run_button(self, client):
         with app.test_request_context():
             # Setup form submission information
             selection = ManageRunForm.run_button
