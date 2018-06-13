@@ -232,3 +232,28 @@ def edit_run_step_status(run_id, value, step_number=None):
         route = route + "/" + step_number
 
     requests.put(route)
+
+
+def edit_process_variable(run_id, pv_content, pv_name, reason_for_change):
+    """
+    :param run_id:
+    :param pv_content:
+    :param pv_name:
+    :param reason_for_change:
+    :return:
+    """
+    response = requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/process_variables/" + run_id)
+
+
+    file = json.loads(response.content)
+
+    pv = file[0]
+
+    pv["RUN_ID"] = run_id
+    pv["PV_NAME"] = pv_name
+    pv["PV_CONTENT"] = pv_content
+    pv["PV_REASON"] = reason_for_change
+
+    for record in file:
+        requests.put("http://ips-db.apps.cf1.ons.statistics.gov.uk/process_variables/" + run_id + "/" + pv_name, json=pv)
+
