@@ -371,3 +371,47 @@ class TestNewRun3:
     def test_webpage_valid_run_id_renders_errors_when_missing_information(self, client):
         res = client.post('/new_run/new_run_3/9e5c1872-3f8e-4ae5-85dc-c67a602d011e')
         assert b'This field is required.' in res.data
+
+
+    # Test that an error is displayed if no files are given.
+    @pytest.mark.skip
+    def test_missing_files_error_new_run_3(self, client):
+        res = client.post('/new_run/new_run_3')
+        assert res.status_code == 200
+        assert b'This field is required.' in res.data
+
+
+    @pytest.mark.skip
+    def test_wrong_files_error_new_run_3(self, client):
+        with app.test_request_context():
+            dummy_file = FileStorage(filename='data.txt')
+            form = LoadDataForm(survey_file=dummy_file,
+                                shift_file=dummy_file,
+                                non_response_file=dummy_file,
+                                unsampled_file=dummy_file,
+                                tunnel_file=dummy_file,
+                                sea_file=dummy_file,
+                                air_file=dummy_file)
+
+            res = client.post('/new_run/new_run_3', data=form.data, follow_redirects=True)
+        assert res.status_code == 200
+        assert b'This field is required.' in res.data
+        assert b'Select process variables' not in res.data
+
+
+    # Test that the error is not displayed if all files are given.
+    @pytest.mark.skip
+    def test_no_error_new_run_3_files(self, client):
+        with app.test_request_context():
+            dummy_file = FileStorage(filename='data.csv')
+            form = LoadDataForm(survey_file=dummy_file,
+                                shift_file=dummy_file,
+                                non_response_file=dummy_file,
+                                unsampled_file=dummy_file,
+                                tunnel_file=dummy_file,
+                                sea_file=dummy_file,
+                                air_file=dummy_file)
+
+            res = client.post('/new_run/new_run_3', data=form.data, follow_redirects=True)
+        assert res.status_code == 200
+        assert b'Select process variables' in res.data
