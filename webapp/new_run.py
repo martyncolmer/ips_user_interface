@@ -213,8 +213,11 @@ def new_run_4(row=None):
     if request.method == 'POST' and row:
         return render_template('/projects/legacy/john/social/edit.html', row=row)
 
-    df = pd.read_excel('S:\CASPA\IPS\Testing\ProcessVariables\Process_Variables_Py.xlsx', sheet_name='Sheet1')
-    return render_template('/projects/legacy/john/social/new_run_4.html', table=df)
+    records = app_methods.get_process_variables()
+
+    header = ['PV_NAME', 'PV_REASON', 'PV_CONTENT']
+
+    return render_template('/projects/legacy/john/social/new_run_4.html', table=records, header=header)
 
 
 @bp.route('/new_run_5')
