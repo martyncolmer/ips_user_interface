@@ -197,9 +197,13 @@ def new_run_3(run_id=None):
     return render_template('/projects/legacy/john/social/new_run_3.html', form=form, error=error)
 
 
-@bp.route('/new_run_process_variables')
+@bp.route('/new_run_4')
 def new_run_process_variables():
-    return render_template('/projects/legacy/john/social/new_run_process_variables.html')
+
+    records = app_methods.get_process_variable_sets()
+
+    header = ['RUN_ID', 'NAME', 'USER', 'START_DATE', 'END_DATE']
+    return render_template('/projects/legacy/john/social/new_run_4.html', table = records, header = header)
 
 
 @bp.route('/edit')
@@ -207,8 +211,8 @@ def edit(row=None):
     return render_template('/projects/legacy/john/social/edit.html', row=row)
 
 
-@bp.route('/new_run_4', methods=['GET', 'POST'])
-def new_run_4(row=None):
+@bp.route('/new_run_5', methods=['GET', 'POST'])
+def new_run_5(row=None):
 
     if request.method == 'POST' and row:
         return render_template('/projects/legacy/john/social/edit.html', row=row)
@@ -217,12 +221,7 @@ def new_run_4(row=None):
 
     header = ['PV_NAME', 'PV_REASON', 'PV_CONTENT']
 
-    return render_template('/projects/legacy/john/social/new_run_4.html', table=records, header=header)
-
-
-@bp.route('/new_run_5')
-def new_run_5():
-    return render_template('/projects/legacy/john/social/new_run_5.html')
+    return render_template('/projects/legacy/john/social/new_run_5.html', table=records, header=header)
 
 
 @bp.route('/new_run_6')

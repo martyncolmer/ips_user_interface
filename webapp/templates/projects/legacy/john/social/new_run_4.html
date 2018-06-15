@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en-gb" dir="ltr" class="no-js"> 
+<html lang="en-gb" dir="ltr" class="no-js">
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -90,10 +90,10 @@
 
 			<div class="group top_40_extra_space">
 				<div>
-					<h2 class="pluto grey_text ">Step 4 of 7</h2>				
+					<h2 class="pluto grey_text ">Step 4 of 5</h2>
 				</div>
 				<div>
-					<h2 class="saturn">Select process variables </h2>				
+					<h2 class="saturn">Select process variables set </h2>
 				</div>
 			</div>
 
@@ -133,7 +133,7 @@
 				    <button class="btn btn--primary" type="submit">Save and continue</button>
 				    &nbsp;&nbsp;&nbsp;
 				    <a class="btn btn--secondary btn--border" href="/new_run_3">Back</a>
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<label><a href="/dashboard">Cancel</a></label>
 				</div>
 
@@ -162,16 +162,20 @@
                                     {% for column in header %}
                                         <th class="table--header--cell"> {{ column | replace('_', ' ') | title }} </th>
                                     {% endfor %}
-                                    <th class="table--header--cell">Edit</th>
+                                    <th class="table--header--cell">Select</th>
                                 </thead>
                                 <tbody>
                                     <!-- for each record, render each data value -->
                                     {% for record in table %}
                                     <tr class="table--row">
-                                        <td class="table--cell">{{record['PV_NAME']}} </td>
-                                        <td class="table--cell">{{record['PV_REASON']}} </td>
-                                        <td class="table--cell">{{record['PV_CONTENT']}}</td>
-                                        <td class="table--cell"><a href="edit">Edit</a></td>
+                                        <td class="table--cell">{{record['RUN_ID']}} </td>
+                                        <td class="table--cell">{{record['NAME']}} </td>
+                                        <td class="table--cell">{{record['USER']}}</td>
+										<td class="table--cell">{{record['START_DATE']}}</td>
+										<td class="table--cell">{{record['END_DATE']}}</td>
+                                        <td width="10%" class="table--cell field__item2">
+											<input class="input--radio2" type="radio" name = "selected">
+										</td>
                                     </tr>
                                     {% endfor %}
                                     </tbody>
@@ -186,6 +190,9 @@
                                     </div>
                                 {% endif%}
 			        	</table>
+						</div>
+
+
 					</div>
 
 					<div class="wrapper">
@@ -198,7 +205,7 @@
 									<a href="#">4</a>&nbsp;
 									<a href="#">5</a>&nbsp;
 									<a href="#">6</a>&nbsp;
-									<a href="#">7</a>&nbsp; 
+									<a href="#">7</a>&nbsp;
 									<a href="#">8</a>&nbsp;
 									<a href="#">9</a>&nbsp;
 									<a href="#">10</a>&nbsp;
@@ -214,10 +221,9 @@
 					<button class="btn btn--primary" type="submit">Save and continue</button>
 					&nbsp;&nbsp;&nbsp;
 					<a class="btn btn--secondary btn--border" href="/new_run/new_run_3">Back</a>
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<label><a href="/dashboard">Cancel</a></label>
 				</div>
-                </div>
 
 			</form>
 
@@ -265,26 +271,26 @@ $('.ui.dropdown').dropdown();
 
 
 <script type="text/javascript">
- 
+
 window.onload = function(){
- 
+
   var form = document.getElementById("form-sign-in");
 
   form.onsubmit = function(e) {
     e.preventDefault();
     var userInput = document.getElementById('text-input').value;
-   
+
     if (userInput.includes('123')) {
-   
+
       window.location = 'contributor.html';
-   
+
     } else if (userInput.includes('cme')) {
       window.location = 'search_results.html';
     }
     return false;
   }
 };
- 
+
 </script>​
 
 
