@@ -214,10 +214,13 @@ def edit(row=None):
 @bp.route('/new_run_5', methods=['GET', 'POST'])
 def new_run_5(row=None):
 
-    if request.method == 'POST' and row:
-        return render_template('/projects/legacy/john/social/edit.html', row=row)
+    #if request.method == 'POST':
+        #if "new_run/new_run_4" in request.headers.get("Referrer"):
 
-    records = app_methods.get_process_variables()
+        #if row:
+            #return render_template('/projects/legacy/john/social/edit.html', row=row)
+
+    records = app_methods.get_process_variables(request.form['selected'])
 
     header = ['PV_NAME', 'PV_REASON', 'PV_CONTENT']
 

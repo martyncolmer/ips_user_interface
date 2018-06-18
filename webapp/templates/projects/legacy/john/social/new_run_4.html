@@ -151,7 +151,7 @@
 	<div class="wrapper">
 		<div class="group">
 
-			<form id="run" action="/new_run/new_run_5" class="form">
+			<form id="run" action="/new_run/new_run_5" class="form" method="POST">
 
 				<div class="wrapper">
 					<div class="group">
@@ -174,7 +174,7 @@
 										<td class="table--cell">{{record['START_DATE']}}</td>
 										<td class="table--cell">{{record['END_DATE']}}</td>
                                         <td width="10%" class="table--cell field__item2">
-											<input class="input--radio2" type="radio" name = "selected">
+											<input class="input--radio2" type="radio" name = "selected" value = {{record['RUN_ID']}}>
 										</td>
                                     </tr>
                                     {% endfor %}

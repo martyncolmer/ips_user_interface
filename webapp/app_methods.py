@@ -81,9 +81,9 @@ def get_run(run_id):
             return x
 
 
-def get_process_variables():
+def get_process_variables(run_id):
 
-    response = requests.get('http://ips-db.apps.cf1.ons.statistics.gov.uk/process_variables')
+    response = requests.get('http://ips-db.apps.cf1.ons.statistics.gov.uk/process_variables/' + run_id)
     return json.loads(response.content)
 
 
