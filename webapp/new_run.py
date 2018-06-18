@@ -159,31 +159,9 @@ def new_run_3(run_id=None):
             if (form.validate() == False):
                 error = True
             else:
-                if not os.path.exists('input/' + session['current_run_id']):
-                    os.mkdir('input/' + session['current_run_id'])
+                pass
 
-                survey_data = form.survey_file.data
-                survey_data.save(os.path.join('input/' + session['current_run_id'], 'survey_data.csv'))
-
-                shift_data = form.shift_file.data
-                shift_data.save(os.path.join('input/' + session['current_run_id'], 'shift_data.csv'))
-
-                non_response_data = form.non_response_file.data
-                non_response_data.save(os.path.join('input/' + session['current_run_id'], 'non_response_data.csv'))
-
-                unsampled_data = form.unsampled_file.data
-                unsampled_data.save(os.path.join('input/' + session['current_run_id'], 'unsampled_data.csv'))
-
-                tunnel_data = form.tunnel_file.data
-                tunnel_data.save(os.path.join('input/' + session['current_run_id'], 'tunnel_data.csv'))
-
-                sea_data = form.sea_file.data
-                sea_data.save(os.path.join('input/' + session['current_run_id'], 'sea_data.csv'))
-
-                air_data = form.air_file.data
-                air_data.save(os.path.join('input/' + session['current_run_id'], 'air_data.csv'))
-
-                return redirect(url_for('new_run_4'))
+                return redirect('/new_run/new_run_4')
 
         survey_data = form.survey_file.data
         survey_filename = form.survey_file.name
@@ -197,8 +175,27 @@ def new_run_3(run_id=None):
     return render_template('/projects/legacy/john/social/new_run_3.html', form=form, error=error)
 
 
-@bp.route('/new_run_4')
+@bp.route('/new_run_4', methods=['GET', 'POST'])
 def new_run_process_variables():
+
+    if request.method == "POST":
+
+        run_id = session['id']
+        run_name = session['run_name']
+        start_date = session['start_date']
+        end_date = session['end_date']
+        user = 'test_user_placeholder'
+
+        template_id = request.form['selected']
+
+        app_methods.create_process_variables_set(run_id, run_name, user, start_date, end_date)
+        app_methods.create_process_variables(run_id, template_id)
+
+        records = app_methods.get_process_variables(run_id)
+
+        header = ['PV_NAME', 'PV_REASON', 'PV_CONTENT']
+
+        return render_template('/projects/legacy/john/social/new_run_5.html', table=records, header=header)
 
     records = app_methods.get_process_variable_sets()
 
@@ -208,23 +205,14 @@ def new_run_process_variables():
 
 @bp.route('/edit')
 def edit(row=None):
+
     return render_template('/projects/legacy/john/social/edit.html', row=row)
 
 
 @bp.route('/new_run_5', methods=['GET', 'POST'])
-def new_run_5(row=None):
+def new_run_5():
 
-    #if request.method == 'POST':
-        #if "new_run/new_run_4" in request.headers.get("Referrer"):
-
-        #if row:
-            #return render_template('/projects/legacy/john/social/edit.html', row=row)
-
-    records = app_methods.get_process_variables(request.form['selected'])
-
-    header = ['PV_NAME', 'PV_REASON', 'PV_CONTENT']
-
-    return render_template('/projects/legacy/john/social/new_run_5.html', table=records, header=header)
+    return render_template('/projects/legacy/john/social/new_run_5.html')
 
 
 @bp.route('/new_run_6')

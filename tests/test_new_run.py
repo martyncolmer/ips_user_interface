@@ -74,3 +74,11 @@ class TestNewRun3:
 
         assert res.status_code == 200
         assert b'File must be a .csv file.' in res.data
+
+class TestNewRun4:
+
+    # Test that the standard page renders correctly.
+    def test_default_page_new_run_4_renders_correctly_with_expected_text_from_get_request(self, client):
+        res = client.get('/new_run/new_run_4')
+        assert res.status_code == 200
+        assert b'Select process variables set' in res.data

@@ -84,7 +84,27 @@ def get_run(run_id):
 def get_process_variables(run_id):
 
     response = requests.get('http://ips-db.apps.cf1.ons.statistics.gov.uk/process_variables/' + run_id)
+
     return json.loads(response.content)
+
+
+def create_process_variables_set(run_id, name, user, start_date, end_date):
+
+    response = requests.get('http://ips-db.apps.cf1.ons.statistics.gov.uk/pv_sets')
+    file = json.loads(response.content)
+    new_pv_set = file[0]
+
+    new_pv_set['RUN_ID'] = run_id
+    new_pv_set['NAME'] = name
+    new_pv_set['USER'] = user
+    new_pv_set['START_DATE'] = start_date
+    new_pv_set['END_DATE'] = end_date
+
+    requests.post('http://ips-db.apps.cf1.ons.statistics.gov.uk/pv_sets', json=new_pv_set)
+
+
+def create_process_variables(run_id, template_id):
+    requests.post('http://ips-db.apps.cf1.ons.statistics.gov.uk/process_variables/' + run_id + '/' + template_id)
 
 
 def get_process_variable_sets():
