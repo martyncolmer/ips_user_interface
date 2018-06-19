@@ -174,7 +174,11 @@
 										<td class="table--cell">{{record['START_DATE']}}</td>
 										<td class="table--cell">{{record['END_DATE']}}</td>
                                         <td width="10%" class="table--cell field__item2">
+											{% if record['RUN_ID'] == "TEMPLATE" %}
+												<input class="input--radio2" type="radio" name = "selected" checked = True value = {{record['RUN_ID']}}>
+											{% else %}
 											<input class="input--radio2" type="radio" name = "selected" value = {{record['RUN_ID']}}>
+											{% endif %}
 										</td>
                                     </tr>
                                     {% endfor %}
