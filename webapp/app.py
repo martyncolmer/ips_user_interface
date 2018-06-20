@@ -14,8 +14,10 @@ from webapp.forms import LoadDataForm
 from webapp.app_methods import export_csv
 from webapp.app_methods import insert_clob
 from webapp.app_methods import export_clob
-from webapp.app_methods import cleanse_temp_folder
+from webapp.app_methods import get_export_data
+# from webapp.app_methods import cleanse_temp_folder
 from webapp.app_methods import get_export_data_table
+from webapp.app_methods import create_export_data_download
 
 APP_DIR = os.path.dirname(__file__)
 app = Flask(__name__)
@@ -313,22 +315,27 @@ def reference_export(run_id, new_export="0", msg=""):
     session['start_date'] = run['start_date']
     current_run = run
 
+    column_headers = ['Filename', 'Source Sata']
+
     # Retrieve table data
     try:
-        data = get_export_data_table(run_id)
+        # Presents the table
+        # data = get_export_data_table(run_id)
+        table_info = get_export_data(run_id)
+        data = table_info[0]
+        exports = table_info[1]
     except Exception as err:
         print(err)
-
     # Generate New Export button
     if request.method == 'POST':
         return redirect('/export_data/' + run_id)
-
-    print(type(msg))
-
+    # print(type(msg))
     return render_template('/projects/legacy/john/social/reference_export.html',
                            current_run=current_run,
+                           column_headers=column_headers,
                            data=data,
                            new_export=str(new_export),
+                           exports=str(exports),
                            msg=str(msg))
 
 
@@ -350,12 +357,14 @@ def export_data(run_id):
         sql_table = request.values['data_selection']
         target_filename = request.values['filename']
 
+        # Stores table in pseudo database
+        # results = create_export_data_download(run_id=run_id, source_table=sql_table, file_name=target_filename)
+
         # Export table to temporary CSV and return success code
         results = export_csv(sql_table, run_id)
         new_export = results[0]
         msg = results[1]
         msg = str(msg)
-
         if msg == "":
             msg = "Export was stored successfully.  See below to download."
 
@@ -378,7 +387,7 @@ def download_data(run_id, file_name):
     memory_file = io.BytesIO()
 
     # Remove files from temp folder
-    cleanse_temp_folder()
+    # cleanse_temp_folder()
 
     # Export CLOB to CSV
     export_clob(run_id, file_name)
@@ -388,7 +397,7 @@ def download_data(run_id, file_name):
     memory_file.seek(0)
 
     # Remove files from temp folder
-    cleanse_temp_folder()
+    # cleanse_temp_folder()
 
     return send_file(memory_file, attachment_filename='{}.zip'.format(file_name))
 

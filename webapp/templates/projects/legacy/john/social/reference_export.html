@@ -86,6 +86,22 @@
 <section>
 
 	<div>
+		{% if exports == "0"%}
+			<div class="collator-item">
+				<h2 class="collator-title">Error</h2>
+
+				<!-- Start: @panel--error -->
+				<div class="panel panel--error">
+					<div class="panel__header">
+						<div class="venus">Error</div>
+					</div>
+					<div class="panel__body">
+						<p class="mars">There are currently no exports saved for this run.  Please Generate New Export.</p>
+					</div>
+				</div>
+			</div>
+		{% endif %}
+
 		{% if new_export == "1"%}
 			</div>
 				<div class="collator-item">
@@ -113,11 +129,6 @@
 					</div>
 					<div class="panel__body">
 						<p class="mars">{{msg}}</p>
-						<!--<ul class="list list&#45;&#45;bare">-->
-							<!--<li class="list__item mars">-->
-								<!--1) <a class="js-inpagelink" href="#1">Select an answer to continue.</a>-->
-							<!--</li>-->
-						<!--</ul>-->
 					</div>
 				</div>
 			</div>
@@ -134,11 +145,14 @@
 						<br>
 						<spam><strong>Execution date & time: </strong>&nbsp;{{current_run['start_date']}}</spam>
 						<br>
-						<!--<spam><strong>Person: </strong>&nbsp;Edgar Allan Poe</spam>-->
 					</div>
 				</div>
 			</div>
 		</div>
+
+
+
+
 	</div>
 
 </section>
@@ -157,16 +171,18 @@
 				</ul>
 					<table class="table table__dense">
 						<thead class="table--head">
-							<th width="30%" class="table--header--cell">&nbsp;&nbsp;Filename</th>
-							<th width="30%" class="table--header--cell">&nbsp;&nbsp;Source Data</th>
+							{% for column in header %}
+								<th class="table--header--cell"> {{ column }} </th>
+							{% endfor %}
 						</thead>
 					<tbody>
 						{% for value in data %}
 						<tr class="table--row">
-							<td width="30%" class="table--cell">&nbsp; <a href="/download_data/{{current_run['id']}}/{{value.split(',')[0]}}">{{ value.split(',')[0] }}.csv</a></td>
-							<td width="30%" class="table--cell">  {{ value.split(',')[1] }}</td>
-					    </tr>
+							<td width="30%" class="table--cell">&nbsp; <a href="/download_data/{{value['RUN_ID']}}/{{value['FILENAME']}}">{{value['RUN_ID']}}</a></td>
+							<td width="30%" class="table--cell">{{value['FILENAME']}} </td>
+						</tr>
 						{% endfor %}
+
 					</tbody>
 
 

@@ -223,8 +223,8 @@ def export_clob(run_id, file_name):
     sql = """
     SELECT DOWNLOADABLE_DATA
     FROM EXPORT_DATA_DOWNLOAD
-    WHERE ED_ID = '{}'
-    AND ED_NAME = '{}'
+    WHERE RUN_ID = '{}'
+    AND FILENAME = '{}'
     """.format(run_id, file_name)
 
     try:
@@ -247,7 +247,9 @@ def export_clob(run_id, file_name):
 
         # Export list to csv in HARD-CODED FILE LOCATION
         path = os.getcwd()
+        print(path)
         filename = r"\temp\{}.csv".format(file_name)
+        print(filename)
         with open(path+filename, "w", newline="") as csvfile:
             writer = csv.writer(csvfile)
             for item in output:
@@ -256,77 +258,121 @@ def export_clob(run_id, file_name):
                 writer.writerow(row)
 
 
-def get_export_data_table(run_id):
-    # Data variables
-    fnames = []
-    table_names = []
-    table_string = {"SURVEY_SUBSAMPLE": "Survey Subsample",
-                    "PS_FINAL": "Final Weight Summary",
-                    "PS_SHIFT_DATA": "Shift",
-                    "PS_NON_RESPONSE": "Non-Response",
-                    "PS_SHIFT_DATA": "Shift Weight Summary",
-                    "NON_RESPONSE_DATA": "Non Response Weight Summary",
-                    "PS_MINIMUMS": "Minimum Weight Summary",
-                    "PS_TRAFFIC": "Traffic Weight Summary",
-                    "PS_UNSAMPLED_OOH": "Unsampled Traffic Weight Summary",
-                    "PS_IMBALANCE": "Imbalance Weight Summary",
-                    "ALL_DATA": "All Data",
-                    "SAS_AIR_MILES": "Air Miles",
-                    "ALCOHOL": "Alcohol",
-                    "REGIONAL": "Regional",
-                    "CONTACT": "Contact",
-                    "MIGRATION": "Migration",
-                    "None": "None"}
-    data = []
+def create_export_data_download(run_id, source_table, file_name):
 
-    # Connection variables
-    conn = get_connection()
-    cur = conn.cursor()
+    """
+        Purpose: Creates a new run and adds it to the current list of runs (.csv currently but will be to database).
 
-    # Construct SQL query
-    sql = """
-    SELECT [FILENAME]
-      ,[SOURCE_TABLE]
-    FROM [EXPORT_DATA_DOWNLOAD]
-    WHERE RUN_ID = '{}'
-    ORDER BY [DATE_CREATED] DESC
-    """.format(run_id)
+        :return: NA
+        """
+    response = requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/export_data_download")
 
-    try:
-        cur.execute(sql)
-    except Exception as err:
-        print(err)
-    else:
-        # Extract rows
-        rows = cur.fetchall()
+    file = json.loads(response.content)
+    new_run = file[0]
 
-        # Append rows to list
-        result = []
-        for row in rows:
-            row = str(row)
-            row = row.replace("(", "").replace("'", "").replace(")", "")
-            result.append(row)
+    new_run['id'] = unique_id
+    new_run['name'] = run_name
+    new_run['desc'] = run_description
+    new_run['start_date'] = start_date
+    new_run['end_date'] = end_date
+    new_run['status'] = run_status
+    new_run['type'] = run_type
 
-        # Pull data apart to change table_names and re-create new data
-        for item in result:
-            # Create filenames list
-            fnames.append(item.split(", ")[0])
+    requests.post("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs", json=new_run)
 
-            # Get table name from current data
-            table = item.split(", ")[1]
+    # date = datetime.now().strftime('%Y%m%d%H%M%S')
+    # requests.post('http://ips-db.apps.cf1.ons.statistics.gov.uk/export_data_download' + run_id + '/' + file_name + '/' + source_table + '/' + date,
+    #               run_id=run_id,
+    #               source_table=source_table,
+    #               file_name=file_name,
+    #               date_created=date)
+    #
+    #
+    # def get_export_data(run_id):
+    response = requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/export_data_download/" + run_id)
+    exports = 1
 
-            # Replace it
-            table_names.append(table_string[table])
+    if response.status_code == 400:
+        data = [{'DATE_CREATED': '',
+                 'DOWNLOADABLE_DATA': '',
+                 'FILENAME': '',
+                 'RUN_ID': '',
+                 'SOURCE_TABLE': ''}]
+        exports = 0
+        return data, exports
+    return json.loads(response.content), exports
 
-        for f, t in zip(fnames, table_names):
-            data.append(f+", "+t)
-
-    return data
-
-if __name__ == "__main__":
+    # REDUNDANT CODE UFN
+    #
+    # # Data variables
+    # fnames = []
+    # table_names = []
+    # table_string = {"SURVEY_SUBSAMPLE": "Survey Subsample",
+    #                 "PS_FINAL": "Final Weight Summary",
+    #                 "PS_SHIFT_DATA": "Shift",
+    #                 "PS_NON_RESPONSE": "Non-Response",
+    #                 "PS_SHIFT_DATA": "Shift Weight Summary",
+    #                 "NON_RESPONSE_DATA": "Non Response Weight Summary",
+    #                 "PS_MINIMUMS": "Minimum Weight Summary",
+    #                 "PS_TRAFFIC": "Traffic Weight Summary",
+    #                 "PS_UNSAMPLED_OOH": "Unsampled Traffic Weight Summary",
+    #                 "PS_IMBALANCE": "Imbalance Weight Summary",
+    #                 "ALL_DATA": "All Data",
+    #                 "SAS_AIR_MILES": "Air Miles",
+    #                 "ALCOHOL": "Alcohol",
+    #                 "REGIONAL": "Regional",
+    #                 "CONTACT": "Contact",
+    #                 "MIGRATION": "Migration",
+    #                 "None": "None"}
+    # data = []
+    #
+    # # Connection variables
+    # conn = get_connection()
+    # cur = conn.cursor()
+    #
+    # # Construct SQL query
+    # sql = """
+    #     SELECT [FILENAME]
+    #       ,[SOURCE_TABLE]
+    #     FROM [EXPORT_DATA_DOWNLOAD]
+    #     WHERE RUN_ID = '{}'
+    #     ORDER BY [DATE_CREATED] DESC
+    #     """.format(run_id)
+    #
+    # try:
+    #     cur.execute(sql)
+    # except Exception as err:
+    #     print(err)
+    # else:
+    #     # Extract rows
+    #     rows = cur.fetchall()
+    #
+    #     # Append rows to list
+    #     result = []
+    #     for row in rows:
+    #         row = str(row)
+    #         row = row.replace("(", "").replace("'", "").replace(")", "")
+    #         result.append(row)
+    #
+    #     # Pull data apart to change table_names and re-create new data
+    #     for item in result:
+    #         # Create filenames list
+    #         fnames.append(item.split(", ")[0])
+    #
+    #         # Get table name from current data
+    #         table = item.split(", ")[1]
+    #
+    #         # Replace it
+    #         table_names.append(table_string[table])
+    #
+    #     for f, t in zip(fnames, table_names):
+    #         data.append(f + ", " + t)
+    #
+    # return data
+# if __name__ == "__main__":
     # table_name = "COLUMN_LOOKUP"
     # bad_run_id = "9e5c1872-3f8e-4ae5-85dc-c67a602d011e"
     # good_run_id = "9c67a602d011e"
     # new_run_id = "40c7fbcc-c0d8-4fee-898e-9eeacf99cb66"
 
-    get_export_data_table('9e5c1872-3f8e-4ae5-85dc-c67a602d011e')
+    # get_export_data_table('9e5c1872-3f8e-4ae5-85dc-c67a602d011e')
