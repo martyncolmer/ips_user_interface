@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en-gb" dir="ltr" class="no-js"> 
+<html lang="en-gb" dir="ltr" class="no-js">
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -16,48 +16,8 @@
 	<link rel="stylesheet" href="../../../../../static/css/legacy-main.css" media="all">
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 	<script type="text/javascript" src="../../../../../static/js/industry-range.js"></script>
-    <style>
-        body {font-family: Arial, Helvetica, sans-serif;}
+	<script type="text/javascript" src="../../../../../static/js/edit-run.js"></script>
 
-        /* The Modal (background) */
-        .modal {
-            display: none; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 1; /* Sit on top */
-            padding-top: 100px; /* Location of the box */
-            left: 0;
-            top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgb(0,0,0); /* Fallback color */
-            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-        }
-
-        /* Modal Content */
-        .modal-content {
-            background-color: #fefefe;
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-        }
-
-        /* The Close Button */
-        .close {
-            color: #aaaaaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: #000;
-            text-decoration: none;
-            cursor: pointer;
-        }
-    </style>
 </head>
 
 <body>
@@ -175,7 +135,7 @@
 				    <button class="btn btn--primary" type="submit">Save and continue</button>
 				    &nbsp;&nbsp;&nbsp;
 				    <a class="btn btn--secondary btn--border" href="/new_run_3">Back</a>
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<label><a href="/dashboard">Cancel</a></label>
 				</div>
 
@@ -193,7 +153,7 @@
 	<div class="wrapper">
 		<div class="group">
 
-			<form id="run" action="/new_run/new_run_5" class="form">
+			<form id="run" action="/new_run/new_run_6" class="form">
 
 				<div class="wrapper">
 					<div class="group">
@@ -213,8 +173,8 @@
                                         <td class="table--cell">{{record['PV_NAME']}} </td>
                                         <td class="table--cell">{{record['PV_REASON']}} </td>
                                         <td class="table--cell">{{record['PV_CONTENT']}}</td>
-                                        <!--<td class="table--cell"><a href="edit">Edit</a></td>-->
-                                        <td class="table--cell"><button id={{record['PV_NAME']}}>Edit</button></td>
+                                        <!--Give the button a class so that we can call it via javascript, attach ID attribute-->
+                                        <td class="table--cell"><button class="pv-edit-button" id={{record['PV_NAME']}}>Edit</button></td>
                                     </tr>
                                     {% endfor %}
                                     </tbody>
@@ -241,7 +201,7 @@
 									<a href="#">4</a>&nbsp;
 									<a href="#">5</a>&nbsp;
 									<a href="#">6</a>&nbsp;
-									<a href="#">7</a>&nbsp; 
+									<a href="#">7</a>&nbsp;
 									<a href="#">8</a>&nbsp;
 									<a href="#">9</a>&nbsp;
 									<a href="#">10</a>&nbsp;
@@ -257,7 +217,7 @@
 					<button class="btn btn--primary" type="submit">Save and continue</button>
 					&nbsp;&nbsp;&nbsp;
 					<a class="btn btn--secondary btn--border" href="/new_run/new_run_4">Back</a>
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<label><a href="/dashboard">Cancel</a></label>
 				</div>
                 </div>
@@ -301,31 +261,7 @@
 	</div>
 
     <script>
-// Get the modal
-var modal = document.getElementById('myModal');
 
-// Get the button that opens the modal
-var btn = document.getElementById("myBtn");
-
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
-
-// When the user clicks the button, open the modal
-btn.onclick = function() {
-    modal.style.display = "block";
-}
-
-// When the user clicks on <span> (x), close the modal
-span.onclick = function() {
-    modal.style.display = "none";
-}
-
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
-}
 </script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -347,26 +283,26 @@ $('.ui.dropdown').dropdown();
 
 
 <script type="text/javascript">
- 
+
 window.onload = function(){
- 
+
   var form = document.getElementById("form-sign-in");
 
   form.onsubmit = function(e) {
     e.preventDefault();
     var userInput = document.getElementById('text-input').value;
-   
+
     if (userInput.includes('123')) {
-   
+
       window.location = 'contributor.html';
-   
+
     } else if (userInput.includes('cme')) {
       window.location = 'search_results.html';
     }
     return false;
   }
 };
- 
+
 </script>​
 
 
