@@ -10,7 +10,7 @@ This is the Legacy Uplift version of the IPS user interface.
 
 4. Set the following environment variables:
 ```
-FLASK_APP=myapp/app.py
+FLASK_APP=webapp
 ```
 
 5. Run the application with `flask run`
