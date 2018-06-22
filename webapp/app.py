@@ -15,9 +15,9 @@ from webapp.app_methods import export_csv
 from webapp.app_methods import insert_clob
 from webapp.app_methods import export_clob
 from webapp.app_methods import get_export_data
-# from webapp.app_methods import cleanse_temp_folder
-from webapp.app_methods import get_export_data_table
 from webapp.app_methods import create_export_data_download
+# from webapp.app_methods import cleanse_temp_folder
+# from webapp.app_methods import create_export_data_download
 
 APP_DIR = os.path.dirname(__file__)
 app = Flask(__name__)
@@ -308,19 +308,16 @@ def weights_2(id, table=None, table_title=None, source=None):
 def reference_export(run_id, new_export="0", msg=""):
     # Retrieve run information
     run = app_methods.get_run(run_id)
-
     session['current_run_id'] = run['id']
     session['run_name'] = run['name']
     session['run_description'] = run['desc']
     session['start_date'] = run['start_date']
     current_run = run
 
-    column_headers = ['Filename', 'Source Sata']
+    column_headers = ['Filename', 'Source Data']
 
-    # Retrieve table data
     try:
         # Presents the table
-        # data = get_export_data_table(run_id)
         table_info = get_export_data(run_id)
         data = table_info[0]
         exports = table_info[1]
@@ -343,14 +340,8 @@ def reference_export(run_id, new_export="0", msg=""):
 def export_data(run_id):
     form = ExportSelectionForm()
     run = app_methods.get_run(run_id)
-
-    session['current_run_id'] = run['id']
-    session['run_name'] = run['name']
-    session['run_description'] = run['desc']
-    session['start_date'] = run['start_date']
-    session['end_date'] = run['end_date']
-
     current_run = run
+    session['current_run_id'] = run['id']
 
     if request.method == 'POST' and form.validate():
         # Get values from front end
@@ -358,24 +349,12 @@ def export_data(run_id):
         target_filename = request.values['filename']
 
         # Stores table in pseudo database
-        # results = create_export_data_download(run_id=run_id, source_table=sql_table, file_name=target_filename)
+        create_export_data_download(run_id=run_id, source_table=sql_table, file_name=target_filename)
 
-        # Export table to temporary CSV and return success code
-        results = export_csv(sql_table, run_id)
-        new_export = results[0]
-        msg = results[1]
-        msg = str(msg)
-        if msg == "":
-            msg = "Export was stored successfully.  See below to download."
-
-        # Insert data to clob
-        insert_clob(sql_table, run_id, target_filename)
-
-        return redirect('/reference_export/' + run_id + '/' + str(new_export) + '/' + msg)
+        return redirect('/reference_export/' + run_id)
     elif request.method == 'POST':
         if 'cancel_button' in request.form:
             return redirect('/reference_export/' + current_run['id'], code=302)
-
     return render_template('/projects/legacy/john/social/export_data.html', form=form, current_run=current_run)
 
 
