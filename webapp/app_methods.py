@@ -265,8 +265,14 @@ def create_export_data_download(run_id, source_table, file_name):
                  'FILENAME': 'TestGet',
                  'RUN_ID': 'el_24_01_1988',
                  'SOURCE_TABLE': 'get_test_source_table'}
+    print(type(json_data))
 
-    response = requests.post('http://ips-db.apps.cf1.ons.statistics.gov.uk/export_data_download', json=json_data)
+    response = requests.post('http://ips-db.apps.cf1.ons.statistics.gov.uk/export_data_download', json=json_data, content_type='application/json')
+
+    if response == 201:
+        print("Success")
+
+    print(response.data)
 
     # response = requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/export_data_download")
     #
@@ -282,10 +288,10 @@ def create_export_data_download(run_id, source_table, file_name):
     #
     # response = requests.post("http://ips-db.apps.cf1.ons.statistics.gov.uk/export_data_download", json=new_rec)
 
-    if response == 201:
-        print("Success")
-
-    print(response)
+    # if response == 201:
+    #     print("Success")
+    #
+    # print(response)
 
 
 def get_export_data(run_id):

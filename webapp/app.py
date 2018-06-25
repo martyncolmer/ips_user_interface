@@ -349,6 +349,7 @@ def export_data(run_id):
         target_filename = request.values['filename']
 
         # Stores table in pseudo database
+        print("here")
         create_export_data_download(run_id=run_id, source_table=sql_table, file_name=target_filename)
 
         return redirect('/reference_export/' + run_id)
