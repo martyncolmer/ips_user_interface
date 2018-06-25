@@ -10,14 +10,11 @@ from webapp.forms import SearchActivityForm
 from webapp.forms import DataSelectionForm
 from webapp.forms import ExportSelectionForm
 from webapp.forms import LoadDataForm
-# from webapp.forms import DownloadData
 from webapp.app_methods import export_csv
 from webapp.app_methods import insert_clob
 from webapp.app_methods import export_clob
-from webapp.app_methods import get_export_data
-from webapp.app_methods import create_export_data_download
-# from webapp.app_methods import cleanse_temp_folder
-# from webapp.app_methods import create_export_data_download
+from webapp.app_methods import cleanse_temp_folder
+from webapp.app_methods import get_export_data_table
 
 APP_DIR = os.path.dirname(__file__)
 app = Flask(__name__)
@@ -308,31 +305,29 @@ def weights_2(id, table=None, table_title=None, source=None):
 def reference_export(run_id, new_export="0", msg=""):
     # Retrieve run information
     run = app_methods.get_run(run_id)
+
     session['current_run_id'] = run['id']
     session['run_name'] = run['name']
     session['run_description'] = run['desc']
     session['start_date'] = run['start_date']
     current_run = run
 
-    column_headers = ['Filename', 'Source Data']
-
+    # Retrieve table data
     try:
-        # Presents the table
-        table_info = get_export_data(run_id)
-        data = table_info[0]
-        exports = table_info[1]
+        data = get_export_data_table(run_id)
     except Exception as err:
         print(err)
+
     # Generate New Export button
     if request.method == 'POST':
         return redirect('/export_data/' + run_id)
-    # print(type(msg))
+
+    print(type(msg))
+
     return render_template('/projects/legacy/john/social/reference_export.html',
                            current_run=current_run,
-                           column_headers=column_headers,
                            data=data,
                            new_export=str(new_export),
-                           exports=str(exports),
                            msg=str(msg))
 
 
@@ -340,22 +335,37 @@ def reference_export(run_id, new_export="0", msg=""):
 def export_data(run_id):
     form = ExportSelectionForm()
     run = app_methods.get_run(run_id)
-    current_run = run
+
     session['current_run_id'] = run['id']
+    session['run_name'] = run['name']
+    session['run_description'] = run['desc']
+    session['start_date'] = run['start_date']
+    session['end_date'] = run['end_date']
+
+    current_run = run
 
     if request.method == 'POST' and form.validate():
         # Get values from front end
         sql_table = request.values['data_selection']
         target_filename = request.values['filename']
 
-        # Stores table in pseudo database
-        print("here")
-        create_export_data_download(run_id=run_id, source_table=sql_table, file_name=target_filename)
+        # Export table to temporary CSV and return success code
+        results = export_csv(sql_table, run_id)
+        new_export = results[0]
+        msg = results[1]
+        msg = str(msg)
 
-        return redirect('/reference_export/' + run_id)
+        if msg == "":
+            msg = "Export was stored successfully.  See below to download."
+
+        # Insert data to clob
+        insert_clob(sql_table, run_id, target_filename)
+
+        return redirect('/reference_export/' + run_id + '/' + str(new_export) + '/' + msg)
     elif request.method == 'POST':
         if 'cancel_button' in request.form:
             return redirect('/reference_export/' + current_run['id'], code=302)
+
     return render_template('/projects/legacy/john/social/export_data.html', form=form, current_run=current_run)
 
 
@@ -364,6 +374,7 @@ def download_data(run_id, file_name):
     # Assign variables
     path = os.getcwd()
     source = r"\temp\{}.csv".format(file_name)
+    print(path+source)
     memory_file = io.BytesIO()
 
     # Remove files from temp folder
@@ -377,7 +388,7 @@ def download_data(run_id, file_name):
     memory_file.seek(0)
 
     # Remove files from temp folder
-    # cleanse_temp_folder()
+    cleanse_temp_folder()
 
     return send_file(memory_file, attachment_filename='{}.zip'.format(file_name))
 

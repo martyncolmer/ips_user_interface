@@ -4,7 +4,6 @@ import pyodbc
 import os
 import json
 import datetime
-import sys
 
 
 APP_DIR = os.path.dirname(__file__)
@@ -86,6 +85,7 @@ def get_run(run_id):
 
 
 def get_connection():
+    # JACK: Redundant - gets the SQL connection
     """
     Author       : Thomas Mahoney
     Date         : 03 / 04 / 2018
@@ -122,6 +122,7 @@ def get_connection():
 
 
 def export_csv(sql_table, run_id):
+    # JACK: Redundant - gets the table information and converts to CSV ready to be converted to a string
     """
     Author: Elinor Thorne
     Purpose: Exports table from database to CSV in temporary location
@@ -157,6 +158,7 @@ def export_csv(sql_table, run_id):
 
 
 def insert_clob(sql_table, run_id, target_filename):
+    # JACK: Redundant - gets the table information from CSV and converts to a string
     """
     Author: Elinor Thorne
     Purpose: Extracts data from temporary CSV and inserts to table as CLOB
@@ -190,6 +192,7 @@ def insert_clob(sql_table, run_id, target_filename):
 
 
 def cleanse_temp_folder():
+    # JACK: Redundant - removes temporary CSV locations
     """
     Author: Elinor Thorne
     Purpose: Removes temporary files from location
@@ -213,6 +216,7 @@ def cleanse_temp_folder():
 
 
 def export_clob(run_id, file_name):
+    # JACK: Redundant - gets the CLOB information and converts to CSV
     """
     Author: Elinor Thorne
     Purpose: Exports CLOB from database to CSV
@@ -248,9 +252,8 @@ def export_clob(run_id, file_name):
 
         # Export list to csv in HARD-CODED FILE LOCATION
         path = os.getcwd()
-        print(path)
         filename = r"\temp\{}.csv".format(file_name)
-        print(filename)
+        print("1) {}{}".format(path, filename))
         with open(path+filename, "w", newline="") as csvfile:
             writer = csv.writer(csvfile)
             for item in output:
@@ -259,6 +262,93 @@ def export_clob(run_id, file_name):
                 writer.writerow(row)
 
 
+def get_export_data_table(run_id):
+    # JACK - following commented code pulls from back-end.  Uncommented code uses SQL process
+    # response = requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/export_data_download/" + run_id)
+    #
+    # # Set boolean to assume records exist
+    # exports = 1
+    #
+    # if response.status_code == 400:
+    #     data = [{'DATE_CREATED': '',
+    #              'DOWNLOADABLE_DATA': '',
+    #              'FILENAME': '',
+    #              'RUN_ID': '',
+    #              'SOURCE_TABLE': ''}]
+    #     # Set boolean if no records exist
+    #     exports = 0
+    #     return data, exports
+    #
+    # return json.loads(response.content), exports
+
+    # Data variables
+    fnames = []
+    table_names = []
+    table_string = {"SURVEY_SUBSAMPLE": "Survey Subsample",
+                    "PS_FINAL": "Final Weight Summary",
+                    "PS_SHIFT_DATA": "Shift",
+                    "PS_NON_RESPONSE": "Non-Response",
+                    "PS_SHIFT_DATA": "Shift Weight Summary",
+                    "NON_RESPONSE_DATA": "Non Response Weight Summary",
+                    "PS_MINIMUMS": "Minimum Weight Summary",
+                    "PS_TRAFFIC": "Traffic Weight Summary",
+                    "PS_UNSAMPLED_OOH": "Unsampled Traffic Weight Summary",
+                    "PS_IMBALANCE": "Imbalance Weight Summary",
+                    "ALL_DATA": "All Data",
+                    "SAS_AIR_MILES": "Air Miles",
+                    "ALCOHOL": "Alcohol",
+                    "REGIONAL": "Regional",
+                    "CONTACT": "Contact",
+                    "MIGRATION": "Migration",
+                    "None": "None"}
+    data = []
+
+    # Connection variables
+    conn = get_connection()
+    cur = conn.cursor()
+
+    # Construct SQL query
+    sql = """
+    SELECT [FILENAME]
+      ,[SOURCE_TABLE]
+    FROM [EXPORT_DATA_DOWNLOAD]
+    WHERE RUN_ID = '{}'
+    ORDER BY [DATE_CREATED] DESC
+    """.format(run_id)
+
+    try:
+        cur.execute(sql)
+    except Exception as err:
+        print(err)
+    else:
+        # Extract rows
+        rows = cur.fetchall()
+
+        # Append rows to list
+        result = []
+        for row in rows:
+            row = str(row)
+            row = row.replace("(", "").replace("'", "").replace(")", "")
+            result.append(row)
+
+        # Pull data apart to change table_names and re-create new data
+        for item in result:
+            # Create filenames list
+            fnames.append(item.split(", ")[0])
+
+            # Get table name from current data
+            table = item.split(", ")[1]
+
+            # Replace it
+            table_names.append(table_string[table])
+
+        for f, t in zip(fnames, table_names):
+            data.append(f+", "+t)
+
+    return data
+
+
+# JACK - the following function should post data
 def create_export_data_download(run_id, source_table, file_name):
     json_data = {'DATE_CREATED': "2018-01-24 12:00:06",
                  'DOWNLOADABLE_DATA': "RUN_ID,FLOW,SUM_PRIOER_WT,SUM_IMNAL_WT",
@@ -292,30 +382,3 @@ def create_export_data_download(run_id, source_table, file_name):
     #     print("Success")
     #
     # print(response)
-
-
-def get_export_data(run_id):
-    response = requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/export_data_download/" + run_id)
-
-    # Set boolean to assume records exist
-    exports = 1
-
-    if response.status_code == 400:
-        data = [{'DATE_CREATED': '',
-                 'DOWNLOADABLE_DATA': '',
-                 'FILENAME': '',
-                 'RUN_ID': '',
-                 'SOURCE_TABLE': ''}]
-        # Set boolean if no records exist
-        exports = 0
-        return data, exports
-
-    return json.loads(response.content), exports
-
-
-if __name__ == "__main__":
-    run_id = "e1_24_01_1988"
-    source_table = "SURVEY_SUBSAMPLE"
-    filename = "Jibberish"
-
-    create_export_data_download(run_id, source_table, filename)
