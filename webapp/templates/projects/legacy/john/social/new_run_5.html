@@ -170,7 +170,8 @@
                                     <!-- for each record, render each data value -->
                                     {% for record in table %}
                                     <tr class="table--row">
-                                        <td class="table--cell">{{record['PV_NAME']}} </td>
+										<!--Give id to PV_NAME column to load data into modal by ID-->
+                                        <td class="table--cell" id="record-id">{{record['PV_NAME']}} </td>
                                         <td class="table--cell">{{record['PV_REASON']}} </td>
                                         <td class="table--cell">{{record['PV_CONTENT']}}</td>
                                         <!--Give the button a class so that we can call it via javascript, attach ID attribute-->
@@ -236,7 +237,10 @@
   <div class="modal-content">
     <span class="close">&times;</span>
     <p>Process variable content</p>
-      <input type="text" id="content_input" placeholder="Hello">
+	  <!--Three inputs with different ID's-->
+      <input type="text" id="id_input" placeholder="">
+      <input type="text" id="reason_input" placeholder="">
+      <input type="text" id="content_input" placeholder="">
   </div>
 
 </div>
