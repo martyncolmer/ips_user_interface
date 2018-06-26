@@ -191,11 +191,7 @@ def new_run_process_variables():
         app_methods.create_process_variables_set(run_id, run_name, user, start_date, end_date)
         app_methods.create_process_variables(run_id, template_id)
 
-        records = app_methods.get_process_variables(run_id)
-
-        header = ['PV_NAME', 'PV_REASON', 'PV_CONTENT']
-
-        return render_template('/projects/legacy/john/social/new_run_5.html', table=records, header=header)
+        return redirect('/new_run/new_run_5')
 
     records = app_methods.get_process_variable_sets()
 
@@ -212,7 +208,12 @@ def edit(row=None):
 @bp.route('/new_run_5', methods=['GET', 'POST'])
 def new_run_5():
 
-    return render_template('/projects/legacy/john/social/new_run_5.html')
+    run_id = session['id']
+    header = ['PV_NAME', 'PV_REASON', 'PV_CONTENT']
+
+    records = app_methods.get_process_variables(run_id)
+
+    return render_template('/projects/legacy/john/social/new_run_5.html', table=records, header=header)
 
 
 @bp.route('/new_run_6')
