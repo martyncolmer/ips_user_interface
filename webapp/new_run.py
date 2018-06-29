@@ -92,8 +92,7 @@ def new_run_2(run_id=None):
                                            session['start_date'], session['end_date'])
 
                     return redirect('/new_run/new_run_3', code=302)
-        else:
-            pass
+
     last_entry = {}
 
     if 's_day' in session:
