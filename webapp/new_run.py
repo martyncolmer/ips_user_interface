@@ -1,4 +1,4 @@
-from flask import request, render_template, Blueprint, session, redirect, url_for
+from flask import request, render_template, Blueprint, session, redirect, url_for, jsonify
 from .forms import CreateRunForm, DateSelectionForm, LoadDataForm
 from . import app_methods
 import uuid
@@ -176,26 +176,18 @@ def new_run_3(run_id=None):
 
 
 @bp.route('/new_run_4', methods=['GET', 'POST'])
-def new_run_process_variables():
+def new_run_4():
 
     if request.method == "POST":
 
-        run_id = session['id']
-        run_name = session['run_name']
-        start_date = session['start_date']
-        end_date = session['end_date']
-        user = 'test_user_placeholder'
-
-        template_id = request.form['selected']
-
-        app_methods.create_process_variables_set(run_id, run_name, user, start_date, end_date)
-        app_methods.create_process_variables(run_id, template_id)
+        session['template_id'] = request.form['selected']
 
         return redirect('/new_run/new_run_5')
 
     records = app_methods.get_process_variable_sets()
 
     header = ['RUN_ID', 'NAME', 'USER', 'START_DATE', 'END_DATE']
+
     return render_template('/projects/legacy/john/social/new_run_4.html', table = records, header = header)
 
 
@@ -208,10 +200,29 @@ def edit(row=None):
 @bp.route('/new_run_5', methods=['GET', 'POST'])
 def new_run_5():
 
-    run_id = session['id']
+    if request.method == 'POST':
+
+        print(request.args.get('form_table'))
+
+        # print(request.form)
+        #
+        # table_data_json = jsonify(request.form)
+        #
+        # print(table_data_json)
+        #
+        # run_id = session['id']
+        # run_name = session['run_name']
+        # start_date = session['start_date']
+        # end_date = session['end_date']
+        # user = 'test_user_placeholder'
+        # app_methods.create_process_variables_set(run_id, run_name, user, start_date, end_date)
+        # app_methods.create_process_variables(run_id, table_data_json)
+
+    template_id = session['template_id']
+
     header = ['PV_NAME', 'PV_REASON', 'PV_CONTENT']
 
-    records = app_methods.get_process_variables(run_id)
+    records = app_methods.get_process_variables(template_id)
 
     return render_template('/projects/legacy/john/social/new_run_5.html', table=records, header=header)
 

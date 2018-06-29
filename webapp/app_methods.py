@@ -49,7 +49,6 @@ def edit_run(run_id, run_name, run_description, start_date, end_date, run_type='
     requests.put("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs/"+run_id, json=run)
 
 
-
 def get_system_info():
     """
     Purpose: Collects and returns the current build's system info to be displayed on the web application.
@@ -103,14 +102,15 @@ def create_process_variables_set(run_id, name, user, start_date, end_date):
     requests.post('http://ips-db.apps.cf1.ons.statistics.gov.uk/pv_sets', json=new_pv_set)
 
 
-def create_process_variables(run_id, template_id):
-    requests.post('http://ips-db.apps.cf1.ons.statistics.gov.uk/process_variables/' + run_id + '/' + template_id)
+def create_process_variables(run_id, json):
+    requests.post('http://ips-db.apps.cf1.ons.statistics.gov.uk/process_variables/' + run_id, json=json)
 
 
 def get_process_variable_sets():
 
     response = requests.get('http://ips-db.apps.cf1.ons.statistics.gov.uk/pv_sets')
     return json.loads(response.content)
+
 
 def get_display_data(table_name, source, run_id):
 
@@ -270,7 +270,6 @@ def edit_process_variable(run_id, pv_content, pv_name, reason_for_change):
     """
     response = requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/process_variables/" + run_id)
 
-
     file = json.loads(response.content)
 
     pv = file[0]
@@ -281,5 +280,4 @@ def edit_process_variable(run_id, pv_content, pv_name, reason_for_change):
     pv["PV_REASON"] = reason_for_change
 
     for record in file:
-        requests.put("http://ips-db.apps.cf1.ons.statistics.gov.uk/process_variables/" + run_id + "/" + pv_name, json=pv)
-
+        requests.put("http://ips-db.apps.cf1.ons.statistics.gov.uk/process_variables/" + run_id + "/", json=pv)

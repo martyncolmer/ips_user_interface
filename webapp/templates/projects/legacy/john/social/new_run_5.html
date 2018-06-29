@@ -152,29 +152,40 @@
 
 	<div class="wrapper">
 		<div class="group">
+            <!--
+            <form id="new_test" name="just_form_test" action="/new_run/new_run_5" class="form" method="post">
+                 {% for record in table %}
+                <li>{{record['PV_NAME']}}
+                {{record['PV_REASON']}}
+                {{record['PV_CONTENT']}}
+                    <button name="button" class="pv-edit-button" id={{record['PV_NAME']}}>Edit</button>
+                </li>
+                {% endfor %}
+                <input type="submit" value="Submit here!">
+            </form>-->
 
-			<form id="run" action="/new_run/new_run_6" class="form">
+			<form id="run" name="pv_form" action="/new_run/new_run_5" class="form" method="post">
 
 				<div class="wrapper">
 					<div class="group">
 						<div class="col-8 top_40_extra_space">
-							<table class="table table__dense">
+							<table name="form_table" id="form_table" class="table table__dense">
                                 {% if table %}
-                                    <thead class="table--head">
+                                    <thead name="table_header" class="table--head">
                                     {% for column in header %}
-                                        <th class="table--header--cell"> {{ column | replace('_', ' ') | title }} </th>
+                                        <th name="{{column}}" class="table--header--cell"> {{ column | replace('_', ' ') | title }} </th>
                                     {% endfor %}
-                                    <th class="table--header--cell">Edit</th>
+                                    <th name="table_header_cell"class="table--header--cell">Edit</th>
                                 </thead>
                                  <tbody>
-                                    <!-- for each record, render each data value -->
+                                    <!-- for each record, render each data value-->
                                     {% for record in table %}
-                                    <tr class="table--row">
-                                        <td class="table--cell">{{record['PV_NAME']}} </td>
-                                        <td class="table--cell">{{record['PV_REASON']}} </td>
-                                        <td class="table--cell">{{record['PV_CONTENT']}}</td>
+                                    <tr name="table_row"class="table--row">
+                                        <td name="{{record['PV_NAME']}}" value="{{record['PV_NAME']}}"class="table--cell">{{record['PV_NAME']}}</td>
+                                        <td name="{{record['PV_REASON']}}" value="{{record['PV_REASON']}}" class="table--cell">{{record['PV_REASON']}} </td>
+                                        <td name="{{record['PV_CONTENT']}}" value="{{record['PV_CONTENT']}}" class="table--cell">{{record['PV_CONTENT']}}</td>
                                         <!--Give the button a class so that we can call it via javascript, attach ID attribute-->
-                                        <td class="table--cell"><button class="pv-edit-button" id={{record['PV_NAME']}}>Edit</button></td>
+                                        <td name="button"class="table--cell"><button class="pv-edit-button" id={{record['PV_NAME']}}>Edit</button></td>
                                     </tr>
                                     {% endfor %}
                                     </tbody>
