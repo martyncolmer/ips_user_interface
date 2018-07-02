@@ -233,8 +233,10 @@ def import_data(table_name, run_id, json_data):
 
     route = 'http://ips-db.apps.cf1.ons.statistics.gov.uk/' + table_name + '/' + run_id
     print(route)
+    print(json_data)
     rv = requests.post(route, json=json_data)
     print(rv)
+    print("COLUMN HEADERS COULD BE CAUSING ERROR!!!!!!!!!!!!!!!")
 
 
 def delete_data(table_name, run_id = None):

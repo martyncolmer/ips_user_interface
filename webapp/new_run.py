@@ -162,31 +162,28 @@ def new_run_3(run_id=None):
 
         #TODO: Write a function to clear down import tables (by run_id?). Returning 500 which i think is due to duplicate records being added.
 
-        # External
+        import time
 
+        # External
+        app_methods.delete_data('SHIFT_DATA', session['id'])
         # Import shift data
         shift_data = form.shift_file.data
         app_methods.survey_data_import('SHIFT_DATA', session['id'], shift_data)
-
         # Import non_response data
         non_response_data = form.non_response_file.data
-        app_methods.survey_data_import('NON_RESPONSE_DATA', session['id'], non_response_data)
-
+        #app_methods.survey_data_import('NON_RESPONSE_DATA', session['id'], non_response_data)
         # Import unsampled data
         unsampled_data = form.unsampled_file.data
-        app_methods.survey_data_import('UNSAMPLED_OOH_DATA', session['id'], unsampled_data)
-
+        #app_methods.survey_data_import('UNSAMPLED_OOH_DATA', session['id'], unsampled_data)
         # Import tunnel data
         tunnel_data = form.tunnel_file.data
-        app_methods.survey_data_import('TRAFFIC_DATA', session['id'], tunnel_data)
-
+        #app_methods.survey_data_import('TRAFFIC_DATA', session['id'], tunnel_data)
         # Import sea data
         sea_data = form.sea_file.data
-        app_methods.survey_data_import('TRAFFIC_DATA', session['id'], sea_data)
-
+        #app_methods.survey_data_import('TRAFFIC_DATA', session['id'], sea_data)
         # Import air data
         air_data = form.air_file.data
-        app_methods.survey_data_import('TRAFFIC_DATA', session['id'], air_data)
+        #app_methods.survey_data_import('TRAFFIC_DATA', session['id'], air_data)
 
         return redirect('/new_run/new_run_4')
     elif request.method == 'GET':
