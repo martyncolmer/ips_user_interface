@@ -30,7 +30,7 @@ def dashboard_view():
         print(request.form)
         #flash_errors(form)
 
-        # If the search button is selected filter hte results on the run status and the searched word.
+        # If the search button is selected filter the results on the run status and the searched word.
         if 'search_button' in request.form:
             search_activity = request.form['search_activity']
             filter_value = request.form['run_type_filter']

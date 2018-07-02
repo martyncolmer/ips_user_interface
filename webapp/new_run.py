@@ -1,7 +1,11 @@
-from flask import request, render_template, Blueprint, session, redirect, url_for
+from flask import request, render_template, Blueprint, session, redirect, url_for, jsonify
 from .forms import CreateRunForm, DateSelectionForm, LoadDataForm
 from . import app_methods
 import uuid
+
+import os
+
+import pandas as pd
 
 bp = Blueprint('new_run', __name__, url_prefix='/new_run', static_folder='static')
 
@@ -149,9 +153,19 @@ def new_run_3(run_id=None):
             # if no run_id present in html call, run steps to add files to run (in whatever way this will be done)
             pass
 
+        if request.method == 'POST':
+            print("Hello")
+            if (form.validate() == False):
+                error = True
+            else:
+                pass
+
+                return redirect('/new_run/new_run_4')
+
         survey_data = form.survey_file.data
         survey_filename = form.survey_file.name
         return redirect('/new_run/new_run_4')
+
     elif request.method == 'GET':
         pass
     else:
@@ -160,14 +174,56 @@ def new_run_3(run_id=None):
     return render_template('/projects/legacy/john/social/new_run_3.html', form=form, error=error)
 
 
-@bp.route('/new_run_4')
+@bp.route('/new_run_4', methods=['GET', 'POST'])
 def new_run_4():
-    return render_template('/projects/legacy/john/social/new_run_4.html')
+
+    if request.method == "POST":
+
+        session['template_id'] = request.form['selected']
+
+        return redirect('/new_run/new_run_5')
+
+    records = app_methods.get_process_variable_sets()
+
+    header = ['RUN_ID', 'NAME', 'USER', 'START_DATE', 'END_DATE']
+
+    return render_template('/projects/legacy/john/social/new_run_4.html', table = records, header = header)
 
 
-@bp.route('/new_run_5')
+@bp.route('/edit')
+def edit(row=None):
+
+    return render_template('/projects/legacy/john/social/edit.html', row=row)
+
+
+@bp.route('/new_run_5', methods=['GET', 'POST'])
 def new_run_5():
-    return render_template('/projects/legacy/john/social/new_run_5.html')
+
+    if request.method == 'POST':
+
+        print(request.args.get('form_table'))
+
+        # print(request.form)
+        #
+        # table_data_json = jsonify(request.form)
+        #
+        # print(table_data_json)
+        #
+        # run_id = session['id']
+        # run_name = session['run_name']
+        # start_date = session['start_date']
+        # end_date = session['end_date']
+        # user = 'test_user_placeholder'
+        # app_methods.create_process_variables_set(run_id, run_name, user, start_date, end_date)
+        # app_methods.create_process_variables(run_id, table_data_json)
+
+    template_id = session['template_id']
+
+    header = ['PV_NAME', 'PV_REASON', 'PV_CONTENT']
+
+    records = app_methods.get_process_variables(template_id)
+
+    return render_template('/projects/legacy/john/social/new_run_5.html', table=records, header=header)
 
 
 @bp.route('/new_run_6')

@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="en-gb" dir="ltr" class="no-js"> 
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<title>Legacy prototype</title>
+	<meta content="width=device-width, initial-scale=1" name="viewport">
+	<link rel="apple-touch-icon" sizes="180x180" href="../../../../../../static/img/favicons/apple-touch-icon.png">
+	<link rel="icon" type="image/png" href="../../../../../static/img/favicons/favicon-32x32.png" sizes="32x32">
+	<link rel="icon" type="image/png" href="../../../../../static/img/favicons/favicon-16x16.png" sizes="16x16">
+	<link rel="manifest" href="../../../../../static/img/favicons/manifest.json">
+  	<link rel="mask-icon" href="../../../../../static/img/favicons/safari-pinned-tab.svg" color="#5bbad5">
+	<meta name="theme-color" content="#ffffff">
+	<link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.14/semantic.css'>
+	<link rel="stylesheet" href="https://cdn.ons.gov.uk/sdc/322aece/css/styles.css">
+	<link rel="stylesheet" href="../../../../../static/css/legacy-main.css" media="all">
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+	<script type="text/javascript" src="../../../../../static/js/industry-range.js"></script>
+</head>
+
+<body>
+
+<script src="https://cdn.ons.gov.uk/sdc/322aece/scripts/bundle.min.js" ></script>
+
+<header class="page__header">
+
+	<div class="logo_container">
+		<div class="wrapper">
+			<div class="group">
+				<div class="col-7">
+					<div class="logo_header">
+						<a href="../hub.html"><img src="../../../../../../../img/logo.svg" alt="Office for National Statistics" class="logo__img"/></a>
+					</div>
+				</div>
+				<div class="col-5">
+					<div class="header_links">
+						<ul class="menubar" role="menubar" id="appmenu">
+							<li role="menuitem"><a href="" class="username">John Smith</a></li>
+							<li class="menubar" role="menuitem"><a href="../../login.html" class="username">Sign out</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="page_title">
+		<div class="wrapper">
+			<div class="group">
+				<div class="col-12">
+					<div><h1 class="jupiter main_heading">Social Surveys</h1></div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="page_title">
+		<div class="wrapper">
+			<div class="bar bar__sitenavigation not-mvpx top_15_extra_space" role="banner">
+		        <div class="bar__inner container">
+		            <div class="sitenavigation">
+		              	<div class="sitenavigation">
+		                	<ul class="sitenavigation__list">
+			                    <li class="sitenavigation__listitem">
+			                    	<a href="Dashboard.html">Dashboard</a>
+			                    </li>
+			                    <li class="sitenavigation__listitem sitenavigation__listitem--active">
+			                    	<a href="#">New run</a>
+			                    </li>
+			                    <li class="sitenavigation__listitem">
+			                    	<a href="system_info.html">System info</a>
+			                    </li>
+			                </ul>
+		              	</div>
+				  	</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</header>
+
+<section>
+    <div class="dialog id=dialog" aria-hidden="true">
+    <!-- <div class="dialog js-dialog" id="dialog" aria-hidden="true" {helpers.track('visible', 'Timeout', 'Timeout window visible')}> -->
+        <div class="dialog__overlay" tabindex="-1"></div>
+
+        <div class="dialog__body" role="dialog" aria-labelledby="dialog-title">
+            <div role="document">
+
+                <div class="mars u-mb-s">Social surveys</div>
+
+                <h1 class="saturn dialog__title" id="dialog-title" tabindex="0">{{row}}</h1>
+
+                <!--
+
+                <div class="field">
+			        <label class="label venus " for="text-input">Name </label>
+			        <input class="input input--text col-12" type="text" id="text-input" value="Colabra vinculares" />
+			    </div>
+
+			    <br>
+			    <br>
+
+			    <div class="answer__fields js-fields">
+				    <label class="label venus " for="textarea-answer">Description</label>
+				    <textarea class="input input--textarea js-charlimit-input" cols="40" rows="1" id="textarea-answer" name="textarea-answer" maxlength="30" aria-describedby="description-question guidance-answer-trigger textarea-answer-remaining" data-maxlength="20">Domus pensara trigales romanus</textarea>
+				    <div class="input__limit u-mt-xs mercury" data-qa="textarea-with-limit" id="textarea-answer-remaining" aria-live="polite">
+				    </div>
+				</div>
+
+				<br>
+
+			-->
+
+			    <div class="answer__fields js-fields">
+				    <label class="label venus " for="textarea-answer">Definition</label>
+				    <textarea class="input input--textarea js-charlimit-input" cols="40" rows="5" id="textarea-answer" name="textarea-answer" maxlength="200" aria-describedby="description-question guidance-answer-trigger textarea-answer-remaining" data-maxlength="20">140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250, 260, 270, 280, 290, 300, 310, 320, 330, 340, 350, 360, 370, 380, 390</textarea>
+				    <div class="input__limit u-mt-xs mercury" data-qa="textarea-with-limit" id="textarea-answer-remaining" aria-live="polite">
+				    </div>
+				</div>
+
+				<br>
+
+				<div class="answer__fields js-fields">
+				    <label class="label venus " for="textarea-answer">Reasons of change</label>
+				    <textarea class="input input--textarea js-charlimit-input" cols="40" rows="2" id="textarea-answer" name="textarea-answer" maxlength="25" aria-describedby="description-question guidance-answer-trigger textarea-answer-remaining" data-maxlength="20">Lorum ipsum caesar seramus</textarea>
+				    <div class="input__limit u-mt-xs mercury" data-qa="textarea-with-limit" id="textarea-answer-remaining" aria-live="polite">
+				    </div>
+				</div>
+
+                <form class="" action="new_run_4.html" method="post">
+                    <div class="col-12 top_60_extra_space">
+						<button class="btn btn--primary" type="submit">Save and continue</button>
+						&nbsp;&nbsp;&nbsp;
+						<a class="btn btn--secondary btn--border" href="new_run_4">Cancel</a>
+					</div>
+                </form>
+                        
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<section>
+
+	<div class="wrapper">
+		<div class="col-8">
+
+			<div class="group top_40_extra_space">
+				<div>
+					<h2 class="pluto grey_text ">Step 4 of 5</h2>				
+				</div>
+				<div>
+					<h2 class="saturn">Select process variables </h2>				
+				</div>
+			</div>
+
+	  	</div>
+	</div>
+
+</section>
+
+<!--
+
+<section>
+
+	<div class="wrapper">
+		<div class="col-8 top_30_extra_space">
+
+			<form id="run" action="old_new_run_5.html" class="form">
+
+				<div class="field field--radio field--multiplechoice">
+				    <fieldset>
+				        <legend class="field__legend mars buttom_10_extra_space">Do you want to use a exinting template?</legend>
+				        <div class="field__item js-focusable-box">
+				            <input class="input input--radio js-focusable" name="radio-answer" value="yes" id="yes" type="radio">
+				            <label class="label label--inline venus " for="yes">
+				            Yes
+				        </label>
+				        </div>
+				        <div class="field__item js-focusable-box">
+				            <input class="input input--radio js-focusable" name="radio-answer" value="no" id="no" type="radio">
+				            <label class="label label--inline venus " for="no">
+				            No
+				        </label>
+				        </div>
+				    </fieldset>
+				</div>
+
+			    <div class="top_50_extra_space">
+				    <button class="btn btn--primary" type="submit">Save and continue</button>
+				    &nbsp;&nbsp;&nbsp;
+				    <a class="btn btn--secondary btn--border" href="new_run_3.html">Back</a>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+					<label><a href="dashboard.html">Cancel</a></label>
+				</div>
+
+			</form>
+
+		</div>
+	</div>
+
+</section>
+
+-->
+
+<section>
+
+	<div class="wrapper">
+
+			<form id="run" action="new_run_5.html" class="form">
+
+				<div class="wrapper">
+					<div class="group">
+						<div class="col-8 top_40_extra_space">
+							<table class="table table__dense">
+								<thead class="table--head">
+									<th width="10%" class="table--header--cell">&nbsp;&nbsp; Select</th>
+									<th width="30%" class="table--header--cell">Name</th>
+									<th width="50%" class="table--header--cell">Description</th>
+									<th width="10%" class="table--header--cell"> </th>
+								</thead>
+								<tbody>
+									<tr class="table--row">
+										<td width="10%" class="table--cell field__item2"> 
+											<input class="input--radio2" type="radio" checked="checked">
+										</td>
+										<td width="30%" class="table--cell">Colabra vinculares</td>
+										<td width="50%" class="table--cell">Use a blank template</td>
+										<td width="10%" class="table--cell"><a href="#"></a></td>
+									</tr>
+									<tr class="table--row">
+										<td width="10%" class="table--cell field__item2"> 
+											<input class="input--radio2" type="radio">
+										</td>
+										<td width="30%" class="table--cell">Lorum ipsum</td>
+										<td width="50%" class="table--cell">Colabra tentare sempre et vinculas supra </td>
+										<td width="10%" class="table--cell"><a href="edit.html">Edit</a></td>
+									</tr>
+									<tr class="table--row">
+										<td width="10%" class="table--cell field__item2"> 
+											<input class="input--radio2" type="radio">
+										</td>
+										<td width="30%" class="table--cell">Roman et senatus </td>
+										<td width="50%" class="table--cell">Caesar retrosas dolore causare </td>
+										<td width="10%" class="table--cell"><a href="#">Edit</a></td>
+									</tr>
+									<tr class="table--row">
+										<td width="10%" class="table--cell field__item2"> 
+											<input class="input--radio2" type="radio">
+										</td>
+										<td width="30%" class="table--cell">Caesar dolore sumus</td>
+										<td width="50%" class="table--cell">Tentare vinculas supra domus populare </td>
+										<td width="10%" class="table--cell"><a href="#">Edit</a></td>
+									</tr>
+									<tr class="table--row">
+										<td width="10%" class="table--cell field__item2"> 
+											<input class="input--radio2" type="radio">
+										</td>
+										<td width="30%" class="table--cell">Simulas pulcras</td>
+										<td width="50%" class="table--cell">Doloris et corpus sintuas </td>
+										<td width="10%" class="table--cell"><a href="#">Edit</a></td>
+									</tr>
+									<tr class="table--row">
+										<td width="10%" class="table--cell field__item2"> 
+											<input class="input--radio2" type="radio">
+										</td>
+										<td width="30%" class="table--cell">Aliquam bondare</td>
+										<td width="50%" class="table--cell">Senatus oblicuas sempre et donates </td>
+										<td width="10%" class="table--cell"><a href="#">Edit</a></td>
+									</tr>
+									<tr class="table--row">
+										<td width="10%" class="table--cell field__item2"> 
+											<input class="input--radio2" type="radio">
+										</td>
+										<td width="30%" class="table--cell">Sumus petrorianus</td>
+										<td width="50%" class="table--cell">Illum provocare sempre aquas est </td>
+										<td width="10%" class="table--cell"><a href="#">Edit</a></td>
+									</tr>
+									<tr class="table--row">
+										<td width="10%" class="table--cell field__item2"> 
+											<input class="input--radio2" type="radio">
+										</td>
+										<td width="30%" class="table--cell">Dolori et mantore</td>
+										<td width="50%" class="table--cell">Populas sempre senatus contevas voluminas </td>
+										<td width="10%" class="table--cell"><a href="#">Edit</a></td>
+									</tr>
+									<tr class="table--row">
+										<td width="10%" class="table--cell field__item2"> 
+											<input class="input--radio2" type="radio">
+										</td>
+										<td width="30%" class="table--cell">Colabra pentas supra</td>
+										<td width="50%" class="table--cell">Iluminas donatus aliquam colabra sempre </td>
+										<td width="10%" class="table--cell"><a href="#">Edit</a></td>
+									</tr>
+									<tr class="table--row">
+										<td width="10%" class="table--cell field__item2"> 
+											<input class="input--radio2" type="radio">
+										</td>
+										<td width="30%" class="table--cell">Ipsum bondu domus</td>
+										<td width="50%" class="table--cell">Dolore reoman senatus causare totus </td>
+										<td width="10%" class="table--cell"><a href="#">Edit</a></td>
+									</tr>
+									<tr class="table--row">
+										<td width="10%" class="table--cell field__item2"> 
+											<input class="input--radio2" type="radio">
+										</td>
+										<td width="30%" class="table--cell">Vinculas sempre</td>
+										<td width="50%" class="table--cell">Ambiguas tentare et dolore provocas </td>
+										<td width="10%" class="table--cell"><a href="#">Edit</a></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+
+					<div class="col-6 table-pagination-extra-padding">
+						<span>
+							1 to 10 of 267 &nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;
+							<a href="#">2</a>&nbsp;
+							<a href="#">3</a>&nbsp;
+							<a href="#">4</a>&nbsp;
+							<a href="#">5</a>&nbsp;
+							<a href="#">6</a>&nbsp;
+							<a href="#">7</a>&nbsp; 
+							<a href="#">8</a>&nbsp;
+							<a href="#">9</a>&nbsp;
+							<a href="#">10</a>&nbsp;
+							<a href="#">Next</a>&nbsp;
+						</span>
+					</div>
+
+				</div>
+
+				<br>
+
+				<div class="col-12 top_70_extra_space">
+					<button class="btn btn--primary" type="submit">Save and continue</button>
+					&nbsp;&nbsp;&nbsp;
+					<a class="btn btn--secondary btn--border" href="new_run_3.html">Back</a>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+					<label><a href="dashboard.html">Cancel</a></label>
+				</div>
+
+			</form>
+
+		</div>
+	</div>
+
+</section>
+
+<section>
+	<div class="buttom_70_extra_space buttom_70_extra_space">
+		<table></table>
+	</div>
+	<div class="buttom_70_extra_space buttom_70_extra_space">
+		<table></table>
+	</div>
+</section>
+
+<footer class="page__footer">
+
+	<div class="wrapper">
+		<div class="group">
+			<div class="col-12">
+				<span class="new">This release is in development. Your <a href="mailto:ramon.delgado@ext.ons.gov.uk?Subject=User%20feedback"> feedback</a> will help us improve it.</span>
+			</div>
+		</div>
+	</div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.14/semantic.min.js'></script>
+
+
+<script>
+	jQuery(document).ready(function($) {
+    $(".clickable-row").click(function() {
+        window.location = $(this).data("href");
+    });
+});
+</script>
+
+
+<script>
+$('.ui.dropdown').dropdown();
+</script>
+
+
+<script type="text/javascript">
+ 
+window.onload = function(){
+ 
+  var form = document.getElementById("form-sign-in");
+
+  form.onsubmit = function(e) {
+    e.preventDefault();
+    var userInput = document.getElementById('text-input').value;
+   
+    if (userInput.includes('123')) {
+   
+      window.location = 'contributor.html';
+   
+    } else if (userInput.includes('cme')) {
+      window.location = 'search_results.html';
+    }
+    return false;
+  }
+};
+ 
+</script>​
+
+
+</footer>
+
+</body>
+</html>

@@ -415,3 +415,45 @@ class TestNewRun3:
             res = client.post('/new_run/new_run_3', data=form.data, follow_redirects=True)
         assert res.status_code == 200
         assert b'Select process variables' in res.data
+        res = client.post('/new_run/new_run_3', data=new_form.data, follow_redirects=True)
+
+        assert res.status_code == 200
+        assert b'File must be a .csv file.' in res.data
+
+
+class TestNewRun4:
+
+    # Test that the standard page renders correctly.
+    def test_default_page_new_run_4_renders_correctly_with_expected_text_from_get_request(self, client):
+        res = client.get('/new_run/new_run_4')
+        assert res.status_code == 200
+        assert b'Select process variables set' in res.data
+
+    # Test that the standard page renders correctly and gets the TEMPLATE pv_set from the database.
+    def test_default_page_new_run_4_has_template_pv_set_included_in_the_list(self, client):
+        res = client.get('/new_run/new_run_4')
+        assert res.status_code == 200
+        assert b'TEMPLATE' in res.data
+
+    # Test that the standard page renders correctly.
+    def test_default_page_new_run_4_renders_correctly_with_correct_headers(self, client):
+        res = client.get('/new_run/new_run_4')
+        assert res.status_code == 200
+        assert b'Run id' and b'Name' and b'User' and b'Start Date' and b'End Date' and b'Select' in res.data
+
+    # Test that the template set is selected by default (i.e. test that pressing save and continue on this page will
+    # successfully navigate to the next page with no other input).
+    @pytest.mark.skip("No assert written and using unresolved flask reference - James Burr to look at.")
+    def test_new_run_4_has_template_selected_by_default_and_will_continue_onto_new_run_5_with_a_post(self, client):
+
+        with app.test_request_context():
+            flask.session[run_id] = 'TEMPLATE'
+            run_name = 'testing'
+            start_date = 'testing'
+            end_date = 'testing'
+            user = 'testing'
+
+            res = client.post('/new_run/new_run_5')
+
+
+

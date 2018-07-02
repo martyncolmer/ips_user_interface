@@ -49,7 +49,6 @@ def edit_run(run_id, run_name, run_description, start_date, end_date, run_type='
     requests.put("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs/"+run_id, json=run)
 
 
-
 def get_system_info():
     """
     Purpose: Collects and returns the current build's system info to be displayed on the web application.
@@ -79,6 +78,38 @@ def get_run(run_id):
     for x in runs:
         if x['id'] == run_id:
             return x
+
+
+def get_process_variables(run_id):
+
+    response = requests.get('http://ips-db.apps.cf1.ons.statistics.gov.uk/process_variables/' + run_id)
+
+    return json.loads(response.content)
+
+
+def create_process_variables_set(run_id, name, user, start_date, end_date):
+
+    response = requests.get('http://ips-db.apps.cf1.ons.statistics.gov.uk/pv_sets')
+    file = json.loads(response.content)
+    new_pv_set = file[0]
+
+    new_pv_set['RUN_ID'] = run_id
+    new_pv_set['NAME'] = name
+    new_pv_set['USER'] = user
+    new_pv_set['START_DATE'] = start_date
+    new_pv_set['END_DATE'] = end_date
+
+    requests.post('http://ips-db.apps.cf1.ons.statistics.gov.uk/pv_sets', json=new_pv_set)
+
+
+def create_process_variables(run_id, json):
+    requests.post('http://ips-db.apps.cf1.ons.statistics.gov.uk/process_variables/' + run_id, json=json)
+
+
+def get_process_variable_sets():
+
+    response = requests.get('http://ips-db.apps.cf1.ons.statistics.gov.uk/pv_sets')
+    return json.loads(response.content)
 
 
 def get_display_data(table_name, source, run_id):
@@ -227,3 +258,26 @@ def edit_run_step_status(run_id, value, step_number=None):
         route = route + "/" + step_number
 
     requests.put(route)
+
+
+def edit_process_variable(run_id, pv_content, pv_name, reason_for_change):
+    """
+    :param run_id:
+    :param pv_content:
+    :param pv_name:
+    :param reason_for_change:
+    :return:
+    """
+    response = requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/process_variables/" + run_id)
+
+    file = json.loads(response.content)
+
+    pv = file[0]
+
+    pv["RUN_ID"] = run_id
+    pv["PV_NAME"] = pv_name
+    pv["PV_CONTENT"] = pv_content
+    pv["PV_REASON"] = reason_for_change
+
+    for record in file:
+        requests.put("http://ips-db.apps.cf1.ons.statistics.gov.uk/process_variables/" + run_id + "/", json=pv)
