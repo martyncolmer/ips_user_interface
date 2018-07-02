@@ -3,6 +3,7 @@ import csv
 import requests
 import json
 import pandas
+import io
 
 
 def create_run(unique_id, run_name, run_description, start_date, end_date, run_type='0', run_status='0'):
@@ -47,7 +48,6 @@ def edit_run(run_id, run_name, run_description, start_date, end_date, run_type='
     run['type'] = run_type
     run['status'] = run_status
     requests.put("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs/"+run_id, json=run)
-
 
 
 def get_system_info():
@@ -227,3 +227,31 @@ def edit_run_step_status(run_id, value, step_number=None):
         route = route + "/" + step_number
 
     requests.put(route)
+
+
+def import_data(table_name, run_id, json_data):
+
+    route = 'http://ips-db.apps.cf1.ons.statistics.gov.uk/' + table_name + '/' + run_id
+    print(route)
+    rv = requests.post(route, json=json_data)
+    print(rv)
+
+
+def delete_data(table_name, run_id = None):
+
+    route = 'http://ips-db.apps.cf1.ons.statistics.gov.uk/' + table_name
+
+    if(run_id):
+        route = route + '/' + run_id
+
+    rv = requests.delete(route)
+    print(rv)
+
+
+def survey_data_import(table_name, import_run_id, import_data_file):
+    # Import  data
+    stream = io.StringIO(import_data_file.stream.read().decode("UTF8"), newline=None)
+    import_csv = csv.DictReader(stream)
+    import_csv.fieldnames = [name.upper() for name in import_csv.fieldnames]
+    import_json = list(import_csv)
+    import_data(table_name, import_run_id, import_json)

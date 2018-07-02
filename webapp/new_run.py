@@ -1,7 +1,10 @@
-from flask import request, render_template, Blueprint, session, redirect, url_for
+from flask import request, render_template, Blueprint, session, redirect, url_for, jsonify
 from .forms import CreateRunForm, DateSelectionForm, LoadDataForm
 from . import app_methods
 import uuid
+import csv
+import io
+
 
 bp = Blueprint('new_run', __name__, url_prefix='/new_run', static_folder='static')
 
@@ -135,9 +138,6 @@ def new_run_3(run_id=None):
 
     error = False
 
-    print(request.values)
-    print(request.form)
-
     if form.validate_on_submit():
         # Functionality has been written. Stubbed for now as we are unsure yet as to the location and method
         # of storing the csv's in a file system. Until we can access DAP and know where to store, this will remain.
@@ -146,11 +146,48 @@ def new_run_3(run_id=None):
             # if a run_id is present in html call, run steps to replace existing files (if any)
             pass
         else:
+
             # if no run_id present in html call, run steps to add files to run (in whatever way this will be done)
             pass
 
-        survey_data = form.survey_file.data
-        survey_filename = form.survey_file.name
+        # Import survey data
+        # survey_data = form.survey_file.data
+        # stream = io.StringIO(survey_data.stream.read().decode("UTF8"), newline=None)
+        # survey_csv = csv.DictReader(stream)
+        # survey_csv.fieldnames = [name.upper() for name in survey_csv.fieldnames]
+        # survey_json = list(survey_csv)
+        # print(survey_json)
+        # app_methods.import_data('SHIFT_DATA', session['id'], survey_json)
+
+
+        #TODO: Write a function to clear down import tables (by run_id?). Returning 500 which i think is due to duplicate records being added.
+
+        # External
+
+        # Import shift data
+        shift_data = form.shift_file.data
+        app_methods.survey_data_import('SHIFT_DATA', session['id'], shift_data)
+
+        # Import non_response data
+        non_response_data = form.non_response_file.data
+        app_methods.survey_data_import('NON_RESPONSE_DATA', session['id'], non_response_data)
+
+        # Import unsampled data
+        unsampled_data = form.unsampled_file.data
+        app_methods.survey_data_import('UNSAMPLED_OOH_DATA', session['id'], unsampled_data)
+
+        # Import tunnel data
+        tunnel_data = form.tunnel_file.data
+        app_methods.survey_data_import('TRAFFIC_DATA', session['id'], tunnel_data)
+
+        # Import sea data
+        sea_data = form.sea_file.data
+        app_methods.survey_data_import('TRAFFIC_DATA', session['id'], sea_data)
+
+        # Import air data
+        air_data = form.air_file.data
+        app_methods.survey_data_import('TRAFFIC_DATA', session['id'], air_data)
+
         return redirect('/new_run/new_run_4')
     elif request.method == 'GET':
         pass
