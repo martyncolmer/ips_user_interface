@@ -415,7 +415,7 @@ class TestNewRun3:
             res = client.post('/new_run/new_run_3', data=form.data, follow_redirects=True)
         assert res.status_code == 200
         assert b'Select process variables' in res.data
-            res = client.post('/new_run/new_run_3', data=new_form.data, follow_redirects=True)
+        res = client.post('/new_run/new_run_3', data=new_form.data, follow_redirects=True)
 
         assert res.status_code == 200
         assert b'File must be a .csv file.' in res.data
@@ -443,6 +443,7 @@ class TestNewRun4:
 
     # Test that the template set is selected by default (i.e. test that pressing save and continue on this page will
     # successfully navigate to the next page with no other input).
+    @pytest.mark.skip("No assert written and using unresolved flask reference - James Burr to look at.")
     def test_new_run_4_has_template_selected_by_default_and_will_continue_onto_new_run_5_with_a_post(self, client):
 
         with app.test_request_context():
