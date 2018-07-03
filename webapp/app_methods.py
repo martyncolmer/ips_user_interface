@@ -233,10 +233,8 @@ def import_data(table_name, run_id, json_data):
 
     route = 'http://ips-db.apps.cf1.ons.statistics.gov.uk/' + table_name + '/' + run_id
     print(route)
-    print(json_data)
     rv = requests.post(route, json=json_data)
     print(rv)
-    print("COLUMN HEADERS COULD BE CAUSING ERROR!!!!!!!!!!!!!!!")
 
 
 def delete_data(table_name, run_id = None):
@@ -247,6 +245,7 @@ def delete_data(table_name, run_id = None):
         route = route + '/' + run_id
 
     rv = requests.delete(route)
+    print("DELETE - " + table_name)
     print(rv)
 
 
@@ -255,5 +254,7 @@ def survey_data_import(table_name, import_run_id, import_data_file):
     stream = io.StringIO(import_data_file.stream.read().decode("UTF8"), newline=None)
     import_csv = csv.DictReader(stream)
     import_csv.fieldnames = [name.upper() for name in import_csv.fieldnames]
+    print("Field Names:")
+    print(import_csv.fieldnames)
     import_json = list(import_csv)
     import_data(table_name, import_run_id, import_json)
