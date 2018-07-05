@@ -1,12 +1,220 @@
+import os
 import csv
 import requests
-import pyodbc
+import json
+from flask import jsonify
+import pandas
+import csv
+import requests
 import os
 import json
-import datetime
-
+import numpy
 
 APP_DIR = os.path.dirname(__file__)
+
+
+def create_run(unique_id, run_name, run_description, start_date, end_date, run_type='0', run_status='0'):
+    """
+    Purpose: Creates a new run and adds it to the current list of runs (.csv currently but will be to database).
+
+    :return: NA
+    """
+    response = requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs")
+
+    file = json.loads(response.content)
+    new_run = file[0]
+
+    new_run['id'] = unique_id
+    new_run['name'] = run_name
+    new_run['desc'] = run_description
+    new_run['start_date'] = start_date
+    new_run['end_date'] = end_date
+    new_run['type'] = run_type
+    new_run['status'] = run_status
+    requests.post("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs", json=new_run)
+
+    create_run_steps(new_run['id'])
+
+
+def edit_run(run_id, run_name, run_description, start_date, end_date, run_type='0', run_status='0'):
+    """
+    Purpose: Modifies an already existing run through a PUT request.
+
+    :return: NA
+    """
+
+    response = requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs")
+
+    file = json.loads(response.content)
+    run = file[0]
+
+    run['name'] = run_name
+    run['desc'] = run_description
+    run['start_date'] = start_date
+    run['end_date'] = end_date
+    run['type'] = run_type
+    run['status'] = run_status
+    requests.put("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs/" + run_id, json=run)
+
+
+def get_system_info():
+    """
+    Purpose: Collects and returns the current build's system info to be displayed on the web application.
+
+    :return: List of records
+    """
+
+    f = open('webapp/resources/ips_system_info.csv', encoding='utf-8')
+    reader = csv.reader(f)
+    records = list(reader)
+    f.close()
+
+    return records
+
+
+def get_runs():
+    response = requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs")
+    return json.loads(response.content)
+
+
+def get_run(run_id):
+    response = requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs")
+    runs = json.loads(response.content)
+
+    for x in runs:
+        if x['id'] == run_id:
+            return x
+
+
+# def get_display_data(table_name, source, run_id):
+#     column_sets = {'SHIFT_DATA': ['PORTROUTE', 'WEEKDAY', 'ARRIVEDEPART', 'AM_PM_NIGHT', 'TOTAL'],
+#                    'TRAFFIC_DATA': ['PORTROUTE', 'PERIODSTART', 'PERIODEND', 'ARRIVEDEPART', 'AM_PM_NIGHT',
+#                                     'TRAFFICTOTAL', 'HAUL'],
+#                    'NON_RESPONSE_DATA': ['PORTROUTE', 'WEEKDAY', 'ARRIVEDEPART', 'AM_PM_NIGHT', 'SAMPINTERVAL',
+#                                          'MIGTOTAL', 'ORDTOTAL'],
+#                    'UNSAMPLED_OOH_DATA': ['PORTROUTE', 'REGION', 'ARRIVEDEPART', 'UNSAMP_TOTAL'],
+#                    'PS_SHIFT_DATA': ['SHIFT_PORT_GRP_PV', 'ARRIVEDEPART', 'WEEKDAY_END_PV', 'AM_PM_NIGHT_PV', 'MIGSI',
+#                                      'POSS_SHIFT_CROSS', 'SAMP_SHIFT_CROSS', 'MIN_SH_WT', 'MEAN_SH_WT', 'MAX_SH_WT',
+#                                      'COUNT_RESPS', 'SUM_SH_WT'],
+#                    'PS_NON_RESPONSE': ['NR_PORT_GRP_PV', 'ARRIVEDEPART', 'WEEKDAY_END_PV', 'MEAN_RESPS_SH_WT',
+#                                        'COUNT_RESPS',
+#                                        'PRIOR_SUM', 'GROSS_RESP', 'GNR', 'MEAN_NR_WT'],
+#                    'PS_MINIMUMS': ['MINS_PORT_GRP_PV', 'ARRIVEDEPART', 'MINS_CTRY_GRP_PV', 'MINS_NAT_GRP_PV',
+#                                    'MINS_NAT_GRP_PV',
+#                                    'MINS_CTRY_PORT_GRP_PV', 'MINS_CASES', 'FULLS_CASES', 'PRIOR_GROSS_MINS',
+#                                    'PRIOR_GROSS_FULLS',
+#                                    'PRIOR_GROSS_ALL', 'MINS_WT', 'POST_SUM', 'CASES_CARRIED_FWD'],
+#                    'PS_TRAFFIC': ['SAMP_PORT_GRP_PV', 'ARRIVEDEPART', 'FOOT_OR_VEHICLE_PV', 'CASES', 'TRAFFICTOTAL',
+#                                   'SUM_TRAFFIC_WT', 'TRAFFIC_WT'],
+#                    'PS_UNSAMPLED_OOH': ['UNSAMP_PORT_GRP_PV', 'ARRIVEDEPART', 'UNSAMP_REGION_GRP_PV', 'CASES',
+#                                         'SUM_PRIOR_WT',
+#                                         'SUM_UNSAMP_TRAFFIC_WT', 'UNSAMP_TRAFFIC_WT'],
+#                    'PS_IMBALANCE': ['FLOW', 'SUM_PRIOR_WT', 'SUM_IMBAL_WT'],
+#                    'PS_FINAL': ['SERIAL', 'SHIFT_WT', 'NON_RESPONSE_WT', 'MINS_WT', 'TRAFFIC_WT',
+#                                 'UNSAMP_TRAFFIC_WT', 'IMBAL_WT', 'FINAL_WT']
+#                    }
+#
+#     # connection = get_connection()
+#
+#     columns = ','.join(column_sets[table_name])
+#
+#     sql_command = "SELECT " + columns + " FROM " + table_name + " WHERE RUN_ID = '" + run_id + "'"
+#
+#     if int(source) > 0:
+#         sql_command += " AND DATA_SOURCE_ID = " + source
+#
+#     print(sql_command)
+#     df = pandas.read_sql(sql_command, connection)
+#
+#     return df
+
+
+def get_display_data_json(table_name, run_id=None, data_source=None):
+    column_sets = {'SHIFT_DATA': ['PORTROUTE', 'WEEKDAY', 'ARRIVEDEPART', 'AM_PM_NIGHT', 'TOTAL'],
+                   'TRAFFIC_DATA': ['PORTROUTE', 'PERIODSTART', 'PERIODEND', 'ARRIVEDEPART', 'AM_PM_NIGHT',
+                                    'TRAFFICTOTAL', 'HAUL'],
+                   'NON_RESPONSE_DATA': ['PORTROUTE', 'WEEKDAY', 'ARRIVEDEPART', 'AM_PM_NIGHT', 'SAMPINTERVAL',
+                                         'MIGTOTAL', 'ORDTOTAL'],
+                   'UNSAMPLED_OOH_DATA': ['PORTROUTE', 'REGION', 'ARRIVEDEPART', 'UNSAMP_TOTAL'],
+                   'PS_SHIFT_DATA': ['SHIFT_PORT_GRP_PV', 'ARRIVEDEPART', 'WEEKDAY_END_PV', 'AM_PM_NIGHT_PV', 'MIGSI',
+                                     'POSS_SHIFT_CROSS', 'SAMP_SHIFT_CROSS', 'MIN_SH_WT', 'MEAN_SH_WT', 'MAX_SH_WT',
+                                     'COUNT_RESPS', 'SUM_SH_WT'],
+                   'PS_NON_RESPONSE': ['NR_PORT_GRP_PV', 'ARRIVEDEPART', 'WEEKDAY_END_PV', 'MEAN_RESPS_SH_WT',
+                                       'COUNT_RESPS',
+                                       'PRIOR_SUM', 'GROSS_RESP', 'GNR', 'MEAN_NR_WT'],
+                   'PS_MINIMUMS': ['MINS_PORT_GRP_PV', 'ARRIVEDEPART', 'MINS_CTRY_GRP_PV', 'MINS_NAT_GRP_PV',
+                                   'MINS_NAT_GRP_PV',
+                                   'MINS_CTRY_PORT_GRP_PV', 'MINS_CASES', 'FULLS_CASES', 'PRIOR_GROSS_MINS',
+                                   'PRIOR_GROSS_FULLS',
+                                   'PRIOR_GROSS_ALL', 'MINS_WT', 'POST_SUM', 'CASES_CARRIED_FWD'],
+                   'PS_TRAFFIC': ['SAMP_PORT_GRP_PV', 'ARRIVEDEPART', 'FOOT_OR_VEHICLE_PV', 'CASES', 'TRAFFICTOTAL',
+                                  'SUM_TRAFFIC_WT', 'TRAFFIC_WT'],
+                   'PS_UNSAMPLED_OOH': ['UNSAMP_PORT_GRP_PV', 'ARRIVEDEPART', 'UNSAMP_REGION_GRP_PV', 'CASES',
+                                        'SUM_PRIOR_WT',
+                                        'SUM_UNSAMP_TRAFFIC_WT', 'UNSAMP_TRAFFIC_WT'],
+                   'PS_IMBALANCE': ['FLOW', 'SUM_PRIOR_WT', 'SUM_IMBAL_WT'],
+                   'PS_FINAL': ['SERIAL', 'SHIFT_WT', 'NON_RESPONSE_WT', 'MINS_WT', 'TRAFFIC_WT',
+                                'UNSAMP_TRAFFIC_WT', 'IMBAL_WT', 'FINAL_WT']
+                   }
+
+    address = "http://ips-db.apps.cf1.ons.statistics.gov.uk/" + table_name
+    if run_id:
+        address = address + "/" + run_id
+
+    if data_source:
+        address = address + "/" + data_source
+
+    response = requests.get(address)
+    if response.status_code == 200:
+        data = json.loads(response.content)
+        df = pandas.DataFrame.from_dict(data)
+        df = df[column_sets[table_name]]
+    else:
+        if table_name in column_sets:
+            df = pandas.DataFrame(columns=column_sets[table_name])
+        else:
+            df = pandas.DataFrame()
+
+    return df
+
+
+def create_run_steps(run_id):
+    """
+    Purpose: Creates a new set of run steps for a newly generated run.
+
+    :return: NA
+    """
+    route = "http://ips-db.apps.cf1.ons.statistics.gov.uk/run_steps/" + run_id
+
+    requests.post(route)
+
+
+def get_run_steps(run_id):
+    address = "http://ips-db.apps.cf1.ons.statistics.gov.uk/run_steps/" + run_id
+
+    response = requests.get(address)
+
+    if response.status_code == 200:
+        values = json.loads(response.content)
+    else:
+        values = []
+
+    return values
+
+
+def edit_run_step_status(run_id, value, step_number=None):
+    """
+    Purpose: Modifies an already existing run's steps through a PUT request.
+
+    :return: NA
+    """
+    route = "http://ips-db.apps.cf1.ons.statistics.gov.uk/run_steps/" + run_id + "/" + value
+
+    if step_number:
+        route = route + "/" + step_number
+
+    requests.put(route)
+
 
 def create_run(unique_id, run_name, run_description, start_date, end_date, run_status='0', run_type='6'):
     """
@@ -52,13 +260,11 @@ def get_system_info():
 
 
 def get_runs():
-
     response = requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs")
     return json.loads(response.content)
 
 
 def get_runs_json():
-
     requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs")
     response = requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs")
     return json.loads(response.content)
@@ -75,7 +281,6 @@ def get_runs_csv():
 
 
 def get_run(run_id):
-
     response = requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs")
     runs = json.loads(response.content)
 
@@ -84,301 +289,91 @@ def get_run(run_id):
             return x
 
 
-def get_connection():
-    # JACK: Redundant - gets the SQL connection
-    """
-    Author       : Thomas Mahoney
-    Date         : 03 / 04 / 2018
-    Purpose      : Establishes a connection to the SQL Server database and returns the connection object.
-    Parameters   : in_table_name - the IPS survey records for the period.
-                   credentials_file  - file containing the server and login credentials used for connection.
-    Returns      : pyodbc connection object
-    Requirements : NA
-    Dependencies : NA
-    """
-
-    # Get credentials and decrypt
-    username = os.getenv("DB_USER_NAME")
-    password = os.getenv("DB_PASSWORD")
-    database = os.getenv("DB_NAME")
-    server = os.getenv("DB_SERVER")
-
-    # My environment variables keep disappearing >:-|
-    # print("Username: {}".format(username))
-    # print("Password: {}".format(password))
-    # print("Database: {}".format(database))
-    # print("Server: {}".format(server))
-
-    # Attempt to connect to the database
-    try:
-        conn = pyodbc.connect(driver="{SQL Server}", server=server, database=database, uid=username, pwd=password,
-                              autocommit=True)
-    except Exception as err:
-        # database_logger().error(err, exc_info = True)
-        print(err)
-        return False
-    else:
-        return conn
-
-
-def export_csv(sql_table, run_id):
-    # JACK: Redundant - gets the table information and converts to CSV ready to be converted to a string
-    """
-    Author: Elinor Thorne
-    Purpose: Exports table from database to CSV in temporary location
-
-    :return: NA
-    """
-    # HARD-CODED file locations
-    path = os.getcwd()
-    filename = r"\temp\{}.csv".format(sql_table)
-
-    # Connection variables
-    conn = get_connection()
-    cur = conn.cursor()
-
-    # Create SQL query
-    sql = """
-    SELECT * FROM [dbo].[{}]
-    WHERE [RUN_ID] = '{}'
-    """.format(sql_table, run_id)
-
-    try:
-        cur.execute(sql)
-    except Exception as err:
-        print(err)
-        return 2, err
-    else:
-        # Write data to CSV
-        with open(path + filename, 'w', newline='') as csvfile:
-            writer = csv.writer(csvfile)
-            writer.writerow([i[0] for i in cur.description])
-            writer.writerows(cur.fetchall())
-        return 1, ""
-
-
-def insert_clob(sql_table, run_id, target_filename):
-    # JACK: Redundant - gets the table information from CSV and converts to a string
-    """
-    Author: Elinor Thorne
-    Purpose: Extracts data from temporary CSV and inserts to table as CLOB
-
-    :return: NA
-    """
-
-    # Retrieve temporary CSV and convert to CLOB
-    path = os.getcwd()
-    file = r"\temp\{}.csv".format(sql_table)
-    dir = path + file
-
-    try:
-        with open(dir, 'r') as f:
-            data = f.read()
-    except Exception as err:
-        print(err)
-
-    # Construct SQL query
-    sql = """
-    INSERT INTO EXPORT_DATA_DOWNLOAD
-    VALUES('{}', '{}', '{}', '{}', (SELECT GETDATE()))
-    """.format(run_id, data, target_filename, sql_table)
-
-    try:
-        conn = get_connection()
-        cur = conn.cursor()
-        cur.execute(sql)
-    except Exception as err:
-        print(err)
-
-
-def cleanse_temp_folder():
-    # JACK: Redundant - removes temporary CSV locations
-    """
-    Author: Elinor Thorne
-    Purpose: Removes temporary files from location
-
-    :return: NA
-    """
-
-    # HARD-CODED FILE LOCATION
-    path = r"..\webapp\temp"
-
-    # Assign variables
-    fileList = os.listdir(path)
-
-
-    try:
-        # Iterate through file and delete every object
-        for fileName in fileList:
-            os.remove(path + "/" + fileName)
-    except Exception as err:
-        print(err)
-
-
-def export_clob(run_id, file_name):
-    # JACK: Redundant - gets the CLOB information and converts to CSV
-    """
-    Author: Elinor Thorne
-    Purpose: Exports CLOB from database to CSV
-
-    :return: NA
-    """
-
-    # Create and execute SQL query
-    sql = """
-    SELECT DOWNLOADABLE_DATA
-    FROM EXPORT_DATA_DOWNLOAD
-    WHERE RUN_ID = '{}'
-    AND FILENAME = '{}'
-    """.format(run_id, file_name)
-
-    try:
-        conn = get_connection()
-        cur = conn.cursor()
-        cur.execute(sql)
-        data = cur.fetchall()
-    except Exception as err:
-        print(err)
-    else:
-        # Retrieve string from SQL and cleanse
-        # print(data)
-        data = str((data[0]))
-        data = data.replace(" ", "").replace("(", "").replace(")", "").replace("'", "").replace("'", "").replace(
-            "\\n", " ")
-
-        # Convert string to list and remove last empty item
-        output = data.split(" ")
-        output.pop()
-
-        # Export list to csv in HARD-CODED FILE LOCATION
-        path = os.getcwd()
-        filename = r"\temp\{}.csv".format(file_name)
-        print("1) {}{}".format(path, filename))
-        with open(path+filename, "w", newline="") as csvfile:
-            writer = csv.writer(csvfile)
-            for item in output:
-                # Create row of data from each item in list and commit to CSV
-                row = item.split(",")
-                writer.writerow(row)
-
-
 def get_export_data_table(run_id):
-    # JACK - following commented code pulls from back-end.  Uncommented code uses SQL process
-    # response = requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/export_data_download/" + run_id)
-    #
-    # # Set boolean to assume records exist
-    # exports = 1
-    #
-    # if response.status_code == 400:
-    #     data = [{'DATE_CREATED': '',
-    #              'DOWNLOADABLE_DATA': '',
-    #              'FILENAME': '',
-    #              'RUN_ID': '',
-    #              'SOURCE_TABLE': ''}]
-    #     # Set boolean if no records exist
-    #     exports = 0
-    #     return data, exports
-    #
-    # return json.loads(response.content), exports
+    response = requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/export_data_download/" + run_id)
 
-    # Data variables
-    fnames = []
-    table_names = []
-    table_string = {"SURVEY_SUBSAMPLE": "Survey Subsample",
-                    "PS_FINAL": "Final Weight Summary",
-                    "PS_SHIFT_DATA": "Shift",
-                    "PS_NON_RESPONSE": "Non-Response",
-                    "PS_SHIFT_DATA": "Shift Weight Summary",
-                    "NON_RESPONSE_DATA": "Non Response Weight Summary",
-                    "PS_MINIMUMS": "Minimum Weight Summary",
-                    "PS_TRAFFIC": "Traffic Weight Summary",
-                    "PS_UNSAMPLED_OOH": "Unsampled Traffic Weight Summary",
-                    "PS_IMBALANCE": "Imbalance Weight Summary",
-                    "ALL_DATA": "All Data",
-                    "SAS_AIR_MILES": "Air Miles",
-                    "ALCOHOL": "Alcohol",
-                    "REGIONAL": "Regional",
-                    "CONTACT": "Contact",
-                    "MIGRATION": "Migration",
-                    "None": "None"}
-    data = []
+    # Set boolean to assume records exist
+    exports = 1
 
-    # Connection variables
-    conn = get_connection()
-    cur = conn.cursor()
+    if response.status_code == 400:
+        data = [{'DATE_CREATED': '',
+                 'DOWNLOADABLE_DATA': '',
+                 'FILENAME': '',
+                 'RUN_ID': '',
+                 'SOURCE_TABLE': ''}]
+        # Set boolean if no records exist
+        exports = 0
+        return data, exports
 
-    # Construct SQL query
-    sql = """
-    SELECT [FILENAME]
-      ,[SOURCE_TABLE]
-    FROM [EXPORT_DATA_DOWNLOAD]
-    WHERE RUN_ID = '{}'
-    ORDER BY [DATE_CREATED] DESC
-    """.format(run_id)
+    json_data = json.loads(response.content)
 
-    try:
-        cur.execute(sql)
-    except Exception as err:
-        print(err)
-    else:
-        # Extract rows
-        rows = cur.fetchall()
-
-        # Append rows to list
-        result = []
-        for row in rows:
-            row = str(row)
-            row = row.replace("(", "").replace("'", "").replace(")", "")
-            result.append(row)
-
-        # Pull data apart to change table_names and re-create new data
-        for item in result:
-            # Create filenames list
-            fnames.append(item.split(", ")[0])
-
-            # Get table name from current data
-            table = item.split(", ")[1]
-
-            # Replace it
-            table_names.append(table_string[table])
-
-        for f, t in zip(fnames, table_names):
-            data.append(f+", "+t)
-
-    return data
+    return json_data, exports
 
 
-# JACK - the following function should post data
-def create_export_data_download(run_id, source_table, file_name):
-    json_data = {'DATE_CREATED': "2018-01-24 12:00:06",
-                 'DOWNLOADABLE_DATA': "RUN_ID,FLOW,SUM_PRIOER_WT,SUM_IMNAL_WT",
-                 'FILENAME': 'TestGet',
-                 'RUN_ID': 'el_24_01_1988',
-                 'SOURCE_TABLE': 'get_test_source_table'}
-    print(type(json_data))
+def check_dir(file_name):
+    directory = os.path.dirname('temp/' + file_name)
+    if not os.path.exists(directory):
+        os.makedirs(directory)
 
-    response = requests.post('http://ips-db.apps.cf1.ons.statistics.gov.uk/export_data_download', json=json_data, content_type='application/json')
+
+def export_clob(run_id, target_filename, sql_table):
+    response = requests.get(
+        'http://ips-db.apps.cf1.ons.statistics.gov.uk/export_data_download' + '/' + run_id + '/' + target_filename + '/' + sql_table)
+
+    table_data_json = json.loads(response.content)
+
+    print(table_data_json)
+
+    run = table_data_json[0]['DOWNLOADABLE_DATA']
+
+    print(run)
+
+    with open(target_filename + ".csv", "w") as text_file:
+        print(run, file=text_file)
+
+
+def create_export_data_download(run_id, sql_table, target_filename):
+    response = requests.get('http://ips-db.apps.cf1.ons.statistics.gov.uk/' + sql_table + '/' + run_id)
+
+    table_data_json = json.loads(response.content)
+    columns = []
+    values = []
+
+    for x in table_data_json:
+        for key in x:
+            columns.append(key)
+        break
+
+    for x in table_data_json:
+        for key in x:
+            values.append(x[key])
+
+    column_length = len(columns)
+    column_counter = 0
+
+    columns_csv_data = ','.join(columns) + '\n'
+    values_csv_data = ''
+
+    column_counter = 0
+    while column_counter <= len(values):
+        data_slice = values[:column_length]
+        values_csv_data += ','.join(data_slice) + '\n'
+        del values[:column_length]
+        column_counter += 1
+
+    data = columns_csv_data + values_csv_data
+
+    json_data = {'DATE_CREATED': "hi",
+                 'DOWNLOADABLE_DATA': data,
+                 'FILENAME': target_filename,
+                 'RUN_ID': run_id,
+                 'SOURCE_TABLE': sql_table}
+
+    data = json.dumps(json_data)
+
+    response = requests.post('http://ips-db.apps.cf1.ons.statistics.gov.uk/export_data_download', data=data)
 
     if response == 201:
         print("Success")
-
-    print(response.data)
-
-    # response = requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/export_data_download")
-    #
-    # file = json.loads(response.content)
-    # new_rec = file[0]
-    #
-    # new_rec['DATE_CREATED'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    # new_rec['FILENAME'] = file_name
-    # new_rec['RUN_ID'] = run_id
-    # new_rec['SOURCE_TABLE'] = source_table
-    #
-    # # print(new_rec["FILENAME"])
-    #
-    # response = requests.post("http://ips-db.apps.cf1.ons.statistics.gov.uk/export_data_download", json=new_rec)
-
-    # if response == 201:
-    #     print("Success")
-    #
-    # print(response)
+    else:
+        print(response.text, response.status_code, response.headers.items())

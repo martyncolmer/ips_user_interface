@@ -91,12 +91,30 @@
 			<div class="top_50_extra_space">
 				<div class="panel panel--simple panel--info">
 			        <div class="panel__body">
-			            <p class="mars">You are about to create a new initial IPS run for FR02 </p>
+						{% if run_id %}
+			            	<p class="mars">You are editing run: {{run_id}} </p>
+						{% else %}
+			            	<p class="mars">You are creating a new IPS run. </p>
+						{% endif%}
 			            <p></p>
 			        </div>
 			    </div>
 			</div>
-
+			{% if form.run_name.errors or form.run_description.errors %}
+				<div class="collator-item">
+					<h2 class="collator-title"></h2>
+					<!-- Start: @panel--error -->
+					<div class="panel panel--error">
+						<div class="panel__header">
+							<div class="venus">Error</div>
+						</div>
+						<div class="panel__body">
+							<p class="mars">Please enter a valid run name and description.</p>
+						</div>
+					</div>
+					<!-- End: @panel--error -->
+				</div>
+			{% endif %}
 			<div class="group top_40_extra_space">
 				<div>
 					<h2 class="pluto grey_text ">Step 1 of 7 </h2>				
@@ -115,18 +133,23 @@
 
 	<div class="wrapper">
 		<div class="col-8 top_40_extra_space">
-
-			<form id="run" action="/new_run_1" class="form" method="post">
-
+			{% if run_id %}
+			<form id="run" action="/new_run/new_run_1/{{run_id}}" class="form" method="post">
+			{% else %}
+			<form id="run" action="/new_run/new_run_1" class="form" method="post">
+			{% endif %}
 				<div class="field">
 					{{ form.csrf_token }}
 					{{ form.run_name.label(class="label venus ", for="text-input")}}
-					{{ form.run_name(class="input input--text", type="text", id="text-input", placeholder="Enter run name") }}
-
+					{% if form.run_name.default %}
+						{{ form.run_name(class="input input--text", type="text", id="text-input", placeholder="Enter run name", value=form.run_name.default)}}
+					{% else %}
+						{{ form.run_name(class="input input--text", type="text", id="text-input", placeholder="Enter run name")}}
+					{% endif %}
 					{% if form.run_name.errors %}
 					<ul>
 						{% for error_message in form.run_name.errors %}
-						<li>{{ error_message }}</li>
+						<li style = "color:red;">{{ error_message }}</li>
 						{% endfor %}
 					</ul>
 					{% endif %}
@@ -137,12 +160,15 @@
 
 			    <div class="answer__fields js-fields">
 					{{ form.run_description.label(class="label venus ", for="text-input")}}
-					{{ form.run_description(class="input input--textarea js-charlimit-input",cols="60",rows="6",id="textarea-answer",maxlength="200")}}
-
+					{% if form.run_description.default %}
+						{{ form.run_description(class="input input--textarea js-charlimit-input",cols="60",rows="6",id="textarea-answer",maxlength="200",value=form.run_description.default)}}
+					{% else %}
+						{{ form.run_description(class="input input--textarea js-charlimit-input",cols="60",rows="6",id="textarea-answer",maxlength="200", placeholder="Enter run Description...")}}
+					{% endif %}
 					{% if form.run_description.errors %}
 					<ul>
 						{% for error_message in form.run_description.errors %}
-						<li>{{ error_message }}</li>
+						<li style = "color:red;">{{ error_message }}</li>
 						{% endfor %}
 					</ul>
 					{% endif %}
@@ -153,10 +179,11 @@
 
 			    <div class="top_50_extra_space">
 					<button class="btn btn--primary" type="submit" name="submit" value="create_run">Save and continue</button>
-				    <!--
-				    <button class="btn btn--neutral">Cancel</button>
-					-->
+					{% if run_id %}
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <label><a href="/manage_run/{{run_id}}">Cancel</a></label>
+					{% else %}
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <label><a href="/dashboard">Cancel</a></label>
+					{% endif %}
 				</div>
 
 			</form>

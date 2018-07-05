@@ -2,7 +2,7 @@ attrs==17.4.0
 click==6.7
 colorama==0.3.9
 coverage==4.5.1
-Flask==0.12.2
+Flask==1.0.2
 Flask-WTF==0.14.2
 itsdangerous==0.24
 Jinja2==2.10
@@ -15,3 +15,8 @@ pytest-cov==2.5.1
 six==1.11.0
 Werkzeug==0.14.1
 WTForms==2.1
+
+numpy==1.14.3
+pandas==0.22.0
+python-dateutil==2.7.3
+pytz==2018.4

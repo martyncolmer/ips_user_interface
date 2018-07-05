@@ -99,18 +99,47 @@
 
 </section>
 
+
+
 <section>
+
+
+
 
 	<div class="wrapper">
 		<div class="col-8 top_40_extra_space">
 
-			<form id="run" action="/weights_2" class="form">
+			<form id="run" action="/manage_run/weights/{{current_run['id']}}" class="form" method = 'POST'>
+
+				{% if form.data_selection.errors %}
+					<div class="collator-item">
+						<h2 class="collator-title"></h2>
+						<!-- Start: @panel--error -->
+						<div class="panel panel--error">
+							<div class="panel__header">
+								<div class="venus">Error</div>
+							</div>
+							<div class="panel__body">
+								<p class="mars">Please select a valid output.</p>
+							</div>
+						</div>
+						<!-- End: @panel--error -->
+					</div>
+                {% endif %}
+
 
 				<div class="field">
-
+					{{ form.csrf_token }}
 					{{ form.data_selection.label(class="label venus ", for="text-input")}}
 					{{ form.data_selection(class="input input--select", type="submit")}}
 
+					{% if form.data_selection.errors %}
+						<ul>
+							{% for error_message in form.data_selection.errors %}
+							<li style = "color:red;">{{ error_message }}</li>
+							{% endfor %}
+						</ul>
+					{% endif %}
 
 			        <!--<label class="label venus " for="text-input">Select weight </label>-->
 			        <!--<select class="input input&#45;&#45;select" id="input-weight_selection" name="weight_selection">-->
@@ -138,7 +167,7 @@
 				    <!--
 				    <button class="btn btn--neutral">Cancel</button>
 					-->
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <label><a href="Dashboard_completed.html">Cancel</a></label>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <label><a href="/manage_run/{{current_run['id']}}">Cancel</a></label>
 				</div>
 
 			</form>
