@@ -105,18 +105,23 @@ def weights_2(id, table=None, table_title=None, source=None):
 
 @bp.route('/export_data/<run_id>')
 def export_data(run_id):
+
     form = ExportSelectionForm() # change to export form once you make one
 
     run = app_methods.get_run(run_id)
 
-    session['id'] = run['id']
-    session['run_name'] = run['name']
-    session['run_description'] = run['desc']
-    session['start_date'] = run['start_date']
-    session['end_date'] = run['end_date']
-    current_run = run
+    if run:
+        session['id'] = run['id']
+        session['run_name'] = run['name']
+        session['run_description'] = run['desc']
+        session['start_date'] = run['start_date']
+        session['end_date'] = run['end_date']
+        current_run = run
 
-    return render_template('/projects/legacy/john/social/export_data.html',
-                           form=form,
-                           current_run=current_run)
+        return render_template('/projects/legacy/john/social/export_data.html',
+                               form=form,
+                               current_run=current_run)
+    else:
+        abort(404)
+
 

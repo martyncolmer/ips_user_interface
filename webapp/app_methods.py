@@ -363,7 +363,7 @@ def create_export_data_download(run_id, sql_table, target_filename):
 
     data = columns_csv_data + values_csv_data
 
-    json_data = {'DATE_CREATED': "hi",
+    json_data = {'DATE_CREATED': "Insert Date Here",
                  'DOWNLOADABLE_DATA': data,
                  'FILENAME': target_filename,
                  'RUN_ID': run_id,
