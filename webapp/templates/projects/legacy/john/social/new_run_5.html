@@ -169,21 +169,32 @@
 				<div class="wrapper">
 					<div class="group">
 						<div class="col-8 top_40_extra_space">
+							{% if table %}
 							<table name="form_table" id="form_table" class="table table__dense">
-                                {% if table %}
                                     <thead name="table_header" class="table--head">
-                                    {% for column in header %}
-                                        <th name="{{column}}" class="table--header--cell"> {{ column | replace('_', ' ') | title }} </th>
-                                    {% endfor %}
-                                    <th name="table_header_cell"class="table--header--cell">Edit</th>
+										<th name="" class="table--header--cell">PV name</th>
+										<th name="" class="table--header--cell">PV Reason</th>
+										<th name="" class="table--header--cell">PV Description</th>
+                                    	<th name="table_header_cell"class="table--header--cell">Edit</th>
                                 </thead>
                                  <tbody>
                                     <!-- for each record, render each data value-->
                                     {% for record in table %}
-                                    <tr name="table_row"class="table--row">
-                                        <td name="{{record['PV_NAME']}}" value="{{record['PV_NAME']}}"class="table--cell">{{record['PV_NAME']}}</td>
-                                        <td name="{{record['PV_REASON']}}" value="{{record['PV_REASON']}}" class="table--cell">{{record['PV_REASON']}} </td>
-                                        <td name="{{record['PV_CONTENT']}}" value="{{record['PV_CONTENT']}}" class="table--cell">{{record['PV_CONTENT']}}</td>
+
+                                    <tr name="table_row" class="table--row">
+
+										<div class="hidden-edit-inputs">
+											<input name="{{record['PV_NAME']}}" class="hidden-edit-input-name" type="hidden" value="{{record['PV_NAME']}}">
+											<input name="{{record['PV_REASON']}}" class="hidden-edit-input-reason" type="hidden" value="{{record['PV_REASON']}}">
+											<input name="{{record['PV_CONTENT']}}" class="hidden-edit-input-content" type="hidden" value="{{record['PV_CONTENT']}}">
+											<!--<input name="{{record['PV_NAME']}}" class="hidden-edit-input-description" type="text" value="">-->
+										</div>
+
+                                        <td class="table--cell">{{record['PV_NAME']}}</td>
+                                        <td class="table--cell">{{record['PV_REASON']}} </td>
+                                        <td class="table--cell">Description</td>
+										<!--<td name="{{record['PV_CONTENT']}}" value="{{record['PV_CONTENT']}}" class="table&#45;&#45;cell">{{record['PV_CONTENT']}}</td>-->
+
                                         <!--Give the button a class so that we can call it via javascript, attach ID attribute-->
                                         <td name="button"class="table--cell"><button class="pv-edit-button" id={{record['PV_NAME']}}>Edit</button></td>
                                     </tr>

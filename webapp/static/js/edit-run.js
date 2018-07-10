@@ -5,6 +5,28 @@
 
 $(document).ready(function(e){
 
+    // Create dictionary of all the table cell rows
+    var tableRows = [];
+            $("#form_table > tbody  > tr").each(function() {
+                var row = {
+                  "name" : $(this).find(".table--cell")[0],
+                  "reason" : $(this).find(".table--cell")[1],
+                  "content" : $(this).find(".table--cell")[2],
+                };
+                tableRows.push(row);
+            });
+
+    // Create dictionary of all the inputs
+    var tableInputs = [];
+           $(".hidden-edit-inputs").each(function() {
+               var row = {
+                 "name" : $(this).find(".hidden-edit-input-name"),
+                 "reason" : $(this).find(".hidden-edit-input-reason"),
+                 "content" : $(this).find(".hidden-edit-input-content"),
+               };
+               tableInputs.push(row);
+           });
+
     // Get the modal so that we can hide/un-hide and attach the ID
     var modal = $(".modal");
 
@@ -22,50 +44,70 @@ $(document).ready(function(e){
         modal.fadeIn(500);
 
         variableId = this.id;
-        // Create array of all the table rows
-        rows = $('.table--row');
-        var data = [];
 
-        // For each row, look at each column, get the ID and check the ID to the one user selected
-        // Then get the row with the matching ID by getting the columns parent row
-        rows.find('td').each(function() {
-            id = ($(this).html()).trim();
-            if (id == variableId) {
-                row = $(this).parent();
+        // Length of the rows in the table
+        rowsLength = tableRows.length
+        // Array we will append rows to
+        data = [];
+
+        /** First we need to go through the table data and find the row we need.
+            Then we can set the modal inputs with data from that table row and update the actual table data when the
+            okay button is clicked
+        **/
+
+        // Iterate over dictionary of table rows
+        for (i=0; i < rowsLength; i++) {
+            // Get dictionary out of array by index
+            row = tableRows[i];
+            // Get the PV Name text
+            name = row['name'].innerHTML;
+
+            // If the dictionary is the one we need add the data to the array
+            if (name === variableId) {
+                data.push(row['name']);
+                data.push(row['reason']);
+                data.push(row['content']);
             }
-        });
+        }
 
-        // For each column in the row, push each column into an array
-        row.find('td').each(function() {
-            data.push($(this).html().trim());
-        });
-
-        // Set the inputs values to whats in the array
-        $("#id_input").val(data[0]);
-        $("#reason_input").val(data[1]);
-        $("#content_input").val(data[2]);
+        // Set the inputs values to that in the data array
+        $("#id_input").val(data[0].innerHTML);
+        $("#reason_input").val(data[1].innerHTML);
+        $("#content_input").val(data[2].innerHTML);
 
         // Edit table data when the okay button is pressed
         $("#modal_okay_button").click(function(event){
-            // Get input values
-            theReason = $('#reason_input').val();
-            theContent = $('#content_input').val();
+            // Get values entered into the inputs by the user
+            reasonInput = $('#reason_input').val();
+            contentInput = $('#content_input').val();
 
-            // For each column in the row change the HTML to the input field text
-            // The count is so we know which column in the row we are at, there might be a nicer way?
-            count = 0;
+            // Get the data from data array
+            reason = data[1];
+            content = data[2];
 
-            row.find('td').each(function() {
-                // Reason column
-                if (count == 1) {
-                  $(this).html(theReason);
+            // Update the table data to that in the array
+            reason.innerHTML = reasonInput;
+            content.innerHTML = contentInput;
+
+            /** Now we need to go through the inputs in the table to get the ones we need.
+                We can update them with the new input values to post to Flask.
+            **/
+
+            // Iterate over dictionary of inputs
+            for (i=0; i < rowsLength; i++) {
+                // Get dictionary out of array by index
+                row = tableInputs[i];
+                // Get the PV Name text
+                name = row['name'].val();
+
+                // If the dictionary is the one we need add the data to the array
+                if (name === variableId) {
+                    // Update the input fields in the table with the ones the user entered
+                    row['reason'].val(reasonInput);
+                    row['content'].val(contentInput);
                 }
-                // Content column
-                else if (count == 2){
-                    $(this).html(theContent);
-                }
-                count ++;
-        });
+            }
+
         // Fade out 500ms
         modal.fadeOut(500);
         });
