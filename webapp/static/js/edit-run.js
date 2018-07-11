@@ -16,16 +16,11 @@ $(document).ready(function(e){
                 tableRows.push(row);
             });
 
-    // Create dictionary of all the inputs
-    var tableInputs = [];
-           $(".hidden-edit-inputs").each(function() {
-               var row = {
-                 "name" : $(this).find(".hidden-edit-input-name"),
-                 "reason" : $(this).find(".hidden-edit-input-reason"),
-                 "content" : $(this).find(".hidden-edit-input-content"),
-               };
-               tableInputs.push(row);
-           });
+    // Get length of dictionary so it can be iterated over
+    rowsLength = tableRows.length
+
+    // Take the contents of the table and put it into the hidden field
+    fillInputFieldForPosting(rowsLength);
 
     // Get the modal so that we can hide/un-hide and attach the ID
     var modal = $(".modal");
@@ -89,24 +84,9 @@ $(document).ready(function(e){
             reason.innerHTML = reasonInput;
             content.innerHTML = contentInput;
 
-            /** Now we need to go through the inputs in the table to get the ones we need.
-                We can update them with the new input values to post to Flask.
-            **/
+            // Take the contents of the table and put it into the hidden field
+            fillInputFieldForPosting(rowsLength);
 
-            // Iterate over dictionary of inputs
-            for (i=0; i < rowsLength; i++) {
-                // Get dictionary out of array by index
-                row = tableInputs[i];
-                // Get the PV Name text
-                name = row['name'].val();
-
-                // If the dictionary is the one we need add the data to the array
-                if (name === variableId) {
-                    // Update the input fields in the table with the ones the user entered
-                    row['reason'].val(reasonInput);
-                    row['content'].val(contentInput);
-                }
-            }
 
         // Fade out 500ms
         modal.fadeOut(500);
@@ -115,5 +95,32 @@ $(document).ready(function(e){
         // Make sure the page doesn't refresh/change when this button is clicked
         return false;
     });
+
+    function fillInputFieldForPosting(rowsLength) {
+        // Iterate over dictionary of table rows
+        data = [];
+        for (i=0; i < rowsLength; i++) {
+            // Get dictionary out of array by index
+            row = tableRows[i];
+
+            // Get the data from row
+            name = row['name'].innerHTML;
+            reason = row['reason'].innerHTML;
+            content = row['content'].innerHTML;
+
+            // Create a dictionary entry to put in the input
+            var row = {
+                  name : name,
+                  "reason" : reason,
+                  "content" : content,
+                };
+
+            // Add to the data array
+            data.push(row);
+        }
+        // Put the data array into the input
+        $(".hidden-edit-input-content").val(data);
+
+    }
 });
 
