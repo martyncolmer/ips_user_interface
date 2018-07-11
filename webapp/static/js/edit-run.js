@@ -118,8 +118,18 @@ $(document).ready(function(e){
             // Add to the data array
             data.push(row);
         }
+
+        dataLength = data.length;
+        dataToSend = "";
         // Put the data array into the input
-        $(".hidden-edit-input-content").val(data);
+        for (i=0; i < dataLength; i++) {
+            row = data[0]
+            dataToSend += row['name'] + ',';
+            dataToSend += row['reason']+ ',';
+            dataToSend += row['content']+ ',';
+        }
+        console.log(dataToSend);
+        $(".hidden-edit-input-content").val(dataToSend);
 
     }
 });
