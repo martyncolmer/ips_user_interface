@@ -166,6 +166,8 @@
 
 			<form id="run" name="pv_form" action="/new_run/new_run_5" class="form" method="post">
 
+				<input name="pv_data" class="hidden-edit-input-content" type="hidden" value="">
+
 				<div class="wrapper">
 					<div class="group">
 						<div class="col-8 top_40_extra_space">
@@ -182,13 +184,6 @@
                                     {% for record in table %}
 
                                     <tr name="table_row" class="table--row">
-
-										<div class="hidden-edit-inputs">
-											<input name="{{record['PV_NAME']}}" class="hidden-edit-input-name" type="hidden" value="{{record['PV_NAME']}}">
-											<input name="{{record['PV_REASON']}}" class="hidden-edit-input-reason" type="hidden" value="{{record['PV_REASON']}}">
-											<input name="{{record['PV_CONTENT']}}" class="hidden-edit-input-content" type="hidden" value="{{record['PV_CONTENT']}}">
-											<!--<input name="{{record['PV_NAME']}}" class="hidden-edit-input-description" type="text" value="">-->
-										</div>
 
                                         <td class="table--cell">{{record['PV_NAME']}}</td>
                                         <td class="table--cell">{{record['PV_REASON']}} </td>
