@@ -97,10 +97,10 @@ $(document).ready(function(e){
     });
 
     function fillInputFieldForPosting(rowsLength) {
-        // Iterate over dictionary of table rows
+        // Fill hidden input with all table data as a comma separated string
         data = [];
         for (i=0; i < rowsLength; i++) {
-            // Get dictionary out of array by index
+            // Get row from dictionary
             row = tableRows[i];
 
             // Get the data from row
@@ -118,8 +118,18 @@ $(document).ready(function(e){
             // Add to the data array
             data.push(row);
         }
+
+        // Iterate over data array and add the data as a comma separated list in the input
+        dataLength = data.length;
+        dataToSend = "";
         // Put the data array into the input
-        $(".hidden-edit-input-content").val(data);
+        for (i=0; i < dataLength; i++) {
+            row = data[i]
+            dataToSend += row['name'] + ',';
+            dataToSend += row['reason']+ ',';
+            dataToSend += row['content']+ ',';
+        }
+        $(".hidden-edit-input-content").val(dataToSend);
 
     }
 });

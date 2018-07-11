@@ -252,12 +252,18 @@
   <!-- Modal content -->
   <div class="modal-content">
     <span class="close">&times;</span>
-    <p>Process variable content</p>
+    <h2>Edit a process variable</h2>
 	  <!--Three inputs with different ID's-->
-      <input type="text" id="id_input" disabled="true" placeholder="">
-      <input type="text" id="reason_input" placeholder="">
-      <input type="text" id="content_input" placeholder="">
-	  <button type="button" id="modal_okay_button">Ok</button>
+	  <label>Name:</label>
+      <input type="text" class="modal-input" id="id_input" disabled="true" placeholder="">
+	  <br>
+	  <label>Reason for change:</label>
+      <input type="text" class="modal-input" id="reason_input" placeholder="">
+	  <br>
+	  <label>Content:</label>
+	  <textarea data-maxlength="50000" class="modal-input" id="content_input"></textarea>
+	  <br><br>
+	  <button type="button" class="btn btn--primary" id="modal_okay_button">Ok</button>
   </div>
 
 </div>
