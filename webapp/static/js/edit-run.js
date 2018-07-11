@@ -124,7 +124,7 @@ $(document).ready(function(e){
         dataToSend = "";
         // Put the data array into the input
         for (i=0; i < dataLength; i++) {
-            row = data[0]
+            row = data[i]
             dataToSend += row['name'] + ',';
             dataToSend += row['reason']+ ',';
             dataToSend += row['content']+ ',';
