@@ -103,7 +103,8 @@ def create_process_variables_set(run_id, name, user, start_date, end_date):
 
 
 def create_process_variables(run_id, json):
-    requests.post('http://ips-db.apps.cf1.ons.statistics.gov.uk/process_variables/' + run_id, json=json)
+    response = requests.post('http://ips-db.apps.cf1.ons.statistics.gov.uk/process_variables/' + run_id, json=json)
+    print(response)
 
 
 def get_process_variable_sets():

@@ -96,7 +96,7 @@ $(document).ready(function(e){
         return false;
     });
 
-    function fillInputFieldForPosting(rowsLength) {
+    /*function fillInputFieldForPosting(rowsLength) {
         // Fill hidden input with all table data as a comma separated string
         data = [];
         for (i=0; i < rowsLength; i++) {
@@ -133,4 +133,42 @@ $(document).ready(function(e){
 
     }
 });
+*/
 
+function fillInputFieldForPosting(rowsLength) {
+        // Fill hidden input with all table data as a comma separated string
+        data = [];
+        for (i=0; i < rowsLength; i++) {
+            // Get row from dictionary
+            row = tableRows[i];
+
+            // Get the data from row
+            name = row['name'].innerHTML;
+            reason = row['reason'].innerHTML;
+            content = row['content'].innerHTML;
+
+            // Create a dictionary entry to put in the input
+            var row = {
+                  name : name,
+                  "reason" : reason,
+                  "content" : content,
+                };
+
+            // Add to the data array
+            data.push(row);
+        }
+
+        // Iterate over data array and add the data as a comma separated list in the input
+        dataLength = data.length;
+        dataToSend = "";
+        // Put the data array into the input
+        for (i=0; i < dataLength; i++) {
+            row = data[i]
+            dataToSend += row['name'] + '^';
+            dataToSend += row['reason']+ '^';
+            dataToSend += row['content']+ '^';
+        }
+        $(".hidden-edit-input-content").val(dataToSend);
+
+    }
+});
