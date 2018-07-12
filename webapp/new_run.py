@@ -2,6 +2,7 @@ from flask import request, render_template, Blueprint, session, redirect, url_fo
 from .forms import CreateRunForm, DateSelectionForm, LoadDataForm
 from . import app_methods
 import uuid
+import json
 
 import os
 
@@ -201,7 +202,9 @@ def new_run_5():
 
     if request.method == 'POST':
 
-        print(request.args.get('form_table'))
+        edited_pvs_string = request.form['pv_data']
+
+        print(edited_pvs_string)
 
         # print(request.form)
         #
