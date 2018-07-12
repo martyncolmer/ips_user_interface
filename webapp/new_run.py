@@ -241,7 +241,7 @@ def new_run_5():
         app_methods.create_process_variables_set(run_id, run_name, user, start_date, end_date)
         app_methods.create_process_variables(run_id, data_dictionary_array)
 
-        return redirect('/dashboard')
+        return redirect('/manage_run/' + run_id)
 
     template_id = session['template_id']
 
