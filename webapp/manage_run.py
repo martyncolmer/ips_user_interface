@@ -106,7 +106,7 @@ def weights_2(id, table=None, table_title=None, source=None):
 @bp.route('/export_data/<run_id>')
 def export_data(run_id):
 
-    form = ExportSelectionForm() # change to export form once you make one
+    form = ExportSelectionForm()
 
     run = app_methods.get_run(run_id)
 

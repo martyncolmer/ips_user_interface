@@ -1,6 +1,7 @@
 from webapp.forms import ExportSelectionForm
 import pytest
 import webapp as web
+import json
 
 app = web.create_app()
 
@@ -21,22 +22,55 @@ def client():
 
 class TestExports:
 
-    # GETS
-    def test_get_webpage_valid_run_id_returns_ok_status(self, client):
+    # GET tests
+
+    def test_get_manage_run_webpage_valid_run_id_returns_ok_status(self, client):
         res = client.get('/manage_run/export_data/9e5c1872-3f8e-4ae5-85dc-c67a602d011e')
         assert res.status_code == 200
         assert b'9e5c1872-3f8e-4ae5-85dc-c67a602d011e' in res.data
 
-    def test_get_webpage_no_run_id_returns_fail_status(self, client):
+    def test_get_manage_run_webpage_no_run_id_returns_fail_status(self, client):
         res = client.get('/manage_run/export_data/')
         assert res.status_code == 404
 
-    def test_get_webpage_using_invalid_run_id(self, client):
-        res = client.get('/manage_run/export_data/9e5c1872-3f8e-4ae5-85dc-c67a602d0')
+    def test_get_manage_run_webpage_using_invalid_run_id(self, client):
+        res = client.get('/manage_run/export_data/not-a-valid-run')
         assert res.status_code == 404
         assert b'9e5c1872-3f8e-4ae5-85dc-c67a602d011e' not in res.data
 
-    # POSTS
+    def test_get_export_table_webpage_valid_run(self, client):
+        res = client.get('/reference_export/9e5c1872-3f8e-4ae5-85dc-c67a602d011e')
+        assert res.status_code == 200
+        assert b'9e5c1872-3f8e-4ae5-85dc-c67a602d011e' in res.data
+
+    def test_get_export_table_webpage_invalid_run(self, client):
+        res = client.get('/reference_export/not-a-valid-run')
+        assert res.status_code == 404
+        assert b'9e5c1872-3f8e-4ae5-85dc-c67a602d011e' not in res.data
+
+    def test_export_data_posts_gets_deletes_data(self, client):
+        # Test data to delete, post and get
+        with app.test_request_context():
+            # Delete the test file so it can be re-added
+            delete_response = client.delete('/export_data/9e5c1872-3f8e-4ae5-85dc-c67a602d011e/this-is-a-testing-file'
+                                            '/PS_IMBALANCE')
+
+            # Setup form submission information
+            data = {'data_selection': 'PS_IMBALANCE', 'filename': 'this-is-a-testing-file'}
+            # Post with valid form data
+            post_response = client.post('/export_data/9e5c1872-3f8e-4ae5-85dc-c67a602d011e', data=data)
+
+            # Get the run data
+            get_response = client.get('/export_data/9e5c1872-3f8e-4ae5-85dc-c67a602d011e/this-is-a-testing-file'
+                                      '/PS_IMBALANCE')
+
+            # Delete and get response should both be 200
+            # Post should be 302
+            assert delete_response.status_code == 200
+            assert post_response.status_code == 302
+            assert get_response.status_code == 200
+
+    # POST tests
 
     # Edit Data button
     def test_pressing_export_button_triggers_redirect_with_no_validation_errors(self, client):

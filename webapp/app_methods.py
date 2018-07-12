@@ -322,14 +322,22 @@ def export_clob(run_id, target_filename, sql_table):
 
     table_data_json = json.loads(response.content)
 
-    print(table_data_json)
-
     run = table_data_json[0]['DOWNLOADABLE_DATA']
-
-    print(run)
 
     with open(target_filename + ".csv", "w") as text_file:
         print(run, file=text_file)
+
+
+def delete_export_data(run_id, target_filename, sql_table):
+    response = requests.delete(
+        'http://ips-db.apps.cf1.ons.statistics.gov.uk/export_data_download/' + run_id + '/' + target_filename + '/' + sql_table)
+
+
+def get_export_file(run_id, target_filename, sql_table):
+    response = requests.get(
+        'http://ips-db.apps.cf1.ons.statistics.gov.uk/export_data_download' + '/' + run_id + '/' + target_filename + '/' + sql_table)
+    response = json.loads(response.content)
+    return response
 
 
 def create_export_data_download(run_id, sql_table, target_filename):
