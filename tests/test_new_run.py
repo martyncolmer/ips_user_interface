@@ -285,7 +285,6 @@ class TestNewRun3:
         assert b'This field is required.' not in res.data
         assert b'All fields must be filled with .csv files only.' not in res.data
 
-
     # Valid Run ID (Edit)
     def test_get_webpage_valid_run_id_returns_ok(self, client):
         res = client.get('/new_run/new_run_3/9e5c1872-3f8e-4ae5-85dc-c67a602d011e')
@@ -441,19 +440,44 @@ class TestNewRun4:
         assert res.status_code == 200
         assert b'Run id' and b'Name' and b'User' and b'Start Date' and b'End Date' and b'Select' in res.data
 
-    # Test that the template set is selected by default (i.e. test that pressing save and continue on this page will
-    # successfully navigate to the next page with no other input).
-    @pytest.mark.skip("No assert written and using unresolved flask reference - James Burr to look at.")
-    def test_new_run_4_has_template_selected_by_default_and_will_continue_onto_new_run_5_with_a_post(self, client):
+    # Ttest that pressing save and continue on this page will successfully navigate to the next page with no other input).
+    def test_new_run_4_will_continue_onto_new_run_5_with_a_post_and_a_value_given_for_the_selected_template_id(self, client):
 
         with app.test_request_context():
-            flask.session[run_id] = 'TEMPLATE'
-            run_name = 'testing'
-            start_date = 'testing'
-            end_date = 'testing'
-            user = 'testing'
 
-            res = client.post('/new_run/new_run_5')
+            res = client.post('/new_run/new_run_4', data = {'selected' : 'TEMPLATE'})
+            assert b'Redirecting...' in res.data
+
+    # Tests that the request does not move onwards if a template id is not given. This should never happen as it is
+    # selected by default when the page is accessed by a normal request i.e. in a non-testing context
+    def test_new_run_4_will_not_continue_if_a_value_is_not_given_for_the_selected_template_id(self, client):
+
+        with app.test_request_context():
+
+            res = client.post('/new_run/new_run_4')
+            assert res.status_code == 400
 
 
+class TestNewRun5:
 
+    def test_that_default_page_renders_correctly(self, client):
+
+        with app.test_request_context():
+            with client.session_transaction() as session:
+                session['template_id'] = 'TEMPLATE'
+            res = client.get('/new_run/new_run_5', data={'template_id': 'TEMPLATE'})
+            assert b'Edit' in res.data
+
+    def test_that_all_headers_render_correctly_with_get_request(self, client):
+        with app.test_request_context():
+            with client.session_transaction() as session:
+                session['template_id'] = 'TEMPLATE'
+            res = client.get('/new_run/new_run_5', data={'template_id': 'TEMPLATE'})
+            assert b'PV name' and b'PV Reason' and b'Edit' in res.data
+
+    def test_that_the_standard_header_banner_renders_correctly(self, client):
+        with app.test_request_context():
+            with client.session_transaction() as session:
+                session['template_id'] = 'TEMPLATE'
+            res = client.get('/new_run/new_run_5', data={'template_id': 'TEMPLATE'})
+            assert b'Dashboard' and b'New run' and b'System info' and b'Other' in res.data
