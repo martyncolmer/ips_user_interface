@@ -42,12 +42,12 @@ class DateSelectionForm(FlaskForm):
     e_month = SelectField(label='Month', choices=months,validators=[InputRequired()])
     e_year = IntegerField(label='Year', validators=[InputRequired(), NumberRange(min=1991, max=now.year + 2)])
 
+
 class ExportSelectionForm(FlaskForm):
-    """Elinor Thorne"""
     data_list = [('', ''),
                  ("SURVEY_SUBSAMPLE", "Survey Subsample"),
                  ("PS_FINAL", "Final Weight Summary"),
-                 ("PS_SHIFT_DATA", "Shift"),
+                 ("SHIFT_DATA", "Shift"),
                  ("PS_NON_RESPONSE", "Non-Response"),
                  ("PS_SHIFT_DATA", "Shift Weight Summary"),
                  ("NON_RESPONSE_DATA", "Non Response Weight Summary"),
@@ -62,13 +62,12 @@ class ExportSelectionForm(FlaskForm):
                  # ("CONTACT", "Contact"),
                  # ("MIGRATION", "Migration")]
 
-    # filename = StringField('Save as', [validators.Length(min=4, max=25), validators.DataRequired()])
-
     filename = StringField(label='Save file as',
                            validators=[InputRequired(), Regexp(r'^[\w+-]+$'), NoneOf([" ", ".", ",", "'"])])
     data_selection = SelectField(label='Select Data', choices=data_list, validators=[InputRequired()])
     display_data = SubmitField(label='Export Data')
     cancel_button = SubmitField(label='Cancel')
+
 
 class DataSelectionForm(FlaskForm):
     data_list = [('', 'Select Data'),

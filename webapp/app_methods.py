@@ -1,14 +1,9 @@
-import os
-import csv
-import requests
-import json
-from flask import jsonify
 import pandas
 import csv
 import requests
 import os
 import json
-import numpy
+from flask import session, render_template
 
 APP_DIR = os.path.dirname(__file__)
 
@@ -84,49 +79,6 @@ def get_run(run_id):
     for x in runs:
         if x['id'] == run_id:
             return x
-
-
-# def get_display_data(table_name, source, run_id):
-#     column_sets = {'SHIFT_DATA': ['PORTROUTE', 'WEEKDAY', 'ARRIVEDEPART', 'AM_PM_NIGHT', 'TOTAL'],
-#                    'TRAFFIC_DATA': ['PORTROUTE', 'PERIODSTART', 'PERIODEND', 'ARRIVEDEPART', 'AM_PM_NIGHT',
-#                                     'TRAFFICTOTAL', 'HAUL'],
-#                    'NON_RESPONSE_DATA': ['PORTROUTE', 'WEEKDAY', 'ARRIVEDEPART', 'AM_PM_NIGHT', 'SAMPINTERVAL',
-#                                          'MIGTOTAL', 'ORDTOTAL'],
-#                    'UNSAMPLED_OOH_DATA': ['PORTROUTE', 'REGION', 'ARRIVEDEPART', 'UNSAMP_TOTAL'],
-#                    'PS_SHIFT_DATA': ['SHIFT_PORT_GRP_PV', 'ARRIVEDEPART', 'WEEKDAY_END_PV', 'AM_PM_NIGHT_PV', 'MIGSI',
-#                                      'POSS_SHIFT_CROSS', 'SAMP_SHIFT_CROSS', 'MIN_SH_WT', 'MEAN_SH_WT', 'MAX_SH_WT',
-#                                      'COUNT_RESPS', 'SUM_SH_WT'],
-#                    'PS_NON_RESPONSE': ['NR_PORT_GRP_PV', 'ARRIVEDEPART', 'WEEKDAY_END_PV', 'MEAN_RESPS_SH_WT',
-#                                        'COUNT_RESPS',
-#                                        'PRIOR_SUM', 'GROSS_RESP', 'GNR', 'MEAN_NR_WT'],
-#                    'PS_MINIMUMS': ['MINS_PORT_GRP_PV', 'ARRIVEDEPART', 'MINS_CTRY_GRP_PV', 'MINS_NAT_GRP_PV',
-#                                    'MINS_NAT_GRP_PV',
-#                                    'MINS_CTRY_PORT_GRP_PV', 'MINS_CASES', 'FULLS_CASES', 'PRIOR_GROSS_MINS',
-#                                    'PRIOR_GROSS_FULLS',
-#                                    'PRIOR_GROSS_ALL', 'MINS_WT', 'POST_SUM', 'CASES_CARRIED_FWD'],
-#                    'PS_TRAFFIC': ['SAMP_PORT_GRP_PV', 'ARRIVEDEPART', 'FOOT_OR_VEHICLE_PV', 'CASES', 'TRAFFICTOTAL',
-#                                   'SUM_TRAFFIC_WT', 'TRAFFIC_WT'],
-#                    'PS_UNSAMPLED_OOH': ['UNSAMP_PORT_GRP_PV', 'ARRIVEDEPART', 'UNSAMP_REGION_GRP_PV', 'CASES',
-#                                         'SUM_PRIOR_WT',
-#                                         'SUM_UNSAMP_TRAFFIC_WT', 'UNSAMP_TRAFFIC_WT'],
-#                    'PS_IMBALANCE': ['FLOW', 'SUM_PRIOR_WT', 'SUM_IMBAL_WT'],
-#                    'PS_FINAL': ['SERIAL', 'SHIFT_WT', 'NON_RESPONSE_WT', 'MINS_WT', 'TRAFFIC_WT',
-#                                 'UNSAMP_TRAFFIC_WT', 'IMBAL_WT', 'FINAL_WT']
-#                    }
-#
-#     # connection = get_connection()
-#
-#     columns = ','.join(column_sets[table_name])
-#
-#     sql_command = "SELECT " + columns + " FROM " + table_name + " WHERE RUN_ID = '" + run_id + "'"
-#
-#     if int(source) > 0:
-#         sql_command += " AND DATA_SOURCE_ID = " + source
-#
-#     print(sql_command)
-#     df = pandas.read_sql(sql_command, connection)
-#
-#     return df
 
 
 def get_display_data_json(table_name, run_id=None, data_source=None):
@@ -341,9 +293,12 @@ def get_export_file(run_id, target_filename, sql_table):
 
 
 def create_export_data_download(run_id, sql_table, target_filename):
-    response = requests.get('http://ips-db.apps.cf1.ons.statistics.gov.uk/' + sql_table + '/' + run_id)
+    try:
+        response = requests.get('http://ips-db.apps.cf1.ons.statistics.gov.uk/' + sql_table + '/' + run_id)
+        table_data_json = json.loads(response.content)
+    except Exception as err:
+        return False
 
-    table_data_json = json.loads(response.content)
     columns = []
     values = []
 
@@ -357,7 +312,6 @@ def create_export_data_download(run_id, sql_table, target_filename):
             values.append(x[key])
 
     column_length = len(columns)
-    column_counter = 0
 
     columns_csv_data = ','.join(columns) + '\n'
     values_csv_data = ''
@@ -379,9 +333,5 @@ def create_export_data_download(run_id, sql_table, target_filename):
 
     data = json.dumps(json_data)
 
-    response = requests.post('http://ips-db.apps.cf1.ons.statistics.gov.uk/export_data_download', data=data)
-
-    if response == 201:
-        print("Success")
-    else:
-        print(response.text, response.status_code, response.headers.items())
+    requests.post('http://ips-db.apps.cf1.ons.statistics.gov.uk/export_data_download', data=data)
+    return True

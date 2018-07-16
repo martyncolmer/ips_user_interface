@@ -84,9 +84,27 @@
 </header>
 
 <section>
-
 	<div class="wrapper">
 		<div class="col-8">
+			<div class="group top_40_extra_space">
+				<div>
+					{% if data == "0"%}
+						<div class="collator-item">
+							<!-- Start: @panel--error -->
+							<div class="panel panel--error">
+								<div class="panel__header">
+									<div class="venus">Error</div>
+								</div>
+								<div class="panel__body">
+									<p class="mars">There is no data to export.  Please select a different export.</p>
+								</div>
+							</div>
+						</div>
+					{% endif %}
+
+				</div>
+			</div>
+
 
 			<div class="group top_40_extra_space">
 				<div>
@@ -96,6 +114,7 @@
 
 	  	</div>
 	</div>
+
 
 </section>
 

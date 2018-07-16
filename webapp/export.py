@@ -1,24 +1,13 @@
-import json
 import os
-import uuid
 import io
 import zipfile
-from flask import Flask, render_template, session, request, url_for, redirect, send_file, abort, flash
-from webapp import app_methods
-from webapp.forms import CreateRunForm
-from webapp.forms import DateSelectionForm
-from webapp.forms import SearchActivityForm
-from webapp.forms import DataSelectionForm
+from flask import request, render_template, Blueprint, session, redirect, send_file, abort
 from webapp.forms import ExportSelectionForm
-from webapp.forms import LoadDataForm
 from webapp.app_methods import create_export_data_download
 from webapp.app_methods import export_clob
 from webapp.app_methods import get_export_data_table
 from webapp.app_methods import delete_export_data
-from webapp.app_methods import get_export_file
-
-from flask import request, render_template, Blueprint, session, redirect
-from . import app_methods
+from webapp.app_methods import get_run
 
 bp = Blueprint('export', __name__, url_prefix='', static_folder='static')
 
@@ -27,10 +16,9 @@ bp = Blueprint('export', __name__, url_prefix='', static_folder='static')
 @bp.route('/reference_export/<run_id>/<new_export>/<msg>', methods=['GET', 'POST'])
 def reference_export(run_id, new_export="0", msg="", data=""):
     # Retrieve run information
-    run = app_methods.get_run(run_id)
+    run = get_run(run_id)
 
     if run:
-
         session['current_run_id'] = run['id']
         session['run_name'] = run['name']
         session['run_description'] = run['desc']
@@ -61,7 +49,7 @@ def reference_export(run_id, new_export="0", msg="", data=""):
 def export_data(run_id, file_name=None, source_table=None):
     if run_id:
         form = ExportSelectionForm()
-        run = app_methods.get_run(run_id)
+        run = get_run(run_id)
 
         session['current_run_id'] = run['id']
         session['run_name'] = run['name']
@@ -72,10 +60,11 @@ def export_data(run_id, file_name=None, source_table=None):
         current_run = run
 
         if request.method == 'GET':
-            get_export_file(run_id, file_name, source_table)
+            pass
+            #get_export_file(run_id, file_name, source_table)
 
-        if request.method == 'DELETE':
-            delete_export_data(run_id, file_name, source_table)
+        # if request.method == 'DELETE':
+        #     delete_export_data(run_id, file_name, source_table)
 
         if request.method == 'POST' and form.validate():
             # Get values from front end
@@ -83,21 +72,25 @@ def export_data(run_id, file_name=None, source_table=None):
             target_filename = request.values['filename']
 
             # Export table to temporary CSV and return success code
-            new_export = 0
-            msg = ""
+            # new_export = 0
+            # msg = ""
 
-            if msg == "":
-                msg = "Export was stored successfully.  See below to download."
+            # if msg == "":
+            #     msg = "Export was stored successfully.  See below to download."
 
             # Insert data to clob
-            create_export_data_download(run_id, sql_table, target_filename)
+            if create_export_data_download(run_id, sql_table, target_filename) == False:
+                return render_template('/projects/legacy/john/social/export_data.html', form=form,
+                                       current_run=current_run,
+                                       data="0")
+            return redirect('/reference_export/' + run_id)# + '/' + str(new_export) + '/' + msg)
 
-            return redirect('/reference_export/' + run_id + '/' + str(new_export) + '/' + msg)
         elif request.method == 'POST':
             if 'cancel_button' in request.form:
                 return redirect('/reference_export/' + current_run['id'], code=302)
 
-        return render_template('/projects/legacy/john/social/export_data.html', form=form, current_run=current_run)
+        return render_template('/projects/legacy/john/social/export_data.html', form=form, current_run=current_run,
+                               data="1")
 
     else:
         abort(404)

@@ -1,7 +1,6 @@
 from webapp.forms import ExportSelectionForm
 import pytest
 import webapp as web
-import json
 
 app = web.create_app()
 
