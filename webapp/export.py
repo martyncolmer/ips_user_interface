@@ -46,7 +46,7 @@ def reference_export(run_id, new_export="0", msg="", data=""):
 
 @bp.route('/export_data/<run_id>/<file_name>/<source_table>', methods=['DELETE', 'GET'])
 @bp.route('/export_data/<run_id>', methods=['GET', 'POST', 'DELETE'])
-def export_data(run_id, file_name=None, source_table=None):
+def export_data(run_id):
     if run_id:
         form = ExportSelectionForm()
         run = get_run(run_id)
@@ -59,31 +59,17 @@ def export_data(run_id, file_name=None, source_table=None):
 
         current_run = run
 
-        if request.method == 'GET':
-            pass
-            #get_export_file(run_id, file_name, source_table)
-
-        # if request.method == 'DELETE':
-        #     delete_export_data(run_id, file_name, source_table)
-
         if request.method == 'POST' and form.validate():
             # Get values from front end
             sql_table = request.values['data_selection']
             target_filename = request.values['filename']
 
-            # Export table to temporary CSV and return success code
-            # new_export = 0
-            # msg = ""
-
-            # if msg == "":
-            #     msg = "Export was stored successfully.  See below to download."
-
-            # Insert data to clob
+            # Try to insert data to clob
             if create_export_data_download(run_id, sql_table, target_filename) == False:
                 return render_template('/projects/legacy/john/social/export_data.html', form=form,
                                        current_run=current_run,
                                        data="0")
-            return redirect('/reference_export/' + run_id)# + '/' + str(new_export) + '/' + msg)
+            return redirect('/reference_export/' + run_id)
 
         elif request.method == 'POST':
             if 'cancel_button' in request.form:
@@ -102,6 +88,7 @@ def download_data(run_id, file_name, source_table):
         # Assign variables
         memory_file = io.BytesIO()
 
+        # Export source table as clob
         export_clob(run_id, file_name, source_table)
 
         # Zip file (# source = file to be zipped. file_name = zip name)
