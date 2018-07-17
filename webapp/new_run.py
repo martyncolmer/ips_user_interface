@@ -231,15 +231,22 @@ def new_run_5():
                     }
             data_dictionary_array.append(data)
 
-        #table_data_json = json.dumps(data_dictionary_array)
-
+        # Get required values from the session
         run_id = session['id']
         run_name = session['run_name']
         start_date = session['start_date']
         end_date = session['end_date']
         user = 'test_user_placeholder'
-        app_methods.create_process_variables_set(run_id, run_name, user, start_date, end_date)
-        app_methods.create_process_variables(run_id, data_dictionary_array)
+
+        # Creates a new pv set if run_id doesn't already exist, otherwise delete existing rows and repopulate
+        if run_id not in app_methods.get_all_run_ids():
+            # Creates a new set of process variables, then fill the empty set with the edited javascript data
+            app_methods.create_process_variables_set(run_id, run_name, user, start_date, end_date)
+            # Fill newly created pv set with new process variables (for new runs)
+            app_methods.create_process_variables(run_id, data_dictionary_array)
+        else:
+            # Edit existing process variables (for edit run)
+            app_methods.edit_process_variables(run_id, data_dictionary_array)
 
         return redirect('/manage_run/' + run_id)
 
