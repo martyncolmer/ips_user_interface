@@ -68,11 +68,21 @@ def get_system_info():
 
 
 def get_runs():
+    """
+        Purpose: Gets all of the runs to put in the list
+
+        :return: List of JSON object runs
+        """
     response = requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs")
     return json.loads(response.content)
 
 
 def get_run(run_id):
+    """
+        Purpose: Gets a single run by ID
+
+        :return: A specific JSON run object
+        """
     response = requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs")
     runs = json.loads(response.content)
 
@@ -210,12 +220,6 @@ def get_system_info():
 
     return records
 
-
-def get_runs():
-    response = requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs")
-    return json.loads(response.content)
-
-
 def get_runs_json():
     requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs")
     response = requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs")
@@ -232,21 +236,19 @@ def get_runs_csv():
     return records
 
 
-def get_run(run_id):
-    response = requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs")
-    runs = json.loads(response.content)
-
-    for x in runs:
-        if x['id'] == run_id:
-            return x
-
-
 def get_export_data_table(run_id):
+    """
+        Purpose: Gets the export data for all the runs
+
+        :return: List of exports as JSON
+        """
+    # API gateway response is a list of JSON data containing the export data for all the runs
     response = requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/export_data_download/" + run_id)
 
     # Set boolean to assume records exist
     exports = 1
 
+    # Empty data if no response
     if response.status_code == 400:
         data = [{'DATE_CREATED': '',
                  'DOWNLOADABLE_DATA': '',
@@ -257,35 +259,50 @@ def get_export_data_table(run_id):
         exports = 0
         return data, exports
 
+    # Convert response to JSON
     json_data = json.loads(response.content)
 
     return json_data, exports
 
 
-def check_dir(file_name):
-    directory = os.path.dirname('temp/' + file_name)
-    if not os.path.exists(directory):
-        os.makedirs(directory)
-
-
 def export_clob(run_id, target_filename, sql_table):
+    """
+        Purpose: Puts the export downloadable data into a text file
+
+        :return: NA
+        """
+    # API gateway response to get a single export from run id, filename and the SQL table
     response = requests.get(
         'http://ips-db.apps.cf1.ons.statistics.gov.uk/export_data_download' + '/' + run_id + '/' + target_filename + '/' + sql_table)
 
+    # Convert data to json
     table_data_json = json.loads(response.content)
 
+    # Get the downloadable data
     run = table_data_json[0]['DOWNLOADABLE_DATA']
 
+    # Put the data in a text file saved in the project root directory with prefix .csv
     with open(target_filename + ".csv", "w") as text_file:
         print(run, file=text_file)
 
 
 def delete_export_data(run_id, target_filename, sql_table):
+    """
+            Purpose: Deletes export data
+
+            :return: NA
+            """
+    # Delete the  export with run id, filename and sql table
     response = requests.delete(
         'http://ips-db.apps.cf1.ons.statistics.gov.uk/export_data_download/' + run_id + '/' + target_filename + '/' + sql_table)
 
 
 def get_export_file(run_id, target_filename, sql_table):
+    """
+            Purpose: Get a single export by run id, filename and SQL table
+
+            :return: Export as JSON
+            """
     response = requests.get(
         'http://ips-db.apps.cf1.ons.statistics.gov.uk/export_data_download' + '/' + run_id + '/' + target_filename + '/' + sql_table)
     response = json.loads(response.content)
@@ -293,45 +310,67 @@ def get_export_file(run_id, target_filename, sql_table):
 
 
 def create_export_data_download(run_id, sql_table, target_filename):
+    """
+            Purpose: Gets the export data and puts into a single long string
+            :return: Boolean - posts the data to the database
+            """
+
+    # Get the export data by SQL table and run id
     try:
         response = requests.get('http://ips-db.apps.cf1.ons.statistics.gov.uk/' + sql_table + '/' + run_id)
+        # Convert to JSON
         table_data_json = json.loads(response.content)
     except Exception as err:
         return False
 
+    # THERE WILL BE A MUCH CLEANER WAY TO DO THIS
+
+    # Lists to append data to and then combine
     columns = []
     values = []
 
+    # Add all the columns to column list
     for x in table_data_json:
         for key in x:
             columns.append(key)
         break
 
+    # Add all the values to a list
     for x in table_data_json:
         for key in x:
             values.append(x[key])
 
+    # Length of columns list so we know how far to slice values
     column_length = len(columns)
 
+    # Create string of all columns split with comma and new line
     columns_csv_data = ','.join(columns) + '\n'
     values_csv_data = ''
 
+    # All we do here is move through values in chunks to add to the right columns
+    # Slice values by column length and append to values string
     column_counter = 0
     while column_counter <= len(values):
         data_slice = values[:column_length]
         values_csv_data += ','.join(data_slice) + '\n'
+        # Delete slice so we can get the next
         del values[:column_length]
         column_counter += 1
 
+    # Combine columns and rows to make one long csv string
     data = columns_csv_data + values_csv_data
 
+    # Create dict with data to post
     json_data = {'DATE_CREATED': "Insert Date Here",
                  'DOWNLOADABLE_DATA': data,
                  'FILENAME': target_filename,
                  'RUN_ID': run_id,
                  'SOURCE_TABLE': sql_table}
 
+    # Convert to json
     data = json.dumps(json_data)
 
+    # Post data to API gateway
     requests.post('http://ips-db.apps.cf1.ons.statistics.gov.uk/export_data_download', data=data)
+
     return True
