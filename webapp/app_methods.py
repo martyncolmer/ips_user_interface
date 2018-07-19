@@ -103,7 +103,8 @@ def create_process_variables_set(run_id, name, user, start_date, end_date):
 
 
 def create_process_variables(run_id, json):
-    requests.post('http://ips-db.apps.cf1.ons.statistics.gov.uk/process_variables/' + run_id, json=json)
+    response = requests.post('http://ips-db.apps.cf1.ons.statistics.gov.uk/process_variables/' + run_id, json=json)
+    print(response)
 
 
 def get_process_variable_sets():
@@ -260,7 +261,7 @@ def edit_run_step_status(run_id, value, step_number=None):
     requests.put(route)
 
 
-def edit_process_variable(run_id, pv_content, pv_name, reason_for_change):
+def edit_process_variables(run_id, json_dictionary):
     """
     :param run_id:
     :param pv_content:
@@ -268,16 +269,19 @@ def edit_process_variable(run_id, pv_content, pv_name, reason_for_change):
     :param reason_for_change:
     :return:
     """
-    response = requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/process_variables/" + run_id)
+    response = requests.delete("http://ips-db.apps.cf1.ons.statistics.gov.uk/process_variables/" + run_id)
 
-    file = json.loads(response.content)
+    create_process_variables(run_id, json_dictionary)
 
-    pv = file[0]
 
-    pv["RUN_ID"] = run_id
-    pv["PV_NAME"] = pv_name
-    pv["PV_CONTENT"] = pv_content
-    pv["PV_REASON"] = reason_for_change
+def get_all_run_ids():
 
-    for record in file:
-        requests.put("http://ips-db.apps.cf1.ons.statistics.gov.uk/process_variables/" + run_id + "/", json=pv)
+    response = requests.get('http://ips-db.apps.cf1.ons.statistics.gov.uk/pv_sets')
+    dictionary_of_pv_sets = json.loads(response.content)
+
+    list_of_run_ids = []
+
+    for record in dictionary_of_pv_sets:
+        list_of_run_ids.append(record['RUN_ID'])
+
+    return list_of_run_ids

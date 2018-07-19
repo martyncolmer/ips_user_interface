@@ -166,24 +166,29 @@
 
 			<form id="run" name="pv_form" action="/new_run/new_run_5" class="form" method="post">
 
+				<input name="pv_data" class="hidden-edit-input-content" type="hidden" value="">
+
 				<div class="wrapper">
 					<div class="group">
 						<div class="col-8 top_40_extra_space">
+							{% if table %}
 							<table name="form_table" id="form_table" class="table table__dense">
-                                {% if table %}
                                     <thead name="table_header" class="table--head">
-                                    {% for column in header %}
-                                        <th name="{{column}}" class="table--header--cell"> {{ column | replace('_', ' ') | title }} </th>
-                                    {% endfor %}
-                                    <th name="table_header_cell"class="table--header--cell">Edit</th>
+										<th name="" class="table--header--cell">PV name</th>
+										<th name="" class="table--header--cell">PV Reason</th>
+                                    	<th name="table_header_cell"class="table--header--cell">Edit</th>
                                 </thead>
                                  <tbody>
                                     <!-- for each record, render each data value-->
                                     {% for record in table %}
-                                    <tr name="table_row"class="table--row">
-                                        <td name="{{record['PV_NAME']}}" value="{{record['PV_NAME']}}"class="table--cell">{{record['PV_NAME']}}</td>
-                                        <td name="{{record['PV_REASON']}}" value="{{record['PV_REASON']}}" class="table--cell">{{record['PV_REASON']}} </td>
-                                        <td name="{{record['PV_CONTENT']}}" value="{{record['PV_CONTENT']}}" class="table--cell">{{record['PV_CONTENT']}}</td>
+
+                                    <tr name="table_row" class="table--row">
+
+                                        <td class="table--cell">{{record['PV_NAME']}}</td>
+                                        <td class="table--cell">{{record['PV_REASON']}} </td>
+                                        <td style="display:none; "class="table--cell">{{record['PV_CONTENT']}}</td>
+										<!--<td name="{{record['PV_CONTENT']}}" value="{{record['PV_CONTENT']}}" class="table&#45;&#45;cell">{{record['PV_CONTENT']}}</td>-->
+
                                         <!--Give the button a class so that we can call it via javascript, attach ID attribute-->
                                         <td name="button"class="table--cell"><button class="pv-edit-button" id={{record['PV_NAME']}}>Edit</button></td>
                                     </tr>
@@ -246,12 +251,18 @@
   <!-- Modal content -->
   <div class="modal-content">
     <span class="close">&times;</span>
-    <p>Process variable content</p>
+    <h2>Edit a process variable</h2>
 	  <!--Three inputs with different ID's-->
-      <input type="text" id="id_input" disabled="true" placeholder="">
-      <input type="text" id="reason_input" placeholder="">
-      <input type="text" id="content_input" placeholder="">
-	  <button type="button" id="modal_okay_button">Ok</button>
+	  <label>Name:</label>
+      <input type="text" class="modal-input" id="id_input" disabled="true" placeholder="">
+	  <br>
+	  <label>Reason for change:</label>
+      <input type="text" class="modal-input" id="reason_input" placeholder="">
+	  <br>
+	  <label>Content:</label>
+	  <textarea data-maxlength="50000" class="modal-input" id="content_input"></textarea>
+	  <br><br>
+	  <button type="button" class="btn btn--primary" id="modal_okay_button">Ok</button>
   </div>
 
 </div>
