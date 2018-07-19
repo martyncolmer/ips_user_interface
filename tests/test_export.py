@@ -50,24 +50,14 @@ class TestExports:
     def test_export_data_posts_gets_deletes_data(self, client):
         # Test data to delete, post and get
         with app.test_request_context():
-            # Delete the test file so it can be re-added
-            delete_response = client.delete('/export_data/9e5c1872-3f8e-4ae5-85dc-c67a602d011e/this-is-a-testing-file'
-                                            '/PS_IMBALANCE')
 
             # Setup form submission information
             data = {'data_selection': 'PS_IMBALANCE', 'filename': 'this-is-a-testing-file'}
             # Post with valid form data
             post_response = client.post('/export_data/9e5c1872-3f8e-4ae5-85dc-c67a602d011e', data=data)
 
-            # Get the run data
-            get_response = client.get('/export_data/9e5c1872-3f8e-4ae5-85dc-c67a602d011e/this-is-a-testing-file'
-                                      '/PS_IMBALANCE')
-
-            # Delete and get response should both be 200
             # Post should be 302
-            assert delete_response.status_code == 200
             assert post_response.status_code == 302
-            assert get_response.status_code == 200
 
     # POST tests
 

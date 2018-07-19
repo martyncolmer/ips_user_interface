@@ -29,7 +29,7 @@
 			<div class="group">
 				<div class="col-7">
 					<div class="logo_header">
-						<a href="../hub.html"><img src="../../../../img/logo.svg" alt="Office for National Statistics" class="logo__img"/></a>
+						<a href="../hub.html"><img src="../../../../../static/img/logo.svg" alt="Office for National Statistics" class="logo__img"/></a>
 					</div>
 				</div>
 				<div class="col-5">
@@ -61,16 +61,16 @@
 		            <div class="sitenavigation">
 		              	<div class="sitenavigation">
 		                	<ul class="sitenavigation__list">
+			                    <li class="sitenavigation__listitem">
+			                    	<a href="/dashboard">Dashboard</a>
+			                    </li>
+			                    <li class="sitenavigation__listitem">
+			                    	<a href="/new_run/new_run_1">New run</a>
+			                    </li>
+			                    <li class="sitenavigation__listitem">
+			                    	<a href="/system_info">System info</a>
+			                    </li>
 			                    <li class="sitenavigation__listitem sitenavigation__listitem--active">
-			                    	<a href="Dashboard_completed.html">Dashboard</a>
-			                    </li>
-			                    <li class="sitenavigation__listitem">
-			                    	<a href="new_run_1.html">New run</a>
-			                    </li>
-			                    <li class="sitenavigation__listitem">
-			                    	<a href="#">System info</a>
-			                    </li>
-			                    <li class="sitenavigation__listitem">
 			                    	<a href="#">Other</a>
 			                    </li>
 			                </ul>
@@ -152,8 +152,8 @@
 				<div class="col-7 top_40_extra_space">
 
 				<ul class="nav-tabs clearfix u-mb-l" data-tabgroup="first-tab-group">
-				  	<li class="nav-tabs__tab"><a class="tab-label" href="reference.html">Runs</a></li>
-              		<li class="nav-tabs__tab--active"><a class="tab-label" href="#tab2">Exports</a></li>
+				  	<li class="nav-tabs__tab"><a class="tab-label" href="/manage_run/{{current_run['id']}}">Manage Run</a></li>
+              		<li class="nav-tabs__tab--active"><a class="tab-label" href="#tab2">Export</a></li>
 				</ul>
 					<table class="table table__dense">
 						<thead class="table--head">
