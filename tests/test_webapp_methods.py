@@ -1,6 +1,5 @@
 from webapp import app_methods
 
-
 def test_get_system_info():
     """
     Purpose: Tests the get_system_info method's functionality.
@@ -38,16 +37,22 @@ def test_get_display_data_json():
     df = app_methods.get_display_data_json('SHIFT_DATA')
     # Dataframe should not be empty
     assert df.empty is False
+    assert len(df.index) == 1000
+    assert len(df.index) == 1000
 
     # Valid table, valid run_id
     df = app_methods.get_display_data_json('SHIFT_DATA', '9e5c1872-3f8e-4ae5-85dc-c67a602d011e')
     # Dataframe should not be empty
     assert df.empty is False
+    assert len(df.index) == 1000
+    assert len(df.index) == 1000
 
     # Valid table, valid run_id, valid data_source
     df = app_methods.get_display_data_json('SHIFT_DATA', '9e5c1872-3f8e-4ae5-85dc-c67a602d011e', '4')
     # Dataframe should not be empty
     assert df.empty is False
+    assert len(df.index) == 1000
+    assert len(df.index) == 1000
 
     # Tests below use incorrect data in the function call
 

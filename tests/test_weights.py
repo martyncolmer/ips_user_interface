@@ -4,7 +4,6 @@ import webapp as web
 
 app = web.create_app()
 
-
 @pytest.fixture()
 def client():
     """The flask test client for our app.

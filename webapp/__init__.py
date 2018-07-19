@@ -15,11 +15,12 @@ def create_app(test_config=None):
         app.config.from_mapping(test_config)
 
     # Register Blueprints
-    from . import dashboard, system_info, new_run, manage_run
+    from . import dashboard, system_info, new_run, manage_run, export
     app.register_blueprint(dashboard.bp)
     app.register_blueprint(system_info.bp)
     app.register_blueprint(new_run.bp)
     app.register_blueprint(manage_run.bp)
+    app.register_blueprint(export.bp)
 
     # Register Simple Index Page
     @app.route('/')

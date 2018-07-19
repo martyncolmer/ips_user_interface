@@ -1,5 +1,5 @@
 from flask import request, render_template, Blueprint, session, redirect, url_for, abort
-from .forms import ManageRunForm, DataSelectionForm
+from .forms import ManageRunForm, DataSelectionForm, ExportSelectionForm
 from . import app_methods
 
 bp = Blueprint('manage_run', __name__, url_prefix='/manage_run', static_folder='static')
@@ -7,7 +7,7 @@ bp = Blueprint('manage_run', __name__, url_prefix='/manage_run', static_folder='
 @bp.route('/<run_id>', methods=['GET', 'POST'])
 def manage_run(run_id):
 
-    form = ManageRunForm();
+    form = ManageRunForm()
 
     status_values = {'0': 'Ready', '1': 'Completed', '2': 'Failed'}
     run_types = {'0': 'Test', '1': 'Live', '2': 'Deleted'}
@@ -105,18 +105,26 @@ def weights_2(id, table=None, table_title=None, source=None):
 
 @bp.route('/export_data/<run_id>')
 def export_data(run_id):
-    form = DataSelectionForm() # change to export form once you make one
+
+    # form = ExportSelectionForm()
 
     run = app_methods.get_run(run_id)
 
-    session['id'] = run['id']
-    session['run_name'] = run['name']
-    session['run_description'] = run['desc']
-    session['start_date'] = run['start_date']
-    session['end_date'] = run['end_date']
-    current_run = run
+    data = app_methods.get_export_data_table(run_id)
 
-    return render_template('/projects/legacy/john/social/export_data.html',
-                           form=form,
-                           current_run=current_run)
+    if run:
+        session['id'] = run['id']
+        session['run_name'] = run['name']
+        session['run_description'] = run['desc']
+        session['start_date'] = run['start_date']
+        session['end_date'] = run['end_date']
+        current_run = run
+
+        return render_template('/projects/legacy/john/social/reference_export.html',
+                               # form=form,
+                               current_run=current_run,
+                               data=data)
+    else:
+        abort(404)
+
 
