@@ -4,6 +4,7 @@ import webapp as web
 
 app = web.create_app()
 
+
 @pytest.fixture()
 def client():
     """The flask test client for our app.
@@ -14,7 +15,6 @@ def client():
     app.testing = True
     app.config["WTF_CSRF_ENABLED"] = False
     client = app.test_client()
-
 
     return client
 
@@ -56,7 +56,6 @@ class TestDashboard:
 
     # POSTS
     def test_pressing_search_button_returns_same_webpage(self, client):
-
         with app.test_request_context():
             # Setup form submission information
             form = SearchActivityForm(search_button=True)
@@ -69,7 +68,6 @@ class TestDashboard:
         assert b'Search activity' in res.data
 
     def test_pressing_search_button_returns_records_to_display(self, client):
-
         with app.test_request_context():
             # Setup form submission information
             form = SearchActivityForm(search_button=True)
@@ -82,7 +80,6 @@ class TestDashboard:
         assert b'9e5c1872-3f8e-4ae5-85dc-c67a602d011e' in res.data
 
     def test_pressing_search_button_with_live_in_field_returns_records_containing_live(self, client):
-
         with app.test_request_context():
             # Setup form submission information
             form = SearchActivityForm(search_button=True, search_activity='190218')

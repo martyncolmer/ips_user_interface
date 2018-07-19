@@ -1,8 +1,10 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 from wtforms import IntegerField
+from wtforms.validators import Regexp
 from wtforms import StringField
 from wtforms import SelectField, SubmitField
+from wtforms.validators import NoneOf
 from wtforms.validators import InputRequired, NumberRange
 
 
@@ -39,6 +41,32 @@ class DateSelectionForm(FlaskForm):
     e_day = IntegerField(label='Day', validators=[InputRequired(), NumberRange(min=1, max=31)])
     e_month = SelectField(label='Month', choices=months,validators=[InputRequired()])
     e_year = IntegerField(label='Year', validators=[InputRequired(), NumberRange(min=1991, max=now.year + 2)])
+
+
+class ExportSelectionForm(FlaskForm):
+    data_list = [('', ''),
+                 ("SURVEY_SUBSAMPLE", "Survey Subsample"),
+                 ("PS_FINAL", "Final Weight Summary"),
+                 ("SHIFT_DATA", "Shift"),
+                 ("PS_NON_RESPONSE", "Non-Response"),
+                 ("PS_SHIFT_DATA", "Shift Weight Summary"),
+                 ("NON_RESPONSE_DATA", "Non Response Weight Summary"),
+                 ("PS_MINIMUMS", "Minimum Weight Summary"),
+                 ("PS_TRAFFIC", "Traffic Weight Summary"),
+                 ("PS_UNSAMPLED_OOH", "Unsampled Traffic Weight Summary"),
+                 ("PS_IMBALANCE", "Imbalance Weight Summary")]
+                 # ("ALL_DATA", "All Data"),
+                 # ("SAS_AIR_MILES", "Air Miles"),
+                 # ("ALCOHOL", "Alcohol"),
+                 # ("REGIONAL", "Regional"),
+                 # ("CONTACT", "Contact"),
+                 # ("MIGRATION", "Migration")]
+
+    filename = StringField(label='Save file as',
+                           validators=[InputRequired(), Regexp(r'^[\w+-]+$'), NoneOf([" ", ".", ",", "'"])])
+    data_selection = SelectField(label='Select Data', choices=data_list, validators=[InputRequired()])
+    display_data = SubmitField(label='Export Data')
+    cancel_button = SubmitField(label='Cancel')
 
 
 class DataSelectionForm(FlaskForm):

@@ -1,12 +1,8 @@
-from flask import request, render_template, Blueprint, session, redirect, url_for, jsonify
+from flask import request, render_template, Blueprint, session, redirect, url_for
 from .forms import CreateRunForm, DateSelectionForm, LoadDataForm
 from . import app_methods
 import uuid
 import json
-
-import os
-
-import pandas as pd
 
 bp = Blueprint('new_run', __name__, url_prefix='/new_run', static_folder='static')
 
@@ -165,7 +161,6 @@ def new_run_3(run_id=None):
         survey_data = form.survey_file.data
         survey_filename = form.survey_file.name
         return redirect('/new_run/new_run_4')
-
     elif request.method == 'GET':
         pass
     else:
