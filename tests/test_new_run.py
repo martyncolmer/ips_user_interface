@@ -488,4 +488,4 @@ class TestNewRun5:
             with client.session_transaction() as session:
                 session['template_id'] = 'TEMPLATE'
             res = client.get('/new_run/new_run_5', data={'template_id': 'TEMPLATE'})
-            assert b'Dashboard' and b'New run' and b'System info' and b'Other' in res.data
+            assert b'Dashboard' and b'New run' and b'System info' in res.data
