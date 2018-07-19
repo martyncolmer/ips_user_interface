@@ -5,6 +5,23 @@
 
 $(document).ready(function(e){
 
+    // Create dictionary of all the table cell rows
+    var tableRows = [];
+            $("#form_table > tbody  > tr").each(function() {
+                var row = {
+                  "name" : $(this).find(".table--cell")[0],
+                  "reason" : $(this).find(".table--cell")[1],
+                  "content" : $(this).find(".table--cell")[2],
+                };
+                tableRows.push(row);
+            });
+
+    // Get length of dictionary so it can be iterated over
+    rowsLength = tableRows.length
+
+    // Take the contents of the table and put it into the hidden field
+    fillInputFieldForPosting(rowsLength);
+
     // Get the modal so that we can hide/un-hide and attach the ID
     var modal = $(".modal");
 
@@ -22,50 +39,55 @@ $(document).ready(function(e){
         modal.fadeIn(500);
 
         variableId = this.id;
-        // Create array of all the table rows
-        rows = $('.table--row');
-        var data = [];
 
-        // For each row, look at each column, get the ID and check the ID to the one user selected
-        // Then get the row with the matching ID by getting the columns parent row
-        rows.find('td').each(function() {
-            id = ($(this).html()).trim();
-            if (id == variableId) {
-                row = $(this).parent();
+        // Length of the rows in the table
+        rowsLength = tableRows.length
+        // Array we will append rows to
+        data = [];
+
+        /** First we need to go through the table data and find the row we need.
+            Then we can set the modal inputs with data from that table row and update the actual table data when the
+            okay button is clicked
+        **/
+
+        // Iterate over dictionary of table rows
+        for (i=0; i < rowsLength; i++) {
+            // Get dictionary out of array by index
+            row = tableRows[i];
+            // Get the PV Name text
+            name = row['name'].innerHTML;
+
+            // If the dictionary is the one we need add the data to the array
+            if (name === variableId) {
+                data.push(row['name']);
+                data.push(row['reason']);
+                data.push(row['content']);
             }
-        });
+        }
 
-        // For each column in the row, push each column into an array
-        row.find('td').each(function() {
-            data.push($(this).html().trim());
-        });
-
-        // Set the inputs values to whats in the array
-        $("#id_input").val(data[0]);
-        $("#reason_input").val(data[1]);
-        $("#content_input").val(data[2]);
+        // Set the inputs values to that in the data array
+        $("#id_input").val(data[0].innerHTML);
+        $("#reason_input").val(data[1].innerHTML);
+        $("#content_input").val(data[2].innerHTML);
 
         // Edit table data when the okay button is pressed
         $("#modal_okay_button").click(function(event){
-            // Get input values
-            theReason = $('#reason_input').val();
-            theContent = $('#content_input').val();
+            // Get values entered into the inputs by the user
+            reasonInput = $('#reason_input').val();
+            contentInput = $('#content_input').val();
 
-            // For each column in the row change the HTML to the input field text
-            // The count is so we know which column in the row we are at, there might be a nicer way?
-            count = 0;
+            // Get the data from data array
+            reason = data[1];
+            content = data[2];
 
-            row.find('td').each(function() {
-                // Reason column
-                if (count == 1) {
-                  $(this).html(theReason);
-                }
-                // Content column
-                else if (count == 2){
-                    $(this).html(theContent);
-                }
-                count ++;
-        });
+            // Update the table data to that in the array
+            reason.innerHTML = reasonInput;
+            content.innerHTML = contentInput;
+
+            // Take the contents of the table and put it into the hidden field
+            fillInputFieldForPosting(rowsLength);
+
+
         // Fade out 500ms
         modal.fadeOut(500);
         });
@@ -73,5 +95,80 @@ $(document).ready(function(e){
         // Make sure the page doesn't refresh/change when this button is clicked
         return false;
     });
-});
 
+    /*function fillInputFieldForPosting(rowsLength) {
+        // Fill hidden input with all table data as a comma separated string
+        data = [];
+        for (i=0; i < rowsLength; i++) {
+            // Get row from dictionary
+            row = tableRows[i];
+
+            // Get the data from row
+            name = row['name'].innerHTML;
+            reason = row['reason'].innerHTML;
+            content = row['content'].innerHTML;
+
+            // Create a dictionary entry to put in the input
+            var row = {
+                  name : name,
+                  "reason" : reason,
+                  "content" : content,
+                };
+
+            // Add to the data array
+            data.push(row);
+        }
+
+        // Iterate over data array and add the data as a comma separated list in the input
+        dataLength = data.length;
+        dataToSend = "";
+        // Put the data array into the input
+        for (i=0; i < dataLength; i++) {
+            row = data[i]
+            dataToSend += row['name'] + ',';
+            dataToSend += row['reason']+ ',';
+            dataToSend += row['content']+ ',';
+        }
+        $(".hidden-edit-input-content").val(dataToSend);
+
+    }
+});
+*/
+
+function fillInputFieldForPosting(rowsLength) {
+        // Fill hidden input with all table data as a comma separated string
+        data = [];
+        for (i=0; i < rowsLength; i++) {
+            // Get row from dictionary
+            row = tableRows[i];
+
+            // Get the data from row
+            name = row['name'].innerHTML;
+            reason = row['reason'].innerHTML;
+            content = row['content'].innerHTML;
+
+            // Create a dictionary entry to put in the input
+            var row = {
+                  name : name,
+                  "reason" : reason,
+                  "content" : content,
+                };
+
+            // Add to the data array
+            data.push(row);
+        }
+
+        // Iterate over data array and add the data as a comma separated list in the input
+        dataLength = data.length;
+        dataToSend = "";
+        // Put the data array into the input
+        for (i=0; i < dataLength; i++) {
+            row = data[i]
+            dataToSend += row['name'] + '^';
+            dataToSend += row['reason']+ '^';
+            dataToSend += row['content']+ '^';
+        }
+        $(".hidden-edit-input-content").val(dataToSend);
+
+    }
+});

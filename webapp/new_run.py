@@ -2,6 +2,7 @@ from flask import request, render_template, Blueprint, session, redirect, url_fo
 from .forms import CreateRunForm, DateSelectionForm, LoadDataForm
 from . import app_methods
 import uuid
+import json
 
 bp = Blueprint('new_run', __name__, url_prefix='/new_run', static_folder='static')
 
@@ -149,6 +150,14 @@ def new_run_3(run_id=None):
             # if no run_id present in html call, run steps to add files to run (in whatever way this will be done)
             pass
 
+        if request.method == 'POST':
+            if (form.validate() == False):
+                error = True
+            else:
+                pass
+
+                return redirect('/new_run/new_run_4')
+
         survey_data = form.survey_file.data
         survey_filename = form.survey_file.name
         return redirect('/new_run/new_run_4')
@@ -160,14 +169,89 @@ def new_run_3(run_id=None):
     return render_template('/projects/legacy/john/social/new_run_3.html', form=form, error=error)
 
 
-@bp.route('/new_run_4')
+@bp.route('/new_run_4', methods=['GET', 'POST'])
 def new_run_4():
-    return render_template('/projects/legacy/john/social/new_run_4.html')
+
+    if request.method == "POST":
+
+        session['template_id'] = request.form['selected']
+
+        return redirect('/new_run/new_run_5')
+
+    records = app_methods.get_process_variable_sets()
+
+    header = ['RUN_ID', 'NAME', 'USER', 'START_DATE', 'END_DATE']
+
+    return render_template('/projects/legacy/john/social/new_run_4.html', table = records, header = header)
 
 
-@bp.route('/new_run_5')
+@bp.route('/edit')
+def edit(row=None):
+
+    return render_template('/projects/legacy/john/social/edit.html', row=row)
+
+
+@bp.route('/new_run_5', methods=['GET', 'POST'])
 def new_run_5():
-    return render_template('/projects/legacy/john/social/new_run_5.html')
+
+    if request.method == 'POST':
+
+        # Method splits a the array into groups of 3
+        def split_list(l, n):
+            # For item i in a range that is a length of l,
+            for i in range(0, len(l), n):
+                # Create an index range for l of n items:
+                yield l[i:i + n]
+
+        # String coming from JavaScript
+        data = request.form['pv_data']
+
+        data = data[:-1]
+
+        # Split the string by delimiter ^
+        data_list = data.split("^")
+
+        # Split the list into groups of 3, change 3 to whatever number you need to group by
+        data_array = list(split_list(data_list, 3))
+
+        # Array will hold the dictionaries
+        data_dictionary_array = []
+
+        # Iterate over list of lists and create a dictionary for each
+        # Append each dictionary to an array
+        for array in data_array:
+            data = {'PV_NAME': array[0],
+                    'PV_REASON': array[1],
+                    'PV_CONTENT': array[2],
+                    }
+            data_dictionary_array.append(data)
+
+        # Get required values from the session
+        run_id = session['id']
+        run_name = session['run_name']
+        start_date = session['start_date']
+        end_date = session['end_date']
+        user = 'test_user_placeholder'
+
+        # Creates a new pv set if run_id doesn't already exist, otherwise delete existing rows and repopulate
+        if run_id not in app_methods.get_all_run_ids():
+            # Creates a new set of process variables, then fill the empty set with the edited javascript data
+            app_methods.create_process_variables_set(run_id, run_name, user, start_date, end_date)
+            # Fill newly created pv set with new process variables (for new runs)
+            app_methods.create_process_variables(run_id, data_dictionary_array)
+        else:
+            # Edit existing process variables (for edit run)
+            app_methods.edit_process_variables(run_id, data_dictionary_array)
+
+        return redirect('/manage_run/' + run_id)
+
+    template_id = session['template_id']
+
+    header = ['PV_NAME', 'PV_REASON', 'PV_CONTENT']
+
+    records = app_methods.get_process_variables(template_id)
+
+    return render_template('/projects/legacy/john/social/new_run_5.html', table=records, header=header)
 
 
 @bp.route('/new_run_6')
