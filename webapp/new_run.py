@@ -1,8 +1,11 @@
-from flask import request, render_template, Blueprint, session, redirect, url_for
+from flask import request, render_template, Blueprint, session, redirect, url_for, jsonify
 from .forms import CreateRunForm, DateSelectionForm, LoadDataForm
 from . import app_methods
 import uuid
 import json
+import csv
+import io
+
 
 bp = Blueprint('new_run', __name__, url_prefix='/new_run', static_folder='static')
 
@@ -83,7 +86,6 @@ def new_run_2(run_id=None):
                     app_methods.edit_run(run_id=run_id, run_name=run['name'], run_description=run['desc'], start_date=run['start_date'], end_date=run['end_date'], run_type=run['type'], run_status='0')
 
                     return redirect('/new_run/new_run_3/' + run_id, code=302)
-                    pass
                 else:
                     app_methods.create_run(session['id'], session['run_name'], session['run_description'],
                                            session['start_date'], session['end_date'])
@@ -136,33 +138,64 @@ def new_run_3(run_id=None):
 
     error = False
 
-    print(request.values)
-    print(request.form)
-
     if form.validate_on_submit():
         # Functionality has been written. Stubbed for now as we are unsure yet as to the location and method
         # of storing the csv's in a file system. Until we can access DAP and know where to store, this will remain.
         # The below code shows the method for retrieving the filename and data from the uploaded files.
+
+        # Import survey data
+        # survey_data = form.survey_file.data
+        # stream = io.StringIO(survey_data.stream.read().decode("UTF8"), newline=None)
+        # survey_csv = csv.DictReader(stream)
+        # survey_csv.fieldnames = [name.upper() for name in survey_csv.fieldnames]
+        # survey_json = list(survey_csv)
+        # print(survey_json)
+        # app_methods.import_data('SHIFT_DATA', session['id'], survey_json)
+
+        #TODO: Duplicates causing issues with imports (Returning 500)... need to look into dealing with this. @TM
+
+        # External
+
+        # Clear down table records associated with the current run id
+        app_methods.delete_data('SHIFT_DATA', session['id'])
+        app_methods.delete_data('NON_RESPONSE_DATA', session['id'])
+        app_methods.delete_data('UNSAMPLED_OOH_DATA', session['id'])
+        app_methods.delete_data('TRAFFIC_DATA', session['id'])
+
+        # Import shift data
+        shift_data = form.shift_file.data
+        app_methods.survey_data_import('SHIFT_DATA', session['id'], shift_data)
+
+        # Import non_response data
+        non_response_data = form.non_response_file.data
+        app_methods.survey_data_import('NON_RESPONSE_DATA', session['id'], non_response_data)
+
+        # Import unsampled data
+        unsampled_data = form.unsampled_file.data
+        app_methods.survey_data_import('UNSAMPLED_OOH_DATA', session['id'], unsampled_data)
+
+        # Import tunnel data
+        tunnel_data = form.tunnel_file.data
+        app_methods.survey_data_import('TRAFFIC_DATA', session['id'], tunnel_data)
+
+        # Import sea data
+        sea_data = form.sea_file.data
+        app_methods.survey_data_import('TRAFFIC_DATA', session['id'], sea_data)
+
+        # Import air data
+        air_data = form.air_file.data
+        app_methods.survey_data_import('TRAFFIC_DATA', session['id'], air_data)
+
         if run_id:
-            # if a run_id is present in html call, run steps to replace existing files (if any)
-            pass
+            return redirect('/new_run/new_run_4/' + run_id, code=302)
         else:
-            # if no run_id present in html call, run steps to add files to run (in whatever way this will be done)
-            pass
+            return redirect('/new_run/new_run_4', code=302)
 
-        if request.method == 'POST':
-            if (form.validate() == False):
-                error = True
-            else:
-                pass
-
-                return redirect('/new_run/new_run_4')
-
-        survey_data = form.survey_file.data
-        survey_filename = form.survey_file.name
-        return redirect('/new_run/new_run_4')
     elif request.method == 'GET':
-        pass
+        return render_template('/projects/legacy/john/social/new_run_3.html',
+                               form=form,
+                               error=error,
+                               run_id=run_id)
     else:
         error = True
 

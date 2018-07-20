@@ -4,6 +4,7 @@ from . import app_methods
 
 bp = Blueprint('manage_run', __name__, url_prefix='/manage_run', static_folder='static')
 
+
 @bp.route('/<run_id>', methods=['GET', 'POST'])
 def manage_run(run_id):
 
@@ -40,7 +41,7 @@ def manage_run(run_id):
             elif 'edit_button' in request.form:
                 return redirect('/new_run/new_run_1/' + current_run['id'], code=302)
             elif 'export_button' in request.form:
-                return redirect('/manage_run/export_data/' + current_run['id'], code=302)
+                return redirect('/reference_export/' + current_run['id'], code=302)
             elif 'manage_run_button' in request.form:
                 return redirect('/manage_run/' + current_run['id'], code=302)
 
