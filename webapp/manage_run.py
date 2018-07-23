@@ -25,8 +25,8 @@ def manage_run(run_id):
     session['end_date'] = run['end_date']
     current_run = run
 
-    current_run['start_date'] = current_run['start_date'][:2] + "-" + current_run['start_date'][2:4] + "-" + current_run['start_date'][4:]
-    current_run['end_date'] = current_run['end_date'][:2] + "-" + current_run['end_date'][2:4] + "-" + current_run['end_date'][4:]
+    current_run['start_date'] = current_run['start_date'][:2] + "/" + current_run['start_date'][2:4] + "/" + current_run['start_date'][4:]
+    current_run['end_date'] = current_run['end_date'][:2] + "/" + current_run['end_date'][2:4] + "/" + current_run['end_date'][4:]
     current_run['status'] = run_statuses[current_run['status']]
     current_run['type'] = run_types[current_run['type']]
 
