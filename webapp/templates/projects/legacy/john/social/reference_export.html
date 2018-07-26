@@ -140,13 +140,13 @@
 						<br>
 						<spam><strong>Run Status: </strong>&nbsp;</spam>
 						{% if current_run['status'] == 'Ready' %}
-						    <em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;{{current_run['status']}}&nbsp;&nbsp;&nbsp;</em>
+						    <em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{current_run['status']}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>
                     	{% elif current_run['status'] == 'In Progress' %}
-						    <em class="badge-status badge--pending">&nbsp;&nbsp;&nbsp;{{current_run['status']}}&nbsp;&nbsp;&nbsp;</em>
+						    <em class="badge-status badge--pending">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{current_run['status']}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>
                     	{% elif current_run['status'] == 'Completed' %}
-						    <em class="badge-status badge--completed">&nbsp;&nbsp;&nbsp;{{current_run['status']}}&nbsp;&nbsp;&nbsp;</em>
+						    <em class="badge-status badge--completed">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{current_run['status']}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>
                     	{% elif current_run['status'] == 'Failed' %}
-						    <em class="badge-status badge--pending">&nbsp;&nbsp;&nbsp;{{current_run['status']}}&nbsp;&nbsp;&nbsp;</em>
+						    <em class="badge-status badge--pending">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{current_run['status']}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>
 					    {% endif %}
 					</div>
 

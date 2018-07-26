@@ -407,3 +407,74 @@ def survey_data_import(table_name, import_run_id, import_data_file):
     print(import_csv.fieldnames)
     import_json = list(import_csv)
     import_data(table_name, import_run_id, import_json)
+
+
+def get_run_step_requests(run_id, step_number = None):
+
+    # Get using sql server connection
+    # conn = get_sql_connection()
+    # cur = conn.cursor()
+    #
+    # # Create and execute SQL query
+    # sql = "SELECT * from [dbo].[RESPONSE] where RUN_ID = '" + run_id + "'"
+    #
+    # try:
+    #     cur.execute(sql)
+    #     result = cur.fetchall()
+    # except Exception as err:
+    #     # Raise (unit testing purposes) and return False to indicate table does not exist
+    #     # database_logger().error(err, exc_info = True)
+    #     print("An exception has been raised. IMPLEMENT LOGGING HERE")
+    #     return False
+    #
+    # print(result)
+    #
+    # return result
+
+    address = "http://ips-db.apps.cf1.ons.statistics.gov.uk/RESPONSE/" + run_id
+
+    if step_number:
+        address = address + '/' + step_number
+
+    response = requests.get(address)
+
+    if response.status_code == 200:
+        values = json.loads(response.content)
+    else:
+        values = []
+
+    return values
+
+# Added temporarily as to not write too much SQL alchemy code which will be removed from SQL when connection can be established from API Gateway
+# def get_sql_connection():
+#     """
+#     Author       : Thomas Mahoney / Nassir Mohammad (edits)
+#     Date         : 11 / 07 / 2018
+#     Purpose      : Establishes a connection to the SQL Server database and returns the connection object.
+#     Parameters   : in_table_name - the IPS survey records for the period.
+#                    credentials_file  - file containing the server and login credentials used for connection.
+#     Returns      : a pyodbc connection object.
+#     Requirements : NA
+#     Dependencies : NA
+#     """
+#
+#     # Get credentials and decrypt
+#     username = os.getenv("DB_USER_NAME")
+#     password = os.getenv("DB_PASSWORD")
+#     database = os.getenv("DB_NAME")
+#     server = os.getenv("DB_SERVER")
+#
+#     # Attempt to connect to the database
+#     try:
+#         conn = pyodbc.connect(driver="{SQL Server}", server=server, database=database, uid=username, pwd=password, autocommit=True)
+#     except Exception as err:
+#         print("computer says no")
+#         #database_logger().error(err, exc_info = True)
+#         return False
+#     else:
+#         return conn
+
+
+
+def create_request(run_id,step_number, json=None):
+    requests.post('http://ips-db.apps.cf1.ons.statistics.gov.uk/RESPONSE/' + run_id + '/' + str(step_number), json=json)
