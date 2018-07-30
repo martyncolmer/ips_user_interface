@@ -76,6 +76,7 @@ def get_runs():
         :return: List of JSON object runs
         """
     response = requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs")
+    #response = requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/get_sql")
     return json.loads(response.content)
 
 
