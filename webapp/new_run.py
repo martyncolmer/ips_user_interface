@@ -1,4 +1,4 @@
-from flask import request, render_template, Blueprint, session, redirect, url_for, jsonify
+from flask import request, render_template, Blueprint, session, redirect, url_for, jsonify, current_app
 from .forms import CreateRunForm, DateSelectionForm, LoadDataForm
 from . import app_methods
 import uuid
@@ -198,6 +198,7 @@ def new_run_3(run_id=None):
                                run_id=run_id)
     else:
         error = True
+        current_app.logger.warning('Application route: ' + request.path + ' Did not fill all fields with .csv files.')
 
     return render_template('/projects/legacy/john/social/new_run_3.html', form=form, error=error)
 
@@ -285,28 +286,3 @@ def new_run_5():
     records = app_methods.get_process_variables(template_id)
 
     return render_template('/projects/legacy/john/social/new_run_5.html', table=records, header=header)
-
-
-@bp.route('/new_run_6')
-def new_run_6():
-    return render_template('/projects/legacy/john/social/new_run_6.html')
-
-
-@bp.route('/new_run_7')
-def new_run_7():
-    return render_template('/projects/legacy/john/social/new_run_7.html')
-
-
-@bp.route('/new_run_8', methods=['GET', 'POST'])
-def new_run_8():
-    return render_template('/projects/legacy/john/social/new_run_8.html')
-
-
-@bp.route('/new_run_9')
-def new_run_9():
-    return render_template('/projects/legacy/john/social/new_run_9.html')
-
-
-@bp.route('/new_run_end')
-def new_run_end():
-    return render_template('/projects/legacy/john/social/new_run_end.html')

@@ -1,5 +1,5 @@
 
-from flask import request, render_template, Blueprint
+from flask import request, render_template, Blueprint, current_app
 from .forms import SearchActivityForm
 from . import app_methods
 
@@ -9,6 +9,8 @@ bp = Blueprint('dashboard', __name__, url_prefix='/dashboard', static_folder='st
 @bp.route('/', methods=['GET', 'POST'])
 def dashboard_view():
     form = SearchActivityForm()
+
+    current_app.logger.info('Dashboard being accessed...')
 
     # Get the records and separate the headers and values
     records = app_methods.get_runs()
@@ -51,6 +53,7 @@ def dashboard_view():
                            search_activity.lower() in x['start_date'].lower() or
                            search_activity.lower() in x['end_date'].lower()]
 
+    current_app.logger.info('Rendering dashboard now...')
     return render_template('/projects/legacy/john/social/dashboard.html',
                            header=header,
                            records=records,
