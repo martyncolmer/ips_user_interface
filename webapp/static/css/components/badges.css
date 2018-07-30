@@ -74,3 +74,8 @@
   color: #fff;
   background-color: #FE781F;
 }
+
+.badge--red {
+  color: #fff;
+  background-color: #FF0000;
+}
