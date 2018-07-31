@@ -14,8 +14,7 @@ def create_app(test_config=None):
     app.config.from_object(settings)
 
     # initialize the log handler
-    log_handler = RotatingFileHandler('info.log', maxBytes=1000, backupCount=1)
-
+    log_handler = RotatingFileHandler('flask_logger.log', maxBytes=2000, backupCount=2)
     # set the log handler level
     log_handler.setLevel(logging.INFO)
 
@@ -23,7 +22,7 @@ def create_app(test_config=None):
     app.logger.setLevel(logging.INFO)
 
     # create formatter and add it to the handlers
-    formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+    formatter = logging.Formatter('%(asctime)s - %(funcName)s - %(levelname)s - %(message)s')
     log_handler.setFormatter(formatter)
 
     app.logger.addHandler(log_handler)

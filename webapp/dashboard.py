@@ -29,8 +29,6 @@ def dashboard_view():
 
     # If this is a post then validate if needed
     if request.method == 'POST' and form.validate():
-        print(request.form)
-        #flash_errors(form)
 
         # If the search button is selected filter hte results on the run status and the searched word.
         if 'search_button' in request.form:
