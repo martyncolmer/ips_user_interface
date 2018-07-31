@@ -43,9 +43,8 @@ def new_run_1(run_id=None):
             run = app_methods.get_run(run_id)
             form.run_name.default = run['name']
             form.run_description.default = run['desc']
-            pass
 
-    return render_template('/projects/legacy/john/social/new_run_1.html',
+    return render_template('/projects/legacy/john/social/new_run_1_test.html',
                            form=form,
                            run_id=run_id)
 
@@ -124,7 +123,7 @@ def new_run_2(run_id=None):
         form.e_month.default = run['end_date'][2:4]
         form.process()
 
-    return render_template('/projects/legacy/john/social/new_run_2.html',
+    return render_template('/projects/legacy/john/social/new_run_2_test.html',
                            form=form,
                            last_entry=last_entry,
                            run_id=run_id)
@@ -192,14 +191,14 @@ def new_run_3(run_id=None):
             return redirect('/new_run/new_run_4', code=302)
 
     elif request.method == 'GET':
-        return render_template('/projects/legacy/john/social/new_run_3.html',
+        return render_template('/projects/legacy/john/social/new_run_3_test.html',
                                form=form,
                                error=error,
                                run_id=run_id)
     else:
         error = True
 
-    return render_template('/projects/legacy/john/social/new_run_3.html', form=form, error=error)
+    return render_template('/projects/legacy/john/social/new_run_3_test.html', form=form, error=error)
 
 
 @bp.route('/new_run_4', methods=['GET', 'POST'])
@@ -215,7 +214,7 @@ def new_run_4():
 
     header = ['RUN_ID', 'NAME', 'USER', 'START_DATE', 'END_DATE']
 
-    return render_template('/projects/legacy/john/social/new_run_4.html', table = records, header = header)
+    return render_template('/projects/legacy/john/social/new_run_4_test.html', table = records, header = header)
 
 
 @bp.route('/edit')
@@ -284,29 +283,4 @@ def new_run_5():
 
     records = app_methods.get_process_variables(template_id)
 
-    return render_template('/projects/legacy/john/social/new_run_5.html', table=records, header=header)
-
-
-@bp.route('/new_run_6')
-def new_run_6():
-    return render_template('/projects/legacy/john/social/new_run_6.html')
-
-
-@bp.route('/new_run_7')
-def new_run_7():
-    return render_template('/projects/legacy/john/social/new_run_7.html')
-
-
-@bp.route('/new_run_8', methods=['GET', 'POST'])
-def new_run_8():
-    return render_template('/projects/legacy/john/social/new_run_8.html')
-
-
-@bp.route('/new_run_9')
-def new_run_9():
-    return render_template('/projects/legacy/john/social/new_run_9.html')
-
-
-@bp.route('/new_run_end')
-def new_run_end():
-    return render_template('/projects/legacy/john/social/new_run_end.html')
+    return render_template('/projects/legacy/john/social/new_run_5_test.html', table=records, header=header)

@@ -51,7 +51,7 @@ def dashboard_view():
                            search_activity.lower() in x['start_date'].lower() or
                            search_activity.lower() in x['end_date'].lower()]
 
-    return render_template('/projects/legacy/john/social/dashboard.html',
+    return render_template('/projects/legacy/john/social/dashboard_test.html',
                            header=header,
                            records=records,
                            form=form)
