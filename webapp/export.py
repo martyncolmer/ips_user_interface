@@ -15,15 +15,22 @@ bp = Blueprint('export', __name__, url_prefix='', static_folder='static')
 @bp.route('/reference_export/<run_id>', methods=['GET', 'POST'])
 @bp.route('/reference_export/<run_id>/<new_export>/<msg>', methods=['GET', 'POST'])
 def reference_export(run_id, new_export="0", msg="", data=""):
+    run_statuses = {'0': 'Ready', '1': 'In Progress', '2': 'Completed', '3': 'Failed'}
+
     # Retrieve run information
     run = get_run(run_id)
 
     if run:
-        session['current_run_id'] = run['id']
+        session['id'] = run['id']
         session['run_name'] = run['name']
         session['run_description'] = run['desc']
         session['start_date'] = run['start_date']
+        session['end_date'] = run['end_date']
         current_run = run
+
+        current_run['start_date'] = current_run['start_date'][:2] + "/" + current_run['start_date'][2:4] + "/" + current_run['start_date'][4:]
+        current_run['end_date'] = current_run['end_date'][:2] + "/" + current_run['end_date'][2:4] + "/" + current_run['end_date'][4:]
+        current_run['status'] = run_statuses[current_run['status']]
 
         # Retrieve table data
         try:
