@@ -73,7 +73,7 @@ def export_data(run_id):
 
             # Try to insert data to clob
             if create_export_data_download(run_id, sql_table, target_filename) == False:
-                return render_template('/projects/legacy/john/social/export_data.html', form=form,
+                return render_template('/projects/legacy/john/social/export_data_test.html', form=form,
                                        current_run=current_run,
                                        data="0")
             return redirect('/reference_export/' + run_id)

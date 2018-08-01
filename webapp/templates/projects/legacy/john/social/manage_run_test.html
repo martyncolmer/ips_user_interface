@@ -19,6 +19,27 @@
             {% block header %}
                 {{ super() }}
 
+				<div class="header__nav">
+					<div class="container">
+						<nav class="nav nav--horizontal nav--light nav--main nav--h-m js-main-nav" aria-label="Main menu" id="main-nav">
+							<ul class="nav__list" aria-label="Navigation menu" role="menubar">
+								<li class="nav__item" role="menuitem" aria-current="page">
+									<a href="/dashboard" class="nav__link">Dashboard</a>
+								</li>
+								<li class="nav__item " role="menuitem">
+									<a href="/new_run/new_run_1" class="nav__link">New Run</a>
+								</li>
+								<li class="nav__item " role="menuitem">
+									<a href="/system_info" class="nav__link">System Info</a>
+								</li>
+								<li class="nav__item nav__item--active" role="menuitem">
+									<a href="#" class="nav__link">Other</a>
+								</li>
+							</ul>
+						</nav>
+					</div>
+				</div>
+
                 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
             {% endblock %}
         </header>

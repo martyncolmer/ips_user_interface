@@ -15,6 +15,25 @@
 		<header class="page__header">
 			{% block header %}
 				{{ super() }}
+
+				<div class="header__nav">
+					<div class="container">
+						<nav class="nav nav--horizontal nav--light nav--main nav--h-m js-main-nav" aria-label="Main menu" id="main-nav">
+							<ul class="nav__list" aria-label="Navigation menu" role="menubar">
+								<li class="nav__item nav__item--active" role="menuitem" aria-current="page">
+									<a href="/dashboard" class="nav__link">Dashboard</a>
+								</li>
+								<li class="nav__item " role="menuitem">
+									<a href="/new_run/new_run_1" class="nav__link">New Run</a>
+								</li>
+								<li class="nav__item " role="menuitem">
+									<a href="/system_info" class="nav__link">System Info</a>
+								</li>
+							</ul>
+						</nav>
+					</div>
+				</div>
+
 			{% endblock %}
 		</header>
 
@@ -28,29 +47,28 @@
 						<div class="panel panel--search u-mb-l">
 							<div class="group panel__body buttom_15_extra_space">
 								<form id="form-search" action="/dashboard/" class="form" method="post">
-
 									<div>
-										<div class="col-8">
-											<br>
+										<div class="col-12">
 											{{ form.csrf_token }}
 											{{ form.search_activity.label(class="saturn title_extra_space")}}
 											</br>
 										</div>
 									</div>
-
-									<div class="col-7">
-										{{ form.search_activity(class="input sbr-search-input", type="text", id="text-input", placeholder="Search...") }}
+									<div class="col-12">
+										<div class="col-6">
+											{{ form.search_activity(class="input input--text", type="text", id="text-input", placeholder="Search...") }}
+										</div>
+										<div class="col-6">
+											{{ form.run_type_filter(class="input input--select", type="submit")}}
+											<!--{{ form.advanced_search(class="btn btn&#45;&#45;secondary venus three-col-button-2", type="submit") }}-->
+										</div>
+										<div class="col-6">
+											{{ form.search_button(class="btn ", type="submit") }}
+											<!--{{ form.run_type_filter(class="input input&#45;&#45;select venus three-col-button-2", type="submit")}}-->
+										</div>
 									</div>
 
-									<div class="col-3">
-										{{ form.search_button(class="btn btn--primary venus three-col-button-2", type="submit") }}
-										<!--{{ form.run_type_filter(class="input input&#45;&#45;select venus three-col-button-2", type="submit")}}-->
-									</div>
 
-									<div class="grid__col col-2">
-										{{ form.run_type_filter(class="input input--select venus three-col-button-2", type="submit")}}
-										<!--{{ form.advanced_search(class="btn btn&#45;&#45;secondary venus three-col-button-2", type="submit") }}-->
-									</div>
 
 								</form>
 							</div>
