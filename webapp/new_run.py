@@ -1,12 +1,11 @@
-from flask import request, render_template, Blueprint, session, redirect, url_for, jsonify
+from flask import request, render_template, Blueprint, session, redirect, url_for, jsonify, current_app
 from .forms import CreateRunForm, DateSelectionForm, LoadDataForm
 from . import app_methods
 import uuid
 import json
+import csv
+import io
 
-import os
-
-import pandas as pd
 
 bp = Blueprint('new_run', __name__, url_prefix='/new_run', static_folder='static')
 
@@ -14,7 +13,8 @@ bp = Blueprint('new_run', __name__, url_prefix='/new_run', static_folder='static
 @bp.route('/new_run_1', methods=['GET', 'POST'])
 @bp.route('/new_run_1/<run_id>', methods=['GET', 'POST'])
 def new_run_1(run_id=None):
-    print(request.method)
+
+    current_app.logger.info("Accessing new_run_1...")
     form = CreateRunForm()
     # if request is a post
     if request.method == 'POST' and form.validate():
@@ -33,11 +33,13 @@ def new_run_1(run_id=None):
                                      start_date=run['start_date'], end_date=run['end_date'], run_type=run['type'],
                                      run_status='0')
 
+                current_app.logger.info("Updated existing run details. Redirecting to new_run_2...")
                 return redirect('/new_run/new_run_2/'+run_id, code=302)
             else:
                 # Generate new run id and store name and description to be used in run creation
                 unique_id = uuid.uuid4()
                 session['id'] = str(unique_id)
+                current_app.logger.info("Generated new unique_id. Redirecting to new_run_2...")
                 return redirect('/new_run/new_run_2', code=302)
     else:
         if run_id:
@@ -45,6 +47,9 @@ def new_run_1(run_id=None):
             form.run_name.default = run['name']
             form.run_description.default = run['desc']
             pass
+
+    if form.run_name.errors or form.run_description.errors:
+        current_app.logger.warning("Missing valid run_id or description.")
 
     return render_template('/projects/legacy/john/social/new_run_1.html',
                            form=form,
@@ -56,10 +61,9 @@ def new_run_1(run_id=None):
 def new_run_2(run_id=None):
     form = DateSelectionForm()
 
-    print(request.values)
-
     # if request is a post
     if request.method == 'POST':
+        current_app.logger.debug("Processing post request.")
         session['s_day'] = request.form['s_day']
         session['s_month'] = request.form['s_month']
         session['s_year'] = request.form['s_year']
@@ -85,12 +89,13 @@ def new_run_2(run_id=None):
                     run['start_date'] = start_date
                     run['end_date'] = end_date
                     app_methods.edit_run(run_id=run_id, run_name=run['name'], run_description=run['desc'], start_date=run['start_date'], end_date=run['end_date'], run_type=run['type'], run_status='0')
+                    current_app.logger.info("Run edited with start and end date. Redirecting to new_run_3...")
 
                     return redirect('/new_run/new_run_3/' + run_id, code=302)
-                    pass
                 else:
                     app_methods.create_run(session['id'], session['run_name'], session['run_description'],
                                            session['start_date'], session['end_date'])
+                    current_app.logger.info("New run created from session variables. Redirecting to new_run_3...")
 
                     return redirect('/new_run/new_run_3', code=302)
 
@@ -103,7 +108,6 @@ def new_run_2(run_id=None):
         last_entry['e_day'] = session['e_day']
         last_entry['e_month'] = session['e_month']
         last_entry['e_year'] = session['e_year']
-        print("Found session s_day")
     else:
         last_entry['s_day'] = ""
         last_entry['s_month'] = ""
@@ -111,7 +115,6 @@ def new_run_2(run_id=None):
         last_entry['e_day'] = ""
         last_entry['e_month'] = ""
         last_entry['e_year'] = ""
-        print("FOUND NOTHING")
 
     if run_id:
         run = app_methods.get_run(run_id)
@@ -140,36 +143,67 @@ def new_run_3(run_id=None):
 
     error = False
 
-    print(request.values)
-    print(request.form)
-
     if form.validate_on_submit():
         # Functionality has been written. Stubbed for now as we are unsure yet as to the location and method
         # of storing the csv's in a file system. Until we can access DAP and know where to store, this will remain.
         # The below code shows the method for retrieving the filename and data from the uploaded files.
+
+        # Import survey data
+        # survey_data = form.survey_file.data
+        # stream = io.StringIO(survey_data.stream.read().decode("UTF8"), newline=None)
+        # survey_csv = csv.DictReader(stream)
+        # survey_csv.fieldnames = [name.upper() for name in survey_csv.fieldnames]
+        # survey_json = list(survey_csv)
+        # print(survey_json)
+        # app_methods.import_data('SHIFT_DATA', session['id'], survey_json)
+
+        #TODO: Duplicates causing issues with imports (Returning 500)... need to look into dealing with this. @TM
+
+        # External
+
+        # Clear down table records associated with the current run id
+        app_methods.delete_data('SHIFT_DATA', session['id'])
+        app_methods.delete_data('NON_RESPONSE_DATA', session['id'])
+        app_methods.delete_data('UNSAMPLED_OOH_DATA', session['id'])
+        app_methods.delete_data('TRAFFIC_DATA', session['id'])
+
+        # Import shift data
+        shift_data = form.shift_file.data
+        app_methods.survey_data_import('SHIFT_DATA', session['id'], shift_data)
+
+        # Import non_response data
+        non_response_data = form.non_response_file.data
+        app_methods.survey_data_import('NON_RESPONSE_DATA', session['id'], non_response_data)
+
+        # Import unsampled data
+        unsampled_data = form.unsampled_file.data
+        app_methods.survey_data_import('UNSAMPLED_OOH_DATA', session['id'], unsampled_data)
+
+        # Import tunnel data
+        tunnel_data = form.tunnel_file.data
+        app_methods.survey_data_import('TRAFFIC_DATA', session['id'], tunnel_data)
+
+        # Import sea data
+        sea_data = form.sea_file.data
+        app_methods.survey_data_import('TRAFFIC_DATA', session['id'], sea_data)
+
+        # Import air data
+        air_data = form.air_file.data
+        app_methods.survey_data_import('TRAFFIC_DATA', session['id'], air_data)
+
         if run_id:
-            # if a run_id is present in html call, run steps to replace existing files (if any)
-            pass
+            return redirect('/new_run/new_run_4/' + run_id, code=302)
         else:
-            # if no run_id present in html call, run steps to add files to run (in whatever way this will be done)
-            pass
-
-        if request.method == 'POST':
-            if (form.validate() == False):
-                error = True
-            else:
-                pass
-
-                return redirect('/new_run/new_run_4')
-
-        survey_data = form.survey_file.data
-        survey_filename = form.survey_file.name
-        return redirect('/new_run/new_run_4')
+            return redirect('/new_run/new_run_4', code=302)
 
     elif request.method == 'GET':
-        pass
+        return render_template('/projects/legacy/john/social/new_run_3.html',
+                               form=form,
+                               error=error,
+                               run_id=run_id)
     else:
         error = True
+        current_app.logger.warning('Application route: ' + request.path + ' Did not fill all fields with .csv files.')
 
     return render_template('/projects/legacy/john/social/new_run_3.html', form=form, error=error)
 
@@ -257,28 +291,3 @@ def new_run_5():
     records = app_methods.get_process_variables(template_id)
 
     return render_template('/projects/legacy/john/social/new_run_5.html', table=records, header=header)
-
-
-@bp.route('/new_run_6')
-def new_run_6():
-    return render_template('/projects/legacy/john/social/new_run_6.html')
-
-
-@bp.route('/new_run_7')
-def new_run_7():
-    return render_template('/projects/legacy/john/social/new_run_7.html')
-
-
-@bp.route('/new_run_8', methods=['GET', 'POST'])
-def new_run_8():
-    return render_template('/projects/legacy/john/social/new_run_8.html')
-
-
-@bp.route('/new_run_9')
-def new_run_9():
-    return render_template('/projects/legacy/john/social/new_run_9.html')
-
-
-@bp.route('/new_run_end')
-def new_run_end():
-    return render_template('/projects/legacy/john/social/new_run_end.html')

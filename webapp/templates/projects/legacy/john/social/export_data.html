@@ -29,7 +29,7 @@
 			<div class="group">
 				<div class="col-7">
 					<div class="logo_header">
-						<a href="../hub.html"><img src="../../../../../static/img/logo.svg" alt="Office for National Statistics" class="logo__img"/></a>
+						<a href="../hub.html"><img src="../../../../img/logo.svg" alt="Office for National Statistics" class="logo__img"/></a>
 					</div>
 				</div>
 				<div class="col-5">
@@ -48,7 +48,7 @@
 		<div class="wrapper">
 			<div class="group">
 				<div class="col-12">
-					<div><h1 class="jupiter main_heading">Social</h1></div>
+					<div><h1 class="jupiter main_heading">Social Surveys</h1></div>
 				</div>
 			</div>
 		</div>
@@ -80,6 +80,7 @@
 			</div>
 		</div>
 	</div>
+
 </header>
 
 <section>
@@ -87,44 +88,77 @@
 		<div class="col-8">
 			<div class="group top_40_extra_space">
 				<div>
-					<h2 class="saturn">Export data </h2>
-                    {{current_run['id']}}
+					{% if data == "0"%}
+						<div class="collator-item">
+							<!-- Start: @panel--error -->
+							<div class="panel panel--error">
+								<div class="panel__header">
+									<div class="venus">Error</div>
+								</div>
+								<div class="panel__body">
+									<p class="mars">There is no data to export.  Please select a different export.</p>
+								</div>
+							</div>
+						</div>
+					{% endif %}
+
 				</div>
 			</div>
+
+
+			<div class="group top_40_extra_space">
+				<div>
+					<h2 class="saturn">Export Data for <i>'{{current_run['name']}}'</i></h2>
+				</div>
+			</div>
+
 	  	</div>
 	</div>
-</section>
 
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
+
+</section>
 
 <section>
 
 	<div class="wrapper">
-		<div class="group">
+		<div class="col-8 top_40_extra_space">
 
-			<form id="run" action="/dashboard" class="form">
+			<form id="run" action="/export_data/{{current_run['id']}}" class="form" method="post">
+
+				<div class="field">
+					{{ form.csrf_token }}
+					{{ form.data_selection.label(class="label venus ", for="text-input")}}
+					{{ form.data_selection(class="input input--select", type="submit")}}
+
+					{% if form.data_selection.errors %}
+					<ul>
+						{% for error_message in form.data_selection.errors %}
+						<li>{{ error_message }}</li>
+						{% endfor %}
+					</ul>
+					{% endif %}
+
+				</div>
+
+				<div class="field">
+					{{ form.csrf_token }}
+					{{ form.filename.label(class="label venus ", for="text-input") }}
+					{{ form.filename(class="input input--text", type="text", id="text-input") }}
+
+					{% if form.filename.errors %}
+					<ul>
+						{% for error_message in form.filename.errors %}
+						<li>{{ error_message }}</li>
+						{% endfor %}
+					</ul>
+					{% endif %}
+				</div>
 
 				<div class="top_50_extra_space">
-					<a class="btn btn--primary" href="/dashboard">Generate</a>
-					&nbsp;&nbsp;&nbsp;
-					<a class="btn btn--secondary btn--border" href="/dashboard">Back</a>
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-					<label><a href="/dashboard">Cancel</a></label>
+					{{ form.csrf_token }}
+					{{ form.display_data(class="btn btn--primary", type="submit") }}
+					&nbsp;&nbsp;&nbsp;&nbsp;
+					{{ form.cancel_button(class="btn btn--secondary", type="submit") }}
 				</div>
 
 			</form>
@@ -135,10 +169,10 @@
 </section>
 
 <section>
-	<div class="buttom_70_extra_space buttom_70_extra_space">
+	<div class="buttom_40_extra_space buttom_40_extra_space">
 		<table></table>
 	</div>
-	<div class="buttom_70_extra_space buttom_70_extra_space">
+	<div class="buttom_40_extra_space buttom_40_extra_space">
 		<table></table>
 	</div>
 </section>
@@ -170,29 +204,29 @@
 <script>
 $('.ui.dropdown').dropdown();
 </script>
-;
+
 
 <script type="text/javascript">
- 
+
 window.onload = function(){
- 
+
   var form = document.getElementById("form-sign-in");
 
   form.onsubmit = function(e) {
     e.preventDefault();
     var userInput = document.getElementById('text-input').value;
-   
+
     if (userInput.includes('123')) {
-   
+
       window.location = 'contributor.html';
-   
+
     } else if (userInput.includes('cme')) {
       window.location = 'search_results.html';
     }
     return false;
   }
 };
- 
+
 </script>​
 
 

@@ -29,6 +29,7 @@ class TestManageRun:
 
     def test_get_webpage_using_valid_run_id(self, client):
 
+
         res = client.get('/manage_run/9e5c1872-3f8e-4ae5-85dc-c67a602d011e')
         assert res.status_code == 200
         assert b'9e5c1872-3f8e-4ae5-85dc-c67a602d011e' in res.data
@@ -38,6 +39,18 @@ class TestManageRun:
         res = client.get('/manage_run/9e5c1872-3f8e-4ae5-85dc-c67a602d0')
         assert res.status_code == 404
         assert b'9e5c1872-3f8e-4ae5-85dc-c67a602d011e' not in res.data
+
+    def test_get_step_logs_renders_correctly(self, client):
+
+        # get the web page
+        res = client.get('/manage_run/9e5c1872-3f8e-4ae5-85dc-c67a602d011e')
+
+        assert b'Warning' in res.data
+
+        assert b'Error' in res.data
+
+        assert b'9e5c1872-3f8e-4ae5-85dc-c67a602d011e' in res.data
+
 
     # POSTS
 
@@ -181,7 +194,7 @@ class TestManageRun:
             res = client.post('/manage_run/9e5c1872-3f8e-4ae5-85dc-c67a602d011e', data=data)
 
         # Ensure target is export_data/<run_id>
-        assert b'/export_data/9e5c1872-3f8e-4ae5-85dc-c67a602d011e' in res.data
+        assert b'/reference_export/9e5c1872-3f8e-4ae5-85dc-c67a602d011e' in res.data
 
     def test_pressing_export_tab_triggers_no_validation_errors(self, client):
 

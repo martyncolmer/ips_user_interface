@@ -16,6 +16,11 @@
 	<link rel="stylesheet" href="../../../../../static/css/legacy-main.css" media="all">
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 	<script type="text/javascript" src="../../../../../static/js/industry-range.js"></script>
+
+
+	<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>-->
+	<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>-->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
 </head>
 
 <body>
@@ -64,11 +69,14 @@
 			                    <li class="sitenavigation__listitem">
 			                    	<a href="/dashboard">Dashboard</a>
 			                    </li>
-			                    <li class="sitenavigation__listitem sitenavigation__listitem--active">
-			                    	<a href="#">New run</a>
+                                 <li class="sitenavigation__listitem">
+			                    	<a href="/new_run/new_run_1">New run</a>
 			                    </li>
 			                    <li class="sitenavigation__listitem">
 			                    	<a href="/system_info">System info</a>
+			                    </li>
+								<li class="sitenavigation__listitem sitenavigation__listitem--active">
+			                    	<a href="#">Other</a>
 			                    </li>
 			                </ul>
 		              	</div>
@@ -87,29 +95,27 @@
 			<div class="group top_50_extra_space">
 				<div class="col-8">
 					<h2 class="jupiter sml-margin">{{current_run['name']}} </h2>
-					<h3 class="saturn sml-margin buttom_10_extra_space">({{current_run['id']}}) &nbsp;
-                        {% if current_run['status'] == 'Ready' %}
-						    <em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;{{current_run['status']}}&nbsp;&nbsp;&nbsp;</em></h3>
-                    	{% elif current_run['status'] == 'In Progress' %}
-						    <em class="badge-status badge--pending">&nbsp;&nbsp;&nbsp;{{current_run['status']}}&nbsp;&nbsp;&nbsp;</em></h3>
-                    	{% elif current_run['status'] == 'Completed' %}
-						    <em class="badge-status badge--completed">&nbsp;&nbsp;&nbsp;{{current_run['status']}}&nbsp;&nbsp;&nbsp;</em></h3>
-                    	{% elif current_run['status'] == 'Failed' %}
-						    <em class="badge-status badge--pending">&nbsp;&nbsp;&nbsp;{{current_run['status']}}&nbsp;&nbsp;&nbsp;</em></h3>
-					    {% endif %}
+					<h3 class="venus sml-margin buttom_10_extra_space">({{current_run['id']}}) &nbsp;</h3>
                     <div>
 						<spam><strong>Description: </strong>&nbsp; {{current_run['desc']}}</spam>
 						<br>
-						<spam><strong>Execution date & time: </strong>&nbsp; 19-10-2017 | 12:05pm</spam>
-						<br>
-						<br>
 						<spam><strong>Field Work dates: </strong>&nbsp; {{current_run['start_date']}} - {{current_run['end_date']}}</spam>
 						<br>
-						<spam><strong>User: </strong>&nbsp; Edgar Allan Poe</spam>
+						<spam><strong>User: </strong>&nbsp; INSERT USER NAME HERE</spam>
 						<br>
-						<spam><strong>Run Status: </strong>&nbsp; {{current_run['status']}}</spam>
+						<spam><strong>Execution date & time: </strong>&nbsp; 19-10-2017 | 12:05pm</spam>
+						<br>
+						<spam><strong>Run Status: </strong>&nbsp;</spam>
+						{% if current_run['status'] == 'Ready' %}
+						    <em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{current_run['status']}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>
+                    	{% elif current_run['status'] == 'In Progress' %}
+						    <em class="badge-status badge--pending">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{current_run['status']}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>
+                    	{% elif current_run['status'] == 'Completed' %}
+						    <em class="badge-status badge--completed">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{current_run['status']}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>
+                    	{% elif current_run['status'] == 'Failed' %}
+						    <em class="badge-status badge--pending">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{current_run['status']}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>
+					    {% endif %}
 					</div>
-
 				</div>
 			</div>
 		</div>
@@ -119,48 +125,71 @@
 
 <section>
 
+	<form id="tabs" class="form", method="POST">
 		<div class="wrapper">
 			<div class="group">
-				<form id="tabs" class="form", method="POST">
-					{{ form.csrf_token }}
-					<div class="grid__col col-7 top_40_extra_space">
-
+				{{ form.csrf_token }}
+				<div class="grid__col col-7 top_40_extra_space">
 					<ul class="nav-tabs clearfix u-mb-l" data-tabgroup="first-tab-group">
-						<!--<li class="nav-tabs__tab&#45;&#45;active"><a class="tab-label" href="#">Manage Run </a></li>-->
-						<!--<li class="nav-tabs__tab"><a class="tab-label" href="/export_data/{{current_run['id']}}">Exports (0) </a></li>-->
 						<li class="nav-tabs__tab--active">{{ form.manage_run_button(class="tab-label", type="submit") }}</li>
 						<li class="nav-tabs__tab">{{ form.export_button(class="tab-label", type="submit") }}</li>
-
+				  	    <!--<li class="nav-tabs__tab&#45;&#45;active"><a class="tab-label" href="/manage_run/{{current_run['id']}}">Manage Run</a></li>-->
+						<!--<li class="nav-tabs__tab"><a class="tab-label" href="/reference_export/{{current_run['id']}}">Export </a></li>-->
 					</ul>
-						<table class="table table__dense">
-							<thead class="table--head">
-								<th width="20%" class="table--header--cell">&nbsp;&nbsp;&nbsp; <input type="checkbox" onClick="toggle(this)" />&nbsp;&nbsp;All</th>
-								<th width="60%" class="table--header--cell">&nbsp;&nbsp; Steps</th>
-								<th width="20%" class="table--header--cell">Status</th>
-							</thead>
-							<tbody>
-								{% for step in run_status %}
-									<tr class="table--row">
-										<td width="10%" class="table--cell field__item2">
-											<input class="input--checkbox2" name="step_checkbox" type="checkbox">
-										</td>
-										<td width="70%" class="table--cell">&nbsp; {{step['NUMBER']}}. {{ step['NAME'] }}</td>
-										{% if step['STATUS'] == 'Ready' %}
-											<td width="20%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ step['STATUS'] }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
-										{% elif step['STATUS'] == 'Completed' %}
-											<td width="20%" class="table--cell"><em class="badge-status badge--completed">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ step['STATUS'] }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
-										{% elif step['STATUS'] == 'Failed' %}
-											<td width="20%" class="table--cell"><em class="badge-status badge--pending">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ step['STATUS'] }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
-										{% endif %}
-									</tr>
-								{% endfor %}
-							</tbody>
-						</table>
-					</div>
-				</form>
-			</div>
+					<table class="table table__dense">
+						<thead class="table--head">
+							<th width="5%" class="table--header--cell">&nbsp;&nbsp;&nbsp; <input type="checkbox" onClick="toggle(this)" />&nbsp;&nbsp;</th>
+							<th width="70%" class="table--header--cell">&nbsp;&nbsp; Steps</th>
+							<th width="20%" class="table--header--cell">Status</th>
+						</thead>
+						<tbody>
+							{% for step in run_status %}
+								<tr class="table--row">
+									<td width="5%" class="table--cell field__item2">
+										&nbsp;&nbsp;&nbsp;<input class="input--checkbox1" name="step_checkbox" type="checkbox">&nbsp;&nbsp;&nbsp;
+									</td>
+									<td width="70%" class="table--cell">&nbsp; {{step['NUMBER']}}. {{ step['NAME'] }}</td>
 
+									<td width="20%" class="table--cell">
+										<!--If the step has an associated report render the status with a button-->
+										{% if step['NUMBER'] in (report_index) and step['STATUS'] in ('Success', 'Failed') %}
+											<button type="button" data-toggle="modal" data-target="#myModal{{step['NUMBER']}}">
+												{% if step['STATUS'] == 'Ready' %}
+													<em class="badge-status badge--no-started">
+													&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ step['STATUS'] }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+												{% elif step['STATUS'] == 'Success' %}
+													<em class="badge-status badge--pending">
+													&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ step['STATUS'] }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+												{% elif step['STATUS'] == 'Failed' %}
+													<em class="badge-status badge--red">
+													&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ step['STATUS'] }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+												{% endif %}
+												</em></em></em>
+											</button>
+										<!--If there is no report just show the status label with on button-->
+										{% else %}
+											{% if step['STATUS'] == 'Ready' %}
+												<em class="badge-status badge--no-started">
+												&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ step['STATUS'] }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+											{% elif step['STATUS'] == 'Success' %}
+												<em class="badge-status badge--completed">
+												&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ step['STATUS'] }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+											{% elif step['STATUS'] == 'Failed' %}
+												<em class="badge-status" b>
+												&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ step['STATUS'] }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+											{% endif %}
+											</em></em></em>
+										{% endif %}
+									</td>
+								</tr>
+							{% endfor %}
+
+						</tbody>
+					</table>
+				</div>
+			</div>
 		</div>
+	</form>
 
 		<div class="wrapper">
 			<div class="group">
@@ -189,6 +218,51 @@
 
 
 </section>
+
+
+{% for step in run_status %}
+	<!-- The Modal Object defined by the step number-->
+	<div id="myModal{{step['NUMBER']}}" class="modal">
+		<!-- Modal content -->
+		<div class="modal-content">
+			<span class="close" data-dismiss="modal">&times;</span>
+
+			<u><label>Run Status Report</label></u>
+			<br><br>
+			<label>Step:</label>
+			<input type="text" class="modal-input" id="id_input" VALUE="{{step['NAME']}}" readonly="readonly">
+			<br>
+			<label>Run Status:</label>
+			<input type="text" class="modal-input" id="reason_input" value="{{step['STATUS']}}" readonly="readonly">
+			<br>
+			<label>Report History:</label>
+			<br>
+			<br>
+			{% if step['NUMBER'] in (report_index) %}
+				{% for rec in reports %}
+					{% if rec['STEP_NUMBER']|int == step['NUMBER']|int %}
+						{% if rec['RESPONSE_CODE']|int == 1 %}
+							<label>Success</label>
+							<textarea data-maxlength="50000" class="modal-input" id="content_input" readonly="readonly">{{rec['ERROR_MSG']}}</textarea>
+						{% elif rec['RESPONSE_CODE']|int == 2 %}
+							<label>Warning</label>
+							<textarea data-maxlength="50000" class="modal-input" id="content_input" readonly="readonly">{{rec['WARNINGS']}}</textarea>
+						{% elif rec['RESPONSE_CODE']|int == 3 %}
+							<label>Error</label>
+							<textarea data-maxlength="50000" class="modal-input" id="content_input" readonly="readonly">{{rec['ERROR_MSG']}}</textarea>
+						{% endif %}
+						<!--<label>Report:</label>-->
+						<!--<textarea data-maxlength="50000" class="modal-input" id="content_input" readonly="readonly">{{rec}}</textarea>-->
+					{% endif %}
+				{% endfor %}
+			{% endif %}
+
+			<br><br>
+			<button type="button" class="btn btn--primary" id="modal_okay_button" data-dismiss="modal">Close</button>
+		</div>
+
+	</div>
+{% endfor %}
 
 <section>
 	<div class="buttom_70_extra_space buttom_70_extra_space">
@@ -221,43 +295,6 @@ function toggle(source) {
   }
 }
 </script>
-
-<!-- <script>
-	jQuery(document).ready(function($) {
-    $(".clickable-row").click(function() {
-        window.location = $(this).data("href");
-    });
-});
-</script>
-
-
-<script>
-$('.ui.dropdown').dropdown();
-</script> -->
-
-
-<!-- <script type="text/javascript">
-
-window.onload = function(){
-
-  var form = document.getElementById("form-sign-in");
-
-  form.onsubmit = function(e) {
-    e.preventDefault();
-    var userInput = document.getElementById('text-input').value;
-
-    if (userInput.includes('123')) {
-
-      window.location = 'contributor.html';
-
-    } else if (userInput.includes('cme')) {
-      window.location = 'search_results.html';
-    }
-    return false;
-  }
-};
-
-</script>​ -->
 
 
 </footer>
