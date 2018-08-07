@@ -11,6 +11,6 @@ def system_info():
     header = records[0]
     records = records[1:]
 
-    return render_template('/projects/legacy/john/social/system_info.html',
+    return render_template('/projects/legacy/john/social/system_info_test.html',
                            header=header,
                            records=records)

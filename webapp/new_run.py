@@ -46,12 +46,11 @@ def new_run_1(run_id=None):
             run = app_methods.get_run(run_id)
             form.run_name.default = run['name']
             form.run_description.default = run['desc']
-            pass
 
     if form.run_name.errors or form.run_description.errors:
         current_app.logger.warning("Missing valid run_id or description.")
 
-    return render_template('/projects/legacy/john/social/new_run_1.html',
+    return render_template('/projects/legacy/john/social/new_run_1_test.html',
                            form=form,
                            run_id=run_id)
 
@@ -129,7 +128,7 @@ def new_run_2(run_id=None):
         form.e_month.default = run['end_date'][2:4]
         form.process()
 
-    return render_template('/projects/legacy/john/social/new_run_2.html',
+    return render_template('/projects/legacy/john/social/new_run_2_test.html',
                            form=form,
                            last_entry=last_entry,
                            run_id=run_id)
@@ -197,7 +196,7 @@ def new_run_3(run_id=None):
             return redirect('/new_run/new_run_4', code=302)
 
     elif request.method == 'GET':
-        return render_template('/projects/legacy/john/social/new_run_3.html',
+        return render_template('/projects/legacy/john/social/new_run_3_test.html',
                                form=form,
                                error=error,
                                run_id=run_id)
@@ -205,11 +204,15 @@ def new_run_3(run_id=None):
         error = True
         current_app.logger.warning('Application route: ' + request.path + ' Did not fill all fields with .csv files.')
 
-    return render_template('/projects/legacy/john/social/new_run_3.html', form=form, error=error)
+    return render_template('/projects/legacy/john/social/new_run_3_test.html', form=form, error=error)
 
 
 @bp.route('/new_run_4', methods=['GET', 'POST'])
 def new_run_4():
+    try:
+        run_id = session['id']
+    except:
+        run_id = False
 
     if request.method == "POST":
 
@@ -219,9 +222,16 @@ def new_run_4():
 
     records = app_methods.get_process_variable_sets()
 
+    pv_set_id = False
+
+    if run_id:
+        for rec in records:
+            if rec['RUN_ID'] in run_id:
+                pv_set_id = rec['RUN_ID']
+
     header = ['RUN_ID', 'NAME', 'USER', 'START_DATE', 'END_DATE']
 
-    return render_template('/projects/legacy/john/social/new_run_4.html', table = records, header = header)
+    return render_template('/projects/legacy/john/social/new_run_4_test.html', table = records, header = header, pv_set_id=pv_set_id)
 
 
 @bp.route('/edit')
@@ -290,4 +300,4 @@ def new_run_5():
 
     records = app_methods.get_process_variables(template_id)
 
-    return render_template('/projects/legacy/john/social/new_run_5.html', table=records, header=header)
+    return render_template('/projects/legacy/john/social/new_run_5_test.html', table=records, header=header)

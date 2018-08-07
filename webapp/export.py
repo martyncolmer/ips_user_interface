@@ -42,7 +42,7 @@ def reference_export(run_id, new_export="0", msg="", data=""):
         if request.method == 'POST':
             return redirect('/export_data/' + run_id)
 
-        return render_template('/projects/legacy/john/social/reference_export.html',
+        return render_template('/projects/legacy/john/social/reference_export_test.html',
                                current_run=current_run,
                                data=data,
                                new_export=str(new_export),
@@ -73,7 +73,7 @@ def export_data(run_id):
 
             # Try to insert data to clob
             if create_export_data_download(run_id, sql_table, target_filename) == False:
-                return render_template('/projects/legacy/john/social/export_data.html', form=form,
+                return render_template('/projects/legacy/john/social/export_data_test.html', form=form,
                                        current_run=current_run,
                                        data="0")
             return redirect('/reference_export/' + run_id)
@@ -82,7 +82,7 @@ def export_data(run_id):
             if 'cancel_button' in request.form:
                 return redirect('/reference_export/' + current_run['id'], code=302)
 
-        return render_template('/projects/legacy/john/social/export_data.html', form=form, current_run=current_run,
+        return render_template('/projects/legacy/john/social/export_data_test.html', form=form, current_run=current_run,
                                data="1")
 
     else:
