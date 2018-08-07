@@ -203,7 +203,7 @@ def new_run_3(run_id=None):
 
 @bp.route('/new_run_4', methods=['GET', 'POST'])
 def new_run_4():
-
+    run_id = session['id']
     if request.method == "POST":
 
         session['template_id'] = request.form['selected']
@@ -212,9 +212,15 @@ def new_run_4():
 
     records = app_methods.get_process_variable_sets()
 
+    pv_set_id = False
+
+    for rec in records:
+        if rec['RUN_ID'] in run_id:
+            pv_set_id = rec['RUN_ID']
+
     header = ['RUN_ID', 'NAME', 'USER', 'START_DATE', 'END_DATE']
 
-    return render_template('/projects/legacy/john/social/new_run_4_test.html', table = records, header = header)
+    return render_template('/projects/legacy/john/social/new_run_4_test.html', table = records, header = header, pv_set_id=pv_set_id)
 
 
 @bp.route('/edit')
