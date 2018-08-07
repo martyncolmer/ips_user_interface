@@ -203,7 +203,11 @@ def new_run_3(run_id=None):
 
 @bp.route('/new_run_4', methods=['GET', 'POST'])
 def new_run_4():
-    run_id = session['id']
+    try:
+        run_id = session['id']
+    except:
+        run_id = False
+
     if request.method == "POST":
 
         session['template_id'] = request.form['selected']
@@ -214,9 +218,10 @@ def new_run_4():
 
     pv_set_id = False
 
-    for rec in records:
-        if rec['RUN_ID'] in run_id:
-            pv_set_id = rec['RUN_ID']
+    if run_id:
+        for rec in records:
+            if rec['RUN_ID'] in run_id:
+                pv_set_id = rec['RUN_ID']
 
     header = ['RUN_ID', 'NAME', 'USER', 'START_DATE', 'END_DATE']
 
