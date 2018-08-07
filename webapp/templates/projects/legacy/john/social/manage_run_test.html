@@ -88,17 +88,17 @@
                         <div class="wrapper">
                             <div class="group">
                                 {{ form.csrf_token }}
-                                <div class="grid__col col-7 top_40_extra_space">
+                                <div class="col-7 top_40_extra_space">
                                     <ul class="nav-tabs clearfix u-mb-l" data-tabgroup="first-tab-group">
-                                        <li class="nav-tabs__tab--active">{{ form.manage_run_button(class="tab-label", type="submit") }}</li>
-                                        <li class="nav-tabs__tab">{{ form.export_button(class="tab-label", type="submit") }}</li>
-                                        <!--<li class="nav-tabs__tab&#45;&#45;active"><a class="tab-label" href="/manage_run/{{current_run['id']}}">Manage Run</a></li>-->
-                                        <!--<li class="nav-tabs__tab"><a class="tab-label" href="/reference_export/{{current_run['id']}}">Export </a></li>-->
+                                        <!--<li class="nav-tabs__tab&#45;&#45;active">{{ form.manage_run_button(class="tab-label", type="submit") }}</li>-->
+                                        <!--<li class="nav-tabs__tab">{{ form.export_button(class="tab-label", type="submit") }}</li>-->
+                                        <li class="nav-tabs__tab--active"><a class="tab-label" href="/manage_run/{{current_run['id']}}">Manage Run</a></li>
+                                        <li class="nav-tabs__tab"><a class="tab-label" href="/reference_export/{{current_run['id']}}">Export </a></li>
                                     </ul>
                                     <table class="table table__dense">
                                         <thead class="table--head">
                                             <th width="5%" class="table--header--cell">&nbsp;&nbsp;&nbsp; <input type="checkbox" onClick="toggle(this)" />&nbsp;&nbsp;</th>
-                                            <th width="70%" class="table--header--cell">&nbsp;&nbsp; Steps</th>
+                                            <th width="75%" class="table--header--cell">&nbsp;&nbsp; Steps</th>
                                             <th width="20%" class="table--header--cell">Status</th>
                                         </thead>
                                         <tbody>
@@ -107,7 +107,7 @@
                                                     <td width="5%" class="table--cell field__item2">
                                                         &nbsp;&nbsp;&nbsp;<input class="input--checkbox1" name="step_checkbox" type="checkbox">&nbsp;&nbsp;&nbsp;
                                                     </td>
-                                                    <td width="70%" class="table--cell">&nbsp; {{step['NUMBER']}}. {{ step['NAME'] }}</td>
+                                                    <td width="75%" class="table--cell">&nbsp; {{step['NUMBER']}}. {{ step['NAME'] }}</td>
 
                                                     <td width="20%" class="table--cell">
                                                         <!--If the step has an associated report render the status with a button-->
