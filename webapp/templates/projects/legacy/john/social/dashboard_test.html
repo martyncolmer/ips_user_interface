@@ -56,13 +56,15 @@
 									</div>
 									<div class="col-12">
 										<div class="col-6">
-											{{ form.search_activity(class="input input--text", type="text", id="text-input", placeholder="Search...") }}
+
+											{{ form.search_activity(class="input input--textarea js-charlimit-input",cols="1",rows="1",id="text-input",maxlength="400", placeholder="Search...")}}
+											<!--{{ form.search_activity(class="input input&#45;&#45;text", type="text", id="text-input", placeholder="Search...") }}-->
 										</div>
-										<div class="col-6">
+										<div class="col-4">
 											{{ form.run_type_filter(class="input input--select", type="submit")}}
 											<!--{{ form.advanced_search(class="btn btn&#45;&#45;secondary venus three-col-button-2", type="submit") }}-->
 										</div>
-										<div class="col-6">
+										<div class="col-2">
 											{{ form.search_button(class="btn ", type="submit") }}
 											<!--{{ form.run_type_filter(class="input input&#45;&#45;select venus three-col-button-2", type="submit")}}-->
 										</div>
