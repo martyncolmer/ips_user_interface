@@ -1,5 +1,5 @@
 
-from flask import request, render_template, Blueprint
+from flask import request, render_template, Blueprint, current_app
 from .forms import SearchActivityForm
 from . import app_methods
 
@@ -9,6 +9,8 @@ bp = Blueprint('dashboard', __name__, url_prefix='/dashboard', static_folder='st
 @bp.route('/', methods=['GET', 'POST'])
 def dashboard_view():
     form = SearchActivityForm()
+
+    current_app.logger.info('Dashboard being accessed...')
 
     # Get the records and separate the headers and values
     records = app_methods.get_runs()
@@ -27,8 +29,6 @@ def dashboard_view():
 
     # If this is a post then validate if needed
     if request.method == 'POST' and form.validate():
-        print(request.form)
-        #flash_errors(form)
 
         # If the search button is selected filter hte results on the run status and the searched word.
         if 'search_button' in request.form:
@@ -51,6 +51,7 @@ def dashboard_view():
                            search_activity.lower() in x['start_date'].lower() or
                            search_activity.lower() in x['end_date'].lower()]
 
+    current_app.logger.info('Rendering dashboard now...')
     return render_template('/projects/legacy/john/social/dashboard_test.html',
                            header=header,
                            records=records,
