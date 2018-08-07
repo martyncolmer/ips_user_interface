@@ -7,7 +7,6 @@ bp = Blueprint('manage_run', __name__, url_prefix='/manage_run', static_folder='
 
 @bp.route('/<run_id>', methods=['GET', 'POST'])
 def manage_run(run_id):
-    print("AT MANAGE RUN START")
     form = ManageRunForm()
 
     status_values = {'0': 'Ready', '1': 'Success', '2': 'Failed'}
@@ -82,7 +81,6 @@ def manage_run(run_id):
             if report['STEP_NUMBER'] == step['NUMBER']:
                 r_index.append(step['NUMBER'])
 
-    print("AT MANAGE RUN END")
     return render_template('/projects/legacy/john/social/manage_run_test.html',
                            form=form,
                            current_run=current_run,
