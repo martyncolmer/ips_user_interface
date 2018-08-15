@@ -40,6 +40,7 @@ class RabbitMQHandler(logging.StreamHandler):
     def emit(self, record):
         self.acquire()
         self.channel.basic_publish(exchange=self.exchange_name, routing_key=self.queue, body=self.format(record))
+        self.release()
 
 
 def create_app(test_config=None):
