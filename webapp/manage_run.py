@@ -7,7 +7,6 @@ bp = Blueprint('manage_run', __name__, url_prefix='/manage_run', static_folder='
 
 @bp.route('/<run_id>', methods=['GET', 'POST'])
 def manage_run(run_id):
-    print("AT MANAGE RUN START")
     form = ManageRunForm()
 
     status_values = {'0': 'Ready', '1': 'Success', '2': 'Failed'}
@@ -82,8 +81,7 @@ def manage_run(run_id):
             if report['STEP_NUMBER'] == step['NUMBER']:
                 r_index.append(step['NUMBER'])
 
-    print("AT MANAGE RUN END")
-    return render_template('/projects/legacy/john/social/manage_run.html',
+    return render_template('/projects/legacy/john/social/manage_run_test.html',
                            form=form,
                            current_run=current_run,
                            run_status=run_status, reports=run_step_requests, report_index=r_index)
@@ -110,7 +108,7 @@ def weights(run_id=None):
                 session['dw_title'] = table_title
                 session['dw_source'] = data_source
                 return redirect(url_for('manage_run.weights_2', table=table_name, id=run['id'], source=data_source, table_title=table_title), code=302)
-        return render_template('/projects/legacy/john/social/weights.html',
+        return render_template('/projects/legacy/john/social/weights_test.html',
                                form=form,
                                current_run=current_run)
     else:
@@ -127,7 +125,7 @@ def weights_2(id, table=None, table_title=None, source=None):
         if table:
             dataframe = app_methods.get_display_data_json(table, id, source)
 
-            return render_template('/projects/legacy/john/social/weights_2.html',
+            return render_template('/projects/legacy/john/social/weights_2_test.html',
                                    table_title=table_title,
                                    table=dataframe,
                                    run_id=id)
@@ -136,29 +134,29 @@ def weights_2(id, table=None, table_title=None, source=None):
     else:
         abort(404)
 
-# Does this need to exist? Pretty sure it has been rewritten in export.py
-@bp.route('/export_data/<run_id>')
-def export_data(run_id):
-
-    # form = ExportSelectionForm()
-
-    run = app_methods.get_run(run_id)
-
-    data = app_methods.get_export_data_table(run_id)
-
-    if run:
-        session['id'] = run['id']
-        session['run_name'] = run['name']
-        session['run_description'] = run['desc']
-        session['start_date'] = run['start_date']
-        session['end_date'] = run['end_date']
-        current_run = run
-
-        return render_template('/projects/legacy/john/social/reference_export.html',
-                               # form=form,
-                               current_run=current_run,
-                               data=data)
-    else:
-        abort(404)
-
+# # Does this need to exist? Pretty sure it has been rewritten in export.py
+# @bp.route('/export_data/<run_id>')
+# def export_data(run_id):
+#
+#     # form = ExportSelectionForm()
+#
+#     run = app_methods.get_run(run_id)
+#
+#     data = app_methods.get_export_data_table(run_id)
+#
+#     if run:
+#         session['id'] = run['id']
+#         session['run_name'] = run['name']
+#         session['run_description'] = run['desc']
+#         session['start_date'] = run['start_date']
+#         session['end_date'] = run['end_date']
+#         current_run = run
+#
+#         return render_template('/projects/legacy/john/social/reference_export.html',
+#                                # form=form,
+#                                current_run=current_run,
+#                                data=data)
+#     else:
+#         abort(404)
+#
 

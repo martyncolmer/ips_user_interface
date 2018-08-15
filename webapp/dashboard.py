@@ -53,7 +53,7 @@ def dashboard_view():
                            search_activity.lower() in x['end_date'].lower()]
 
     current_app.logger.info('Rendering dashboard now...')
-    return render_template('/projects/legacy/john/social/dashboard.html',
+    return render_template('/projects/legacy/john/social/dashboard_test.html',
                            header=header,
                            records=records,
                            form=form)
