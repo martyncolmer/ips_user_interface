@@ -159,12 +159,16 @@ def new_run_3(run_id=None):
         #TODO: Duplicates causing issues with imports (Returning 500)... need to look into dealing with this. @TM
 
         # External
-
+        current_app.logger.debug("Clearing down table records...")
         # Clear down table records associated with the current run id
         app_methods.delete_data('SHIFT_DATA', session['id'])
         app_methods.delete_data('NON_RESPONSE_DATA', session['id'])
         app_methods.delete_data('UNSAMPLED_OOH_DATA', session['id'])
         app_methods.delete_data('TRAFFIC_DATA', session['id'])
+
+        current_app.logger.debug("Finished clearing down table records.")
+
+        current_app.logger.info("Importing data...")
 
         # Import shift data
         shift_data = form.shift_file.data
@@ -191,18 +195,21 @@ def new_run_3(run_id=None):
         app_methods.survey_data_import('TRAFFIC_DATA', session['id'], air_data)
 
         if run_id:
+            current_app.logger.debug("Run_id given...")
             return redirect('/new_run/new_run_4/' + run_id, code=302)
         else:
+            current_app.logger.debug("No run_id given...")
             return redirect('/new_run/new_run_4', code=302)
 
     elif request.method == 'GET':
+        current_app.logger.info("Fulfilling GET request...")
         return render_template('/projects/legacy/john/social/new_run_3_test.html',
                                form=form,
                                error=error,
                                run_id=run_id)
     else:
         error = True
-        current_app.logger.warning('Application route: ' + request.path + ' Did not fill all fields with .csv files.')
+        current_app.logger.warning('User did not fill all fields with .csv files.')
 
     return render_template('/projects/legacy/john/social/new_run_3_test.html', form=form, error=error)
 
@@ -218,6 +225,8 @@ def new_run_4():
 
         session['template_id'] = request.form['selected']
 
+        current_app.logger.info("Redirecting to new_run_5 with template_id " + session['template_id'] + "...")
+
         return redirect('/new_run/new_run_5')
 
     records = app_methods.get_process_variable_sets()
@@ -231,7 +240,9 @@ def new_run_4():
 
     header = ['RUN_ID', 'NAME', 'USER', 'START_DATE', 'END_DATE']
 
-    return render_template('/projects/legacy/john/social/new_run_4_test.html', table = records, header = header, pv_set_id=pv_set_id)
+    current_app.logger.debug("Got process variable sets, rendering new_run_4.")
+
+    return render_template('/projects/legacy/john/social/new_run_4_test.html', table=records, header=header)
 
 
 @bp.route('/edit')
@@ -244,6 +255,8 @@ def edit(row=None):
 def new_run_5():
 
     if request.method == 'POST':
+
+        current_app.logger.info("Getting data from Javascript modal...")
 
         # Method splits a the array into groups of 3
         def split_list(l, n):
@@ -275,22 +288,31 @@ def new_run_5():
                     }
             data_dictionary_array.append(data)
 
+        user = 'test_user_placeholder'
+
+        current_app.logger.info("Getting session values...")
+        current_app.logger.debug("Session values: %s, %s, %s, %s, %s, %s.", session['id'], session['run_name'],
+                                 session['start_date'], session['end_date'], user)
+
         # Get required values from the session
         run_id = session['id']
         run_name = session['run_name']
         start_date = session['start_date']
         end_date = session['end_date']
-        user = 'test_user_placeholder'
 
         # Creates a new pv set if run_id doesn't already exist, otherwise delete existing rows and repopulate
         if run_id not in app_methods.get_all_run_ids():
+            current_app.logger.info("New run_id given, creating new process variable set...")
             # Creates a new set of process variables, then fill the empty set with the edited javascript data
             app_methods.create_process_variables_set(run_id, run_name, user, start_date, end_date)
             # Fill newly created pv set with new process variables (for new runs)
             app_methods.create_process_variables(run_id, data_dictionary_array)
+            current_app.logger.info("New process variable set created.")
         else:
+            current_app.logger.info("Existing run_id given, updating records...")
             # Edit existing process variables (for edit run)
             app_methods.edit_process_variables(run_id, data_dictionary_array)
+            current_app.logger.info("Records updated successfully.")
 
         return redirect('/manage_run/' + run_id)
 

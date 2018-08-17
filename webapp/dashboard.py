@@ -10,6 +10,7 @@ bp = Blueprint('dashboard', __name__, url_prefix='/dashboard', static_folder='st
 def dashboard_view():
     form = SearchActivityForm()
 
+    # Log that dashboard view has been accessed
     current_app.logger.info('Dashboard being accessed...')
 
     # Get the records and separate the headers and values
