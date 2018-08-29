@@ -14,7 +14,10 @@ def dashboard_view():
     current_app.logger.info('Dashboard being accessed...')
 
     # Get the records and separate the headers and values
-    records = app_methods.get_runs()
+    try:
+        records = app_methods.get_runs()
+    except Exception as error:
+        current_app.logger.error(error, exc_info=True)
     header = ['Run_ID', 'Run_Name', 'Run_Description', 'Start_Date', 'End_Date', 'Type', 'Status']
 
     # Setup key value pairs for displaying run information
@@ -31,7 +34,7 @@ def dashboard_view():
     # If this is a post then validate if needed
     if request.method == 'POST' and form.validate():
 
-        # If the search button is selected filter hte results on the run status and the searched word.
+        # If the search button is selected filter the results on the run status and the searched word.
         if 'search_button' in request.form:
             search_activity = request.form['search_activity']
             filter_value = request.form['run_type_filter']
