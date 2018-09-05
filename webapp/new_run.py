@@ -24,6 +24,7 @@ def new_run_1(run_id=None):
             session['run_description'] = request.form['run_description']
 
             if run_id:
+                current_app.logger.info("Run_id given, editing existing run.")
                 run = app_methods.get_run(run_id)
 
                 run['name'] = request.form['run_name']
@@ -33,15 +34,20 @@ def new_run_1(run_id=None):
                                      start_date=run['start_date'], end_date=run['end_date'], run_type=run['type'],
                                      run_status='0')
 
-                current_app.logger.info("Updated existing run details. Redirecting to new_run_2...")
+                current_app.logger.debug("Updated existing run details.")
+                current_app.logger.info("Redirecting to new_run_2...")
+
                 return redirect('/new_run/new_run_2/'+run_id, code=302)
             else:
+                current_app.logger.info("Run_id not given. Creating new run.")
                 # Generate new run id and store name and description to be used in run creation
                 unique_id = uuid.uuid4()
                 session['id'] = str(unique_id)
-                current_app.logger.info("Generated new unique_id. Redirecting to new_run_2...")
+                current_app.logger.debug("Generated new unique_id.")
+                current_app.logger.info("Redirecting to new_run_2...")
                 return redirect('/new_run/new_run_2', code=302)
     else:
+        # If request is a GET
         if run_id:
             run = app_methods.get_run(run_id)
             form.run_name.default = run['name']
@@ -240,7 +246,7 @@ def new_run_4():
 
     header = ['RUN_ID', 'NAME', 'USER', 'START_DATE', 'END_DATE']
 
-    current_app.logger.debug("Got process variable sets, rendering new_run_4.")
+    current_app.logger.debug("Retrieved process variable sets, rendering new_run_4.")
 
     return render_template('/projects/legacy/john/social/new_run_4_test.html', table=records, header=header)
 
@@ -291,14 +297,14 @@ def new_run_5():
         user = 'test_user_placeholder'
 
         current_app.logger.info("Getting session values...")
-        current_app.logger.debug("Session values: %s, %s, %s, %s, %s, %s.", session['id'], session['run_name'],
-                                 session['start_date'], session['end_date'], user)
 
         # Get required values from the session
         run_id = session['id']
         run_name = session['run_name']
         start_date = session['start_date']
         end_date = session['end_date']
+
+        current_app.logger.debug("Session values: %s, %s, %s, %s, %s, %s.", run_id, run_name, start_date, end_date, user)
 
         # Creates a new pv set if run_id doesn't already exist, otherwise delete existing rows and repopulate
         if run_id not in app_methods.get_all_run_ids():
