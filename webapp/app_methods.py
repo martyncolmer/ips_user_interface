@@ -9,6 +9,9 @@ from flask import session, render_template
 
 APP_DIR = os.path.dirname(__file__)
 
+API_TARGET = r'http://10.28.56.71:5000'
+API_TARGET = r'http://localhost:5000'
+
 
 def create_run(unique_id, run_name, run_description, start_date, end_date, run_type='0', run_status='0'):
     """
@@ -75,7 +78,12 @@ def get_runs():
 
         :return: List of JSON object runs
         """
-    response = requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs")
+
+    response = requests.get(API_TARGET+r'/runs')
+
+    #response = requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs")       # Cloudfoundry
+    #response = requests.get("http://localhost:5000/runs")                              # Local host
+    #response = requests.get("http://10.28.56.71:5000/runs")                            # James' machine
     #response = requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/get_sql")
     return json.loads(response.content)
 

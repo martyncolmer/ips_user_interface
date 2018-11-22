@@ -9,19 +9,19 @@ from webapp.forms import CreateRunForm, DateSelectionForm, SearchActivityForm, D
 import requests
 import pandas as pd
 
-app = Flask(__name__)
-
-
-
-@app.route('/')
-def index():
-    return redirect(url_for('dashboard'), code=302)
-
-
-@app.route('/login')
-def login():
-    return render_template('/projects/legacy/login.html')
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
+# app = Flask(__name__)
+#
+#
+#
+# @app.route('/')
+# def index():
+#     return redirect(url_for('dashboard'), code=302)
+#
+#
+# @app.route('/login')
+# def login():
+#     return render_template('/projects/legacy/login.html')
+#
+#
+# if __name__ == '__main__':
+#     app.run(debug=True)

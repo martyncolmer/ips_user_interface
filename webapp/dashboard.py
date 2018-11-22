@@ -21,15 +21,15 @@ def dashboard_view():
     header = ['Run_ID', 'Run_Name', 'Run_Description', 'Start_Date', 'End_Date', 'Type', 'Status']
 
     # Setup key value pairs for displaying run information
-    run_types = {'0': 'Test', '1': 'Live', '2': 'Deleted'}
+    run_types = {'0': 'Test', '1': 'Live', '2': 'Deleted', '3': 'SQL', '4': 'SQL', '5': 'SQL', '6': 'SQL'}
     run_statuses = {'0': 'Ready', '1': 'In Progress', '2': 'Completed', '3': 'Failed'}
 
     # Reformat values to be displayed on the UI
     for record in records:
-        record['start_date'] = record['start_date'][:2] + "-" + record['start_date'][2:4] + "-" + record['start_date'][4:]
-        record['end_date'] = record['end_date'][:2] + "-" + record['end_date'][2:4] + "-" + record['end_date'][4:]
-        record['status'] = run_statuses[record['status']]
-        record['type'] = run_types[record['type']]
+        record['START_DATE'] = str(record['START_DATE'])[:2] + "-" + str(record['START_DATE'])[2:4] + "-" + str(record['START_DATE'])[4:]
+        record['END_DATE'] = str(record['END_DATE'])[:2] + "-" + str(record['END_DATE'])[2:4] + "-" + str(record['END_DATE'])[4:]
+        record['RUN_STATUS'] = run_statuses[str(int(record['RUN_STATUS']))]
+        record['RUN_TYPE_ID'] = run_types[str(int(record['RUN_TYPE_ID']))]
 
     # If this is a post then validate if needed
     if request.method == 'POST' and form.validate():
