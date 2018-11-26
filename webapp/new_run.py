@@ -27,11 +27,11 @@ def new_run_1(run_id=None):
                 current_app.logger.info("Run_id given, editing existing run.")
                 run = app_methods.get_run(run_id)
 
-                run['name'] = request.form['run_name']
-                run['desc'] = request.form['run_description']
+                run['RUN_NAME'] = request.form['run_name']
+                run['RUN_DESC'] = request.form['run_description']
                 # Update run name and description
-                app_methods.edit_run(run_id=run_id, run_name=run['name'], run_description=run['desc'],
-                                     start_date=run['start_date'], end_date=run['end_date'], run_type=run['type'],
+                app_methods.edit_run(run_id=run_id, run_name=run['RUN_NAME'], run_description=run['RUN_DESC'],
+                                     start_date=run['START_DATE'], end_date=run['END_DATE'], run_type=run['RUN_TYPE_ID'],
                                      run_status='0')
 
                 current_app.logger.debug("Updated existing run details.")
@@ -50,8 +50,8 @@ def new_run_1(run_id=None):
         # If request is a GET
         if run_id:
             run = app_methods.get_run(run_id)
-            form.run_name.default = run['name']
-            form.run_description.default = run['desc']
+            form.run_name.default = run['RUN_NAME']
+            form.run_description.default = run['RUN_DESC']
 
     if form.run_name.errors or form.run_description.errors:
         current_app.logger.warning("Missing valid run_id or description.")
@@ -82,8 +82,8 @@ def new_run_2(run_id=None):
         if form.validate():
             if request.form['submit'] == 'create_run':
 
-                start_date = request.form['s_day'] + request.form['s_month'] + request.form['s_year']
-                end_date = request.form['e_day'] + request.form['e_month'] + request.form['e_year']
+                start_date = request.form['s_year'] + r"-" + request.form['s_month'] + r"-" + request.form['s_day']
+                end_date = request.form['s_year'] + r"-" + request.form['e_month'] + r"-" + request.form['s_day']
 
                 session['start_date'] = start_date
                 session['end_date'] = end_date
@@ -93,7 +93,9 @@ def new_run_2(run_id=None):
                     run = app_methods.get_run(run_id)
                     run['start_date'] = start_date
                     run['end_date'] = end_date
-                    app_methods.edit_run(run_id=run_id, run_name=run['name'], run_description=run['desc'], start_date=run['start_date'], end_date=run['end_date'], run_type=run['type'], run_status='0')
+                    app_methods.edit_run(run_id=run_id, run_name=run['RUN_NAME'], run_description=run['RUN_DESC']
+                                         , start_date=run['START_DATE'], end_date=run['END_DATE']
+                                         , run_type=run['RUN_TYPE_ID'], run_status='0')
                     current_app.logger.info("Run edited with start and end date. Redirecting to new_run_3...")
 
                     return redirect('/new_run/new_run_3/' + run_id, code=302)
@@ -123,15 +125,15 @@ def new_run_2(run_id=None):
 
     if run_id:
         run = app_methods.get_run(run_id)
-        last_entry['s_day'] = run['start_date'][:2]
-        last_entry['s_month'] = run['start_date'][2:4]
-        last_entry['s_year'] = run['start_date'][4:8]
-        last_entry['e_day'] = run['end_date'][:2]
-        last_entry['e_month'] = run['end_date'][2:4]
-        last_entry['e_year'] = run['end_date'][4:8]
+        last_entry['s_day'] = run['START_DATE'][:2]
+        last_entry['s_month'] = run['START_DATE'][2:4]
+        last_entry['s_year'] = run['START_DATE'][4:8]
+        last_entry['e_day'] = run['END_DATE'][:2]
+        last_entry['e_month'] = run['END_DATE'][2:4]
+        last_entry['e_year'] = run['END_DATE'][4:8]
 
-        form.s_month.default = run['start_date'][2:4]
-        form.e_month.default = run['end_date'][2:4]
+        form.s_month.default = run['START_DATE'][2:4]
+        form.e_month.default = run['END_DATE'][2:4]
         form.process()
 
     return render_template('/projects/legacy/john/social/new_run_2_test.html',

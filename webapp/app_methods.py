@@ -9,8 +9,8 @@ from flask import session, render_template
 
 APP_DIR = os.path.dirname(__file__)
 
-API_TARGET = r'http://10.28.56.71:5000'
-API_TARGET = r'http://localhost:5000'
+API_TARGET = r'http://10.28.56.87:5000'        # This is my VDI instance IP.
+#API_TARGET = r'http://localhost:5000'
 
 
 def create_run(unique_id, run_name, run_description, start_date, end_date, run_type='0', run_status='0'):
@@ -19,21 +19,21 @@ def create_run(unique_id, run_name, run_description, start_date, end_date, run_t
 
     :return: NA
     """
-    response = requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs")
+    response = requests.get(API_TARGET + r"/runs")
 
     file = json.loads(response.content)
     new_run = file[0]
 
-    new_run['id'] = unique_id
-    new_run['name'] = run_name
-    new_run['desc'] = run_description
-    new_run['start_date'] = start_date
-    new_run['end_date'] = end_date
-    new_run['type'] = run_type
-    new_run['status'] = run_status
-    requests.post("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs", json=new_run)
+    new_run['RUN_ID'] = unique_id
+    new_run['RUN_NAME'] = run_name
+    new_run['RUN_DESC'] = run_description
+    new_run['START_DATE'] = start_date
+    new_run['END_DATE'] = end_date
+    new_run['RUN_TYPE_ID'] = run_type
+    new_run['RUN_STATUS'] = run_status
+    requests.post(API_TARGET + r"/runs", json=new_run)
 
-    create_run_steps(new_run['id'])
+    create_run_steps(new_run['RUN_ID'])
 
 
 def edit_run(run_id, run_name, run_description, start_date, end_date, run_type='0', run_status='0'):
@@ -43,18 +43,19 @@ def edit_run(run_id, run_name, run_description, start_date, end_date, run_type='
     :return: NA
     """
 
-    response = requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs")
+    response = requests.get(API_TARGET + r'/runs')
 
     file = json.loads(response.content)
     run = file[0]
 
-    run['name'] = run_name
-    run['desc'] = run_description
-    run['start_date'] = start_date
-    run['end_date'] = end_date
-    run['type'] = run_type
-    run['status'] = run_status
-    requests.put("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs/" + run_id, json=run)
+    run['RUN_ID'] = run_id
+    run['RUN_NAME'] = run_name
+    run['RUN_DESC'] = run_description
+    run['START_DATE'] = start_date
+    run['END_DATE'] = end_date
+    run['RUN_TYPE_ID'] = run_type
+    run['RUN_STATUS'] = run_status
+    requests.put(API_TARGET + r'/runs/' + run_id, json=run)
 
 
 def get_system_info():
@@ -80,11 +81,6 @@ def get_runs():
         """
 
     response = requests.get(API_TARGET+r'/runs')
-
-    #response = requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs")       # Cloudfoundry
-    #response = requests.get("http://localhost:5000/runs")                              # Local host
-    #response = requests.get("http://10.28.56.71:5000/runs")                            # James' machine
-    #response = requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/get_sql")
     return json.loads(response.content)
 
 
@@ -94,11 +90,11 @@ def get_run(run_id):
 
         :return: A specific JSON run object
         """
-    response = requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/runs")
+    response = requests.get(API_TARGET+r'/runs')
     runs = json.loads(response.content)
 
     for x in runs:
-        if x['id'] == run_id:
+        if x['RUN_ID'] == run_id:
             return x
 
 
@@ -189,7 +185,7 @@ def create_run_steps(run_id):
 
     :return: NA
     """
-    route = "http://ips-db.apps.cf1.ons.statistics.gov.uk/run_steps/" + run_id
+    route = API_TARGET + r"/run_steps/" + run_id
 
     requests.post(route)
 
