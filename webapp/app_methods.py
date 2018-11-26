@@ -126,7 +126,7 @@ def get_display_data_json(table_name, run_id=None, data_source=None):
                                 'UNSAMP_TRAFFIC_WT', 'IMBAL_WT', 'FINAL_WT']
                    }
 
-    address = "http://ips-db.apps.cf1.ons.statistics.gov.uk/" + table_name
+    address = API_TARGET + r'/' + table_name
     if run_id:
         address = address + "/" + run_id
 
@@ -191,7 +191,7 @@ def create_run_steps(run_id):
 
 
 def get_run_steps(run_id):
-    address = "http://ips-db.apps.cf1.ons.statistics.gov.uk/run_steps/" + run_id
+    address = API_TARGET + r'/run_steps/' + run_id
 
     response = requests.get(address)
 
@@ -209,7 +209,7 @@ def edit_run_step_status(run_id, value, step_number=None):
 
     :return: NA
     """
-    route = "http://ips-db.apps.cf1.ons.statistics.gov.uk/run_steps/" + run_id + "/" + value
+    route = API_TARGET + r'/run_steps/' + run_id + r'/' + value
 
     if step_number:
         route = route + "/" + step_number
@@ -436,7 +436,7 @@ def get_run_step_requests(run_id, step_number = None):
     #
     # return result
 
-    address = "http://ips-db.apps.cf1.ons.statistics.gov.uk/RESPONSE/" + run_id
+    address = API_TARGET + r'/RESPONSE/' + run_id
 
     if step_number:
         address = address + '/' + step_number
@@ -482,4 +482,4 @@ def get_run_step_requests(run_id, step_number = None):
 
 
 def create_request(run_id,step_number, json=None):
-    requests.post('http://ips-db.apps.cf1.ons.statistics.gov.uk/RESPONSE/' + run_id + '/' + str(step_number), json=json)
+    requests.post(API_TARGET + r'/RESPONSE/' + run_id + '/' + str(step_number), json=json)

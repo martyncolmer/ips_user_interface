@@ -17,17 +17,17 @@ def manage_run(run_id):
     if not run:
         abort(404)
 
-    session['id'] = run['id']
-    session['run_name'] = run['name']
-    session['run_description'] = run['desc']
-    session['start_date'] = run['start_date']
-    session['end_date'] = run['end_date']
+    session['id'] = run['RUN_ID']
+    session['run_name'] = run['RUN_NAME']
+    session['run_description'] = run['RUN_DESC']
+    session['start_date'] = run['START_DATE']
+    session['end_date'] = run['END_DATE']
     current_run = run
 
-    current_run['start_date'] = current_run['start_date'][:2] + "/" + current_run['start_date'][2:4] + "/" + current_run['start_date'][4:]
-    current_run['end_date'] = current_run['end_date'][:2] + "/" + current_run['end_date'][2:4] + "/" + current_run['end_date'][4:]
-    current_run['status'] = run_statuses[current_run['status']]
-    current_run['type'] = run_types[current_run['type']]
+    current_run['START_DATE'] = current_run['START_DATE'][:2] + "/" + current_run['START_DATE'][2:4] + "/" + current_run['START_DATE'][4:]
+    current_run['END_DATE'] = current_run['END_DATE'][:2] + "/" + current_run['END_DATE'][2:4] + "/" + current_run['END_DATE'][4:]
+    current_run['RUN_STATUS'] = run_statuses[str(int(current_run['RUN_STATUS']))]
+    current_run['RUN_TYPE_ID'] = run_types[str(int(current_run['RUN_TYPE_ID']))]
 
     # If this is a post then validate if needed
     if request.method == 'POST' and form.validate():
@@ -59,27 +59,28 @@ def manage_run(run_id):
 
                 pass
             elif 'display_button' in request.form:
-                return redirect('/manage_run/weights/' + current_run['id'], code=302)
+                return redirect('/manage_run/weights/' + current_run['RUN_ID'], code=302)
             elif 'edit_button' in request.form:
-                return redirect('/new_run/new_run_1/' + current_run['id'], code=302)
+                return redirect('/new_run/new_run_1/' + current_run['RUN_ID'], code=302)
             elif 'export_button' in request.form:
-                return redirect('/reference_export/' + current_run['id'], code=302)
+                return redirect('/reference_export/' + current_run['RUN_ID'], code=302)
             elif 'manage_run_button' in request.form:
-                return redirect('/manage_run/' + current_run['id'], code=302)
+                return redirect('/manage_run/' + current_run['RUN_ID'], code=302)
 
-    run_status = app_methods.get_run_steps(run['id'])
+    run_status = app_methods.get_run_steps(run['RUN_ID'])
 
     run_step_requests = app_methods.get_run_step_requests(run_id)
 
     for step in run_status:
-        step['STATUS'] = status_values[step['STATUS']]
+        step['STEP_STATUS'] = status_values[str(int(step['STEP_STATUS']))]
+        step['STEP_NUMBER'] = str(int(step['STEP_NUMBER']))
 
     r_index = []
 
     for report in run_step_requests:
         for step in run_status:
-            if report['STEP_NUMBER'] == step['NUMBER']:
-                r_index.append(step['NUMBER'])
+            if report['STEP_NUMBER'] == step['STEP_NUMBER']:
+                r_index.append(step['STEP_NUMBER'])
 
     return render_template('/projects/legacy/john/social/manage_run_test.html',
                            form=form,
