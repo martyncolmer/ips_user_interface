@@ -41,19 +41,19 @@ def dashboard_view():
             # If the filer is -1 then no filter to apply otherwise filter using the run_status value
             if request.form['run_type_filter'] != '-1':
                 records = [x for x in records
-                           if (search_activity.lower() in x['id'].lower() or
-                               search_activity.lower() in x['name'].lower() or
-                               search_activity.lower() in x['desc'].lower() or
-                               search_activity.lower() in x['start_date'].lower() or
-                               search_activity.lower() in x['end_date'].lower()) and
-                           run_types[filter_value].lower() == x['type'].lower()]
+                           if (search_activity.lower() in x['RUN_ID'].lower() or
+                               search_activity.lower() in x['RUN_NAME'].lower() or
+                               search_activity.lower() in x['RUN_DESC'].lower() or
+                               search_activity.lower() in x['START_DATE'].lower() or
+                               search_activity.lower() in x['END_DATE'].lower()) and
+                           run_types[filter_value].lower() == x['RUN_TYPE_ID'].lower()]
             else:
                 records = [x for x in records
-                           if search_activity.lower() in x['id'].lower() or
-                           search_activity.lower() in x['name'].lower() or
-                           search_activity.lower() in x['desc'].lower() or
-                           search_activity.lower() in x['start_date'].lower() or
-                           search_activity.lower() in x['end_date'].lower()]
+                           if search_activity.lower() in x['RUN_ID'].lower() or
+                           search_activity.lower() in x['RUN_NAME'].lower() or
+                           search_activity.lower() in x['RUN_DESC'].lower() or
+                           search_activity.lower() in x['START_DATE'].lower() or
+                           search_activity.lower() in x['END_DATE'].lower()]
 
     current_app.logger.info('Rendering dashboard now...')
     return render_template('/projects/legacy/john/social/dashboard_test.html',

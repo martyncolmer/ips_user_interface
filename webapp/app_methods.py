@@ -19,18 +19,11 @@ def create_run(unique_id, run_name, run_description, start_date, end_date, run_t
 
     :return: NA
     """
-    response = requests.get(API_TARGET + r"/runs")
+    #response = requests.get(API_TARGET + r"/runs")
 
-    file = json.loads(response.content)
-    new_run = file[0]
+    new_run = {'RUN_ID': unique_id, 'RUN_NAME': run_name, 'RUN_DESC': run_description,
+               'START_DATE': start_date, 'END_DATE': end_date, 'RUN_TYPE_ID': run_type, 'RUN_STATUS': run_status}
 
-    new_run['RUN_ID'] = unique_id
-    new_run['RUN_NAME'] = run_name
-    new_run['RUN_DESC'] = run_description
-    new_run['START_DATE'] = start_date
-    new_run['END_DATE'] = end_date
-    new_run['RUN_TYPE_ID'] = run_type
-    new_run['RUN_STATUS'] = run_status
     requests.post(API_TARGET + r"/runs", json=new_run)
 
     create_run_steps(new_run['RUN_ID'])
@@ -149,14 +142,14 @@ def get_display_data_json(table_name, run_id=None, data_source=None):
 
 def get_process_variables(run_id):
 
-    response = requests.get('http://ips-db.apps.cf1.ons.statistics.gov.uk/process_variables/' + run_id)
+    response = requests.get(API_TARGET + r'/process_variables/' + run_id)
 
     return json.loads(response.content)
 
 
 def create_process_variables_set(run_id, name, user, start_date, end_date):
 
-    response = requests.get('http://ips-db.apps.cf1.ons.statistics.gov.uk/pv_sets')
+    response = requests.get(API_TARGET + r'/pv_sets')
     file = json.loads(response.content)
     new_pv_set = file[0]
 
@@ -166,16 +159,16 @@ def create_process_variables_set(run_id, name, user, start_date, end_date):
     new_pv_set['START_DATE'] = start_date
     new_pv_set['END_DATE'] = end_date
 
-    requests.post('http://ips-db.apps.cf1.ons.statistics.gov.uk/pv_sets', json=new_pv_set)
+    requests.post(API_TARGET + r'/pv_sets', json=new_pv_set)
 
 
 def create_process_variables(run_id, json):
-    requests.post('http://ips-db.apps.cf1.ons.statistics.gov.uk/process_variables/' + run_id, json=json)
+    requests.post(API_TARGET + r'/process_variables/' + run_id, json=json)
 
 
 def get_process_variable_sets():
 
-    response = requests.get('http://ips-db.apps.cf1.ons.statistics.gov.uk/pv_sets')
+    response = requests.get(API_TARGET + r'/pv_sets')
     return json.loads(response.content)
 
 
@@ -224,7 +217,7 @@ def get_export_data_table(run_id):
         :return: List of exports as JSON
         """
     # API gateway response is a list of JSON data containing the export data for all the runs
-    response = requests.get("http://ips-db.apps.cf1.ons.statistics.gov.uk/export_data_download/" + run_id)
+    response = requests.get(API_TARGET + r'/export_data_download/' + run_id)
 
     # Set boolean to assume records exist
     exports = 1
@@ -254,7 +247,7 @@ def export_clob(run_id, target_filename, sql_table):
         """
     # API gateway response to get a single export from run id, filename and the SQL table
     response = requests.get(
-        'http://ips-db.apps.cf1.ons.statistics.gov.uk/export_data_download' + '/' + run_id + '/' + target_filename + '/' + sql_table)
+        API_TARGET + r'/export_data_download' + r'/' + run_id + r'/' + target_filename + r'/' + sql_table)
 
     # Convert data to json
     table_data_json = json.loads(response.content)
@@ -275,7 +268,7 @@ def delete_export_data(run_id, target_filename, sql_table):
             """
     # Delete the  export with run id, filename and sql table
     response = requests.delete(
-        'http://ips-db.apps.cf1.ons.statistics.gov.uk/export_data_download/' + run_id + '/' + target_filename + '/' + sql_table)
+        API_TARGET + r'/export_data_download/' + run_id + '/' + target_filename + '/' + sql_table)
 
 
 def get_export_file(run_id, target_filename, sql_table):
@@ -285,7 +278,7 @@ def get_export_file(run_id, target_filename, sql_table):
             :return: Export as JSON
             """
     response = requests.get(
-        'http://ips-db.apps.cf1.ons.statistics.gov.uk/export_data_download' + '/' + run_id + '/' + target_filename + '/' + sql_table)
+        API_TARGET + r'/export_data_download' + r'/' + run_id + r'/' + target_filename + r'/' + sql_table)
     response = json.loads(response.content)
     return response
 
@@ -298,7 +291,7 @@ def create_export_data_download(run_id, sql_table, target_filename):
 
     # Get the export data by SQL table and run id
     try:
-        response = requests.get('http://ips-db.apps.cf1.ons.statistics.gov.uk/' + sql_table + '/' + run_id)
+        response = requests.get(API_TARGET + sql_table + r'/' + run_id)
         # Convert to JSON
         table_data_json = json.loads(response.content)
     except Exception as err:
@@ -352,7 +345,7 @@ def create_export_data_download(run_id, sql_table, target_filename):
     data = json.dumps(json_data)
 
     # Post data to API gateway
-    requests.post('http://ips-db.apps.cf1.ons.statistics.gov.uk/export_data_download', data=data)
+    requests.post(API_TARGET + r'/export_data_download', data=data)
 
     return True
 
@@ -365,14 +358,14 @@ def edit_process_variables(run_id, json_dictionary):
     :param reason_for_change:
     :return:
     """
-    response = requests.delete("http://ips-db.apps.cf1.ons.statistics.gov.uk/process_variables/" + run_id)
+    response = requests.delete(API_TARGET + r'/process_variables/' + run_id)
 
     create_process_variables(run_id, json_dictionary)
 
 
 def get_all_run_ids():
 
-    response = requests.get('http://ips-db.apps.cf1.ons.statistics.gov.uk/pv_sets')
+    response = requests.get(API_TARGET + r'/pv_sets')
     dictionary_of_pv_sets = json.loads(response.content)
 
     list_of_run_ids = []
@@ -385,7 +378,7 @@ def get_all_run_ids():
 
 def import_data(table_name, run_id, json_data):
 
-    route = 'http://ips-db.apps.cf1.ons.statistics.gov.uk/' + table_name + '/' + run_id
+    route = API_TARGET + r'/' + table_name + r'/' + run_id
     print(route)
     rv = requests.post(route, json=json_data)
     print(rv)
@@ -393,10 +386,10 @@ def import_data(table_name, run_id, json_data):
 
 def delete_data(table_name, run_id=None):
 
-    route = 'http://ips-db.apps.cf1.ons.statistics.gov.uk/' + table_name
+    route = API_TARGET + r'/' + table_name
 
     if run_id:
-        route = route + '/' + run_id
+        route = route + r'/' + run_id
 
     rv = requests.delete(route)
     print("DELETE - " + table_name)
@@ -439,7 +432,7 @@ def get_run_step_requests(run_id, step_number = None):
     address = API_TARGET + r'/RESPONSE/' + run_id
 
     if step_number:
-        address = address + '/' + step_number
+        address = address + r'/' + step_number
 
     response = requests.get(address)
 

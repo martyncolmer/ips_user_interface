@@ -159,7 +159,7 @@
 
                                         <div class="top_50_extra_space">
                                             {{ form.csrf_token }}
-                                            {% if current_run['status'] == '2'%}
+                                            {% if current_run['STEP_STATUS'] == '2'%}
                                                 {{ form.display_button(class="btn btn--primary", type="submit") }}
                                             {% else %}
                                                 {{ form.run_button(class="btn btn--primary", type="submit") }}

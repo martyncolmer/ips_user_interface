@@ -10,8 +10,8 @@ def manage_run(run_id):
     form = ManageRunForm()
 
     status_values = {'0': 'Ready', '1': 'Success', '2': 'Failed'}
-    run_types = {'0': 'Test', '1': 'Live', '2': 'Deleted'}
-    run_statuses = {'0': 'Ready', '1': 'Running', '2': 'Success', '3': 'Failed'}
+    run_types = {'0': 'Test', '1': 'Live', '2': 'Deleted', '3': 'SQL', '4': 'SQL', '5': 'SQL', '6': 'SQL'}
+    run_statuses = {'0': 'Ready', '1': 'In Progress', '2': 'Completed', '3': 'Failed'}
 
     run = app_methods.get_run(run_id)
     if not run:
@@ -24,8 +24,6 @@ def manage_run(run_id):
     session['end_date'] = run['END_DATE']
     current_run = run
 
-    current_run['START_DATE'] = current_run['START_DATE'][:2] + "/" + current_run['START_DATE'][2:4] + "/" + current_run['START_DATE'][4:]
-    current_run['END_DATE'] = current_run['END_DATE'][:2] + "/" + current_run['END_DATE'][2:4] + "/" + current_run['END_DATE'][4:]
     current_run['RUN_STATUS'] = run_statuses[str(int(current_run['RUN_STATUS']))]
     current_run['RUN_TYPE_ID'] = run_types[str(int(current_run['RUN_TYPE_ID']))]
 
@@ -94,11 +92,11 @@ def weights(run_id=None):
 
     run = app_methods.get_run(run_id)
     if run:
-        session['id'] = run['id']
-        session['run_name'] = run['name']
-        session['run_description'] = run['desc']
-        session['start_date'] = run['start_date']
-        session['end_date'] = run['end_date']
+        session['id'] = run['RUN_ID']
+        session['run_name'] = run['RUN_NAME']
+        session['run_description'] = run['RUN_DESC']
+        session['start_date'] = run['START_DATE']
+        session['end_date'] = run['END_DATE']
         current_run = run
 
         if request.method == 'POST':

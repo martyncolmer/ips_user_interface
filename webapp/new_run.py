@@ -125,15 +125,15 @@ def new_run_2(run_id=None):
 
     if run_id:
         run = app_methods.get_run(run_id)
-        last_entry['s_day'] = run['START_DATE'][:2]
-        last_entry['s_month'] = run['START_DATE'][2:4]
-        last_entry['s_year'] = run['START_DATE'][4:8]
-        last_entry['e_day'] = run['END_DATE'][:2]
-        last_entry['e_month'] = run['END_DATE'][2:4]
-        last_entry['e_year'] = run['END_DATE'][4:8]
+        last_entry['s_day'] = run['START_DATE'][8:10]
+        last_entry['s_month'] = run['START_DATE'][5:7]
+        last_entry['s_year'] = run['START_DATE'][:4]
+        last_entry['e_day'] = run['END_DATE'][8:10]
+        last_entry['e_month'] = run['END_DATE'][5:7]
+        last_entry['e_year'] = run['END_DATE'][:4]
 
-        form.s_month.default = run['START_DATE'][2:4]
-        form.e_month.default = run['END_DATE'][2:4]
+        form.s_month.default = run['START_DATE'][5:7]
+        form.e_month.default = run['END_DATE'][5:7]
         form.process()
 
     return render_template('/projects/legacy/john/social/new_run_2_test.html',
@@ -289,10 +289,16 @@ def new_run_5():
 
         # Iterate over list of lists and create a dictionary for each
         # Append each dictionary to an array
+
+        # Process variable id tracking variable
+        pid = 0
+
         for array in data_array:
-            data = {'PV_NAME': array[0],
-                    'PV_REASON': array[1],
-                    'PV_CONTENT': array[2],
+            pid += 1
+            data = {'PROCESS_VARIABLE_ID': pid,
+                    'PV_NAME': array[0],
+                    'PV_DESC': array[1],
+                    'PV_DEF': array[2],
                     }
             data_dictionary_array.append(data)
 
@@ -311,13 +317,16 @@ def new_run_5():
         # Creates a new pv set if run_id doesn't already exist, otherwise delete existing rows and repopulate
         if run_id not in app_methods.get_all_run_ids():
             current_app.logger.info("New run_id given, creating new process variable set...")
+
             # Creates a new set of process variables, then fill the empty set with the edited javascript data
             app_methods.create_process_variables_set(run_id, run_name, user, start_date, end_date)
+
             # Fill newly created pv set with new process variables (for new runs)
             app_methods.create_process_variables(run_id, data_dictionary_array)
             current_app.logger.info("New process variable set created.")
         else:
             current_app.logger.info("Existing run_id given, updating records...")
+
             # Edit existing process variables (for edit run)
             app_methods.edit_process_variables(run_id, data_dictionary_array)
             current_app.logger.info("Records updated successfully.")
