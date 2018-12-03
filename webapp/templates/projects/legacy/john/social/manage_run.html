@@ -148,12 +148,12 @@
 									<td width="5%" class="table--cell field__item2">
 										&nbsp;&nbsp;&nbsp;<input class="input--checkbox1" name="step_checkbox" type="checkbox">&nbsp;&nbsp;&nbsp;
 									</td>
-									<td width="70%" class="table--cell">&nbsp; {{step['NUMBER']}}. {{ step['NAME'] }}</td>
+									<td width="70%" class="table--cell">&nbsp; {{step['STEP_NUMBER']}}. {{ step['NAME'] }}</td>
 
 									<td width="20%" class="table--cell">
 										<!--If the step has an associated report render the status with a button-->
-										{% if step['NUMBER'] in (report_index) and step['STATUS'] in ('Success', 'Failed') %}
-											<button type="button" data-toggle="modal" data-target="#myModal{{step['NUMBER']}}">
+										{% if step['STEP_NUMBER'] in (report_index) and step['STATUS'] in ('Success', 'Failed') %}
+											<button type="button" data-toggle="modal" data-target="#myModal{{step['STEP_NUMBER']}}">
 												{% if step['STATUS'] == 'Ready' %}
 													<em class="badge-status badge--no-started">
 													&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ step['STATUS'] }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -222,7 +222,7 @@
 
 {% for step in run_status %}
 	<!-- The Modal Object defined by the step number-->
-	<div id="myModal{{step['NUMBER']}}" class="modal">
+	<div id="myModal{{step['STEP_NUMBER']}}" class="modal">
 		<!-- Modal content -->
 		<div class="modal-content">
 			<span class="close" data-dismiss="modal">&times;</span>
@@ -238,9 +238,9 @@
 			<label>Report History:</label>
 			<br>
 			<br>
-			{% if step['NUMBER'] in (report_index) %}
+			{% if step['STEP_NUMBER'] in (report_index) %}
 				{% for rec in reports %}
-					{% if rec['STEP_NUMBER']|int == step['NUMBER']|int %}
+					{% if rec['STEP_NUMBER']|int == step['STEP_NUMBER']|int %}
 						{% if rec['RESPONSE_CODE']|int == 1 %}
 							<label>Success</label>
 							<textarea data-maxlength="50000" class="modal-input" id="content_input" readonly="readonly">{{rec['ERROR_MSG']}}</textarea>

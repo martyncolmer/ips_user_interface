@@ -378,10 +378,7 @@ def get_all_run_ids():
 
 def import_data(table_name, run_id, json_data):
 
-    route = API_TARGET + r'/' + table_name + r'/' + run_id
-    print(route)
-    rv = requests.post(route, json=json_data)
-    print(rv)
+    requests.post(API_TARGET + r'/' + table_name + r'/' + run_id, json=json_data)
 
 
 def delete_data(table_name, run_id=None):
@@ -398,7 +395,7 @@ def delete_data(table_name, run_id=None):
 
 def survey_data_import(table_name, import_run_id, import_data_file):
     # Import  data
-    stream = io.StringIO(import_data_file.stream.read().decode("UTF8"), newline=None)
+    stream = io.StringIO(import_data_file.stream.read().decode("ANSI"), newline=None)
     import_csv = csv.DictReader(stream)
     import_csv.fieldnames = [name.upper() for name in import_csv.fieldnames]
     print("Field Names:")
@@ -428,6 +425,7 @@ def get_run_step_requests(run_id, step_number = None):
     # print(result)
     #
     # return result
+
 
     address = API_TARGET + r'/RESPONSE/' + run_id
 

@@ -169,38 +169,42 @@ def new_run_3(run_id=None):
         # External
         current_app.logger.debug("Clearing down table records...")
         # Clear down table records associated with the current run id
-        app_methods.delete_data('SHIFT_DATA', session['id'])
-        app_methods.delete_data('NON_RESPONSE_DATA', session['id'])
-        app_methods.delete_data('UNSAMPLED_OOH_DATA', session['id'])
-        app_methods.delete_data('TRAFFIC_DATA', session['id'])
+        # app_methods.delete_data('SHIFT_DATA', session['id'])
+        # app_methods.delete_data('NON_RESPONSE_DATA', session['id'])
+        # app_methods.delete_data('UNSAMPLED_OOH_DATA', session['id'])
+        # app_methods.delete_data('TRAFFIC_DATA', session['id'])
 
         current_app.logger.debug("Finished clearing down table records.")
 
         current_app.logger.info("Importing data...")
 
-        # Import shift data
-        shift_data = form.shift_file.data
-        app_methods.survey_data_import('SHIFT_DATA', session['id'], shift_data)
+        # Import survey data
+        survey_data = form.survey_file.data
+        app_methods.survey_data_import('SURVEY_SUBSAMPLE', session['id'], survey_data)
 
-        # Import non_response data
-        non_response_data = form.non_response_file.data
-        app_methods.survey_data_import('NON_RESPONSE_DATA', session['id'], non_response_data)
-
-        # Import unsampled data
-        unsampled_data = form.unsampled_file.data
-        app_methods.survey_data_import('UNSAMPLED_OOH_DATA', session['id'], unsampled_data)
-
-        # Import tunnel data
-        tunnel_data = form.tunnel_file.data
-        app_methods.survey_data_import('TRAFFIC_DATA', session['id'], tunnel_data)
-
-        # Import sea data
-        sea_data = form.sea_file.data
-        app_methods.survey_data_import('TRAFFIC_DATA', session['id'], sea_data)
-
-        # Import air data
-        air_data = form.air_file.data
-        app_methods.survey_data_import('TRAFFIC_DATA', session['id'], air_data)
+        # # Import shift data
+        # shift_data = form.shift_file.data
+        # app_methods.survey_data_import('SHIFT_DATA', session['id'], shift_data)
+        #
+        # # Import non_response data
+        # non_response_data = form.non_response_file.data
+        # app_methods.survey_data_import('NON_RESPONSE_DATA', session['id'], non_response_data)
+        #
+        # # Import unsampled data
+        # unsampled_data = form.unsampled_file.data
+        # app_methods.survey_data_import('UNSAMPLED_OOH_DATA', session['id'], unsampled_data)
+        #
+        # # Import tunnel data
+        # tunnel_data = form.tunnel_file.data
+        # app_methods.survey_data_import('TRAFFIC_DATA', session['id'], tunnel_data)
+        #
+        # # Import sea data
+        # sea_data = form.sea_file.data
+        # app_methods.survey_data_import('TRAFFIC_DATA', session['id'], sea_data)
+        #
+        # # Import air data
+        # air_data = form.air_file.data
+        # app_methods.survey_data_import('TRAFFIC_DATA', session['id'], air_data)
 
         if run_id:
             current_app.logger.debug("Run_id given...")

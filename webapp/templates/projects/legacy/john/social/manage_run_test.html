@@ -112,7 +112,7 @@
                                                     <td width="20%" class="table--cell">
                                                         <!--If the step has an associated report render the status with a button-->
                                                         {% if step['STEP_NUMBER'] in (report_index) and step['STEP_STATUS'] in ('Success', 'Failed') %}
-                                                            <button type="button" data-toggle="modal" data-target="#myModal{{step['NUMBER']}}">
+                                                            <button type="button" data-toggle="modal" data-target="#myModal{{step['STEP_NUMBER']}}">
                                                                 {% if step['STEP_STATUS'] == 'Ready' %}
                                                                     <em class="badge-status badge--no-started">
                                                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ step['STEP_STATUS'] }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
