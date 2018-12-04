@@ -66,6 +66,8 @@ def create_app(test_config=None):
 
     app.logger.addHandler(rabbit_mq_handler)
 
+    app.logger.disabled = True
+
     if test_config:
             # Override default Settings with test config if passed in
             app.config.from_mapping(test_config)

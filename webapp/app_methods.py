@@ -5,6 +5,7 @@ import os
 import json
 import pandas
 import io
+import datetime
 from flask import session, render_template
 
 APP_DIR = os.path.dirname(__file__)
@@ -217,7 +218,7 @@ def get_export_data_table(run_id):
         :return: List of exports as JSON
         """
     # API gateway response is a list of JSON data containing the export data for all the runs
-    response = requests.get(API_TARGET + r'/export_data_download/' + run_id)
+    response = requests.get(API_TARGET + r'/EXPORT_DATA_DOWNLOAD/' + run_id)
 
     # Set boolean to assume records exist
     exports = 1
@@ -247,7 +248,7 @@ def export_clob(run_id, target_filename, sql_table):
         """
     # API gateway response to get a single export from run id, filename and the SQL table
     response = requests.get(
-        API_TARGET + r'/export_data_download' + r'/' + run_id + r'/' + target_filename + r'/' + sql_table)
+        API_TARGET + r'/EXPORT_DATA_DOWNLOAD' + r'/' + run_id + r'/' + target_filename + r'/' + sql_table)
 
     # Convert data to json
     table_data_json = json.loads(response.content)
@@ -278,7 +279,7 @@ def get_export_file(run_id, target_filename, sql_table):
             :return: Export as JSON
             """
     response = requests.get(
-        API_TARGET + r'/export_data_download' + r'/' + run_id + r'/' + target_filename + r'/' + sql_table)
+        API_TARGET + r'/EXPORT_DATA_DOWNLOAD' + r'/' + run_id + r'/' + target_filename + r'/' + sql_table)
     response = json.loads(response.content)
     return response
 
@@ -291,13 +292,13 @@ def create_export_data_download(run_id, sql_table, target_filename):
 
     # Get the export data by SQL table and run id
     try:
-        response = requests.get(API_TARGET + sql_table + r'/' + run_id)
+        response = requests.get(API_TARGET + r'/' + sql_table + r'/' + run_id)
         # Convert to JSON
         table_data_json = json.loads(response.content)
     except Exception as err:
         return False
 
-    # THERE WILL BE A MUCH CLEANER WAY TO DO THIS
+    # TODO: THERE WILL BE A MUCH CLEANER WAY TO DO THIS
 
     # Lists to append data to and then combine
     columns = []
@@ -326,7 +327,7 @@ def create_export_data_download(run_id, sql_table, target_filename):
     column_counter = 0
     while column_counter <= len(values):
         data_slice = values[:column_length]
-        values_csv_data += ','.join(data_slice) + '\n'
+        values_csv_data += ','.join(map(str, data_slice)) + '\n'
         # Delete slice so we can get the next
         del values[:column_length]
         column_counter += 1
@@ -335,7 +336,7 @@ def create_export_data_download(run_id, sql_table, target_filename):
     data = columns_csv_data + values_csv_data
 
     # Create dict with data to post
-    json_data = {'DATE_CREATED': "Insert Date Here",
+    json_data = {'DATE_CREATED': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') ,
                  'DOWNLOADABLE_DATA': data,
                  'FILENAME': target_filename,
                  'RUN_ID': run_id,
@@ -345,7 +346,7 @@ def create_export_data_download(run_id, sql_table, target_filename):
     data = json.dumps(json_data)
 
     # Post data to API gateway
-    requests.post(API_TARGET + r'/export_data_download', data=data)
+    requests.post(API_TARGET + r'/EXPORT_DATA_DOWNLOAD', data=data)
 
     return True
 
@@ -471,6 +472,5 @@ def get_run_step_requests(run_id, step_number = None):
 #         return conn
 
 
-
 def create_request(run_id,step_number, json=None):
-    requests.post(API_TARGET + r'/RESPONSE/' + run_id + '/' + str(step_number), json=json)
+    requests.post(API_TARGET + r'/RESPONSE', json=json)

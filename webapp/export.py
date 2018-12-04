@@ -21,16 +21,14 @@ def reference_export(run_id, new_export="0", msg="", data=""):
     run = get_run(run_id)
 
     if run:
-        session['id'] = run['id']
-        session['run_name'] = run['name']
-        session['run_description'] = run['desc']
-        session['start_date'] = run['start_date']
-        session['end_date'] = run['end_date']
+        session['id'] = run['RUN_ID']
+        session['run_name'] = run['RUN_NAME']
+        session['run_description'] = run['RUN_DESC']
+        session['start_date'] = run['START_DATE']
+        session['end_date'] = run['END_DATE']
         current_run = run
 
-        current_run['start_date'] = current_run['start_date'][:2] + "/" + current_run['start_date'][2:4] + "/" + current_run['start_date'][4:]
-        current_run['end_date'] = current_run['end_date'][:2] + "/" + current_run['end_date'][2:4] + "/" + current_run['end_date'][4:]
-        current_run['status'] = run_statuses[current_run['status']]
+        current_run['RUN_STATUS'] = run_statuses[str(int(current_run['RUN_STATUS']))]
 
         # Retrieve table data
         try:
@@ -58,11 +56,11 @@ def export_data(run_id):
         form = ExportSelectionForm()
         run = get_run(run_id)
 
-        session['current_run_id'] = run['id']
-        session['run_name'] = run['name']
-        session['run_description'] = run['desc']
-        session['start_date'] = run['start_date']
-        session['end_date'] = run['end_date']
+        session['id'] = run['RUN_ID']
+        session['run_name'] = run['RUN_NAME']
+        session['run_description'] = run['RUN_DESC']
+        session['start_date'] = run['START_DATE']
+        session['end_date'] = run['END_DATE']
 
         current_run = run
 
@@ -80,7 +78,7 @@ def export_data(run_id):
 
         elif request.method == 'POST':
             if 'cancel_button' in request.form:
-                return redirect('/reference_export/' + current_run['id'], code=302)
+                return redirect('/reference_export/' + current_run['RUN_ID'], code=302)
 
         return render_template('/projects/legacy/john/social/export_data_test.html', form=form, current_run=current_run,
                                data="1")

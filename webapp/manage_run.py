@@ -55,7 +55,6 @@ def manage_run(run_id):
                 app_methods.edit_run_step_status(run_id,'1','2')
                 app_methods.edit_run_step_status(run_id,'2','3')
 
-                pass
             elif 'display_button' in request.form:
                 return redirect('/manage_run/weights/' + current_run['RUN_ID'], code=302)
             elif 'edit_button' in request.form:
@@ -77,7 +76,7 @@ def manage_run(run_id):
 
     for report in run_step_requests:
         for step in run_status:
-            if report['STEP_NUMBER'] == step['STEP_NUMBER']:
+            if report['STEP_NUMBER'] == int(step['STEP_NUMBER']):
                 r_index.append(step['STEP_NUMBER'])
 
     return render_template('/projects/legacy/john/social/manage_run_test.html',

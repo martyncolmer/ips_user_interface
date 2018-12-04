@@ -103,9 +103,9 @@
                                     {{ form.csrf_token }}
                                     {{ form.run_name.label(class="label venus ", for="text-input")}}
                                     {% if form.run_name.default %}
-                                        {{ form.run_name(class="input input--text", type="text", id="text-input", placeholder="Enter run name", value=form.run_name.default)}}
+                                        {{ form.run_name(class="input input--text", type="text", id="text-input", placeholder="Enter run name", maxlength="30", value=form.run_name.default)}}
                                     {% else %}
-                                        {{ form.run_name(class="input input--text", type="text", id="text-input", placeholder="Enter run name")}}
+                                        {{ form.run_name(class="input input--text", type="text", id="text-input", placeholder="Enter run name", maxlength="30")}}
                                     {% endif %}
                                     {% if form.run_name.errors %}
                                     <ul>
