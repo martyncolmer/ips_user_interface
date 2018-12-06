@@ -474,3 +474,7 @@ def get_run_step_requests(run_id, step_number = None):
 
 def create_request(run_id,step_number, json=None):
     requests.post(API_TARGET + r'/RESPONSE', json=json)
+
+
+def start_run(run_id):
+    requests.post(API_TARGET + r'/manage_run/start_run/' + str(run_id))

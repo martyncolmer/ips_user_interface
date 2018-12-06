@@ -9,7 +9,7 @@ bp = Blueprint('manage_run', __name__, url_prefix='/manage_run', static_folder='
 def manage_run(run_id):
     form = ManageRunForm()
 
-    status_values = {'0': 'Ready', '1': 'Success', '2': 'Failed'}
+    status_values = {'0': 'Ready', '1': 'Success', '2': 'Failed', '3': 'Running'}
     run_types = {'0': 'Test', '1': 'Live', '2': 'Deleted', '3': 'SQL', '4': 'SQL', '5': 'SQL', '6': 'SQL'}
     run_statuses = {'0': 'Ready', '1': 'In Progress', '2': 'Completed', '3': 'Failed'}
 
@@ -33,27 +33,29 @@ def manage_run(run_id):
             # If the run button is selected run the calculation steps
             if 'run_button' in request.form:
 
-                json = {'RUN_ID': run_id,
-                        'STEP_NUMBER': 2,
-                        'RESPONSE_CODE': '2',
-                        'ERROR_MSG': '',
-                        'STACK_TRACE': '',
-                        'WARNINGS': 'This is gonna break if you dont fix it. Also other stuff..',
-                        }
-                app_methods.create_request(run_id, 2, json)
+                app_methods.start_run(run_id)
 
-                json = {'RUN_ID': run_id,
-                        'STEP_NUMBER': 3,
-                        'RESPONSE_CODE': '3',
-                        'ERROR_MSG': 'ERROR! This has broken on this step because you are bad.',
-                        'STACK_TRACE': '',
-                        'WARNINGS': '',
-                        }
-                app_methods.create_request(run_id, 3, json)
-
-                app_methods.edit_run_step_status(run_id, '1', '1')
-                app_methods.edit_run_step_status(run_id,'1','2')
-                app_methods.edit_run_step_status(run_id,'2','3')
+                # json = {'RUN_ID': run_id,
+                #         'STEP_NUMBER': 2,
+                #         'RESPONSE_CODE': '2',
+                #         'ERROR_MSG': '',
+                #         'STACK_TRACE': '',
+                #         'WARNINGS': 'This is gonna break if you dont fix it. Also other stuff..',
+                #         }
+                # app_methods.create_request(run_id, 2, json)
+                #
+                # json = {'RUN_ID': run_id,
+                #         'STEP_NUMBER': 3,
+                #         'RESPONSE_CODE': '3',
+                #         'ERROR_MSG': 'ERROR! This has broken on this step because you are bad.',
+                #         'STACK_TRACE': '',
+                #         'WARNINGS': '',
+                #         }
+                # app_methods.create_request(run_id, 3, json)
+                #
+                # app_methods.edit_run_step_status(run_id, '1', '1')
+                # app_methods.edit_run_step_status(run_id,'1','2')
+                # app_methods.edit_run_step_status(run_id,'2','3')
 
             elif 'display_button' in request.form:
                 return redirect('/manage_run/weights/' + current_run['RUN_ID'], code=302)

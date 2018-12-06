@@ -136,6 +136,9 @@
                                                             {% elif step['STEP_STATUS'] == 'Failed' %}
                                                                 <em class="badge-status" b>
                                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ step['STEP_STATUS'] }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                            {% elif step['STEP_STATUS'] == 'Running' %}
+                                                                    <em class="badge-status badge--pending">
+                                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ step['STEP_STATUS'] }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                             {% endif %}
                                                             </em></em></em>
                                                         {% endif %}
