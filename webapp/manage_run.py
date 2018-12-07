@@ -34,28 +34,11 @@ def manage_run(run_id):
             if 'run_button' in request.form:
 
                 app_methods.start_run(run_id)
+                run_status = app_methods.get_run_steps(run['RUN_ID'])
 
-                # json = {'RUN_ID': run_id,
-                #         'STEP_NUMBER': 2,
-                #         'RESPONSE_CODE': '2',
-                #         'ERROR_MSG': '',
-                #         'STACK_TRACE': '',
-                #         'WARNINGS': 'This is gonna break if you dont fix it. Also other stuff..',
-                #         }
-                # app_methods.create_request(run_id, 2, json)
-                #
-                # json = {'RUN_ID': run_id,
-                #         'STEP_NUMBER': 3,
-                #         'RESPONSE_CODE': '3',
-                #         'ERROR_MSG': 'ERROR! This has broken on this step because you are bad.',
-                #         'STACK_TRACE': '',
-                #         'WARNINGS': '',
-                #         }
-                # app_methods.create_request(run_id, 3, json)
-                #
-                # app_methods.edit_run_step_status(run_id, '1', '1')
-                # app_methods.edit_run_step_status(run_id,'1','2')
-                # app_methods.edit_run_step_status(run_id,'2','3')
+                for step in run_status:
+                    step['STEP_STATUS'] = status_values[str(int(step['STEP_STATUS']))]
+                    step['STEP_NUMBER'] = str(int(step['STEP_NUMBER']))
 
             elif 'display_button' in request.form:
                 return redirect('/manage_run/weights/' + current_run['RUN_ID'], code=302)
@@ -107,7 +90,7 @@ def weights(run_id=None):
                 session['dw_table'] = table_name
                 session['dw_title'] = table_title
                 session['dw_source'] = data_source
-                return redirect(url_for('manage_run.weights_2', table=table_name, id=run['id'], source=data_source, table_title=table_title), code=302)
+                return redirect(url_for('manage_run.weights_2', table=table_name, id=run['RUN_ID'], source=data_source, table_title=table_title), code=302)
         return render_template('/projects/legacy/john/social/weights_test.html',
                                form=form,
                                current_run=current_run)

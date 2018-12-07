@@ -68,6 +68,7 @@
                                         {% if current_run['RUN_STATUS'] == 'Ready' %}
                                             <em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{current_run['RUN_STATUS']}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>
                                         {% elif current_run['RUN_STATUS'] == 'In Progress' %}
+                                            <meta http-equiv="refresh" content="2">
                                             <em class="badge-status badge--pending">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{current_run['RUN_STATUS']}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>
                                         {% elif current_run['RUN_STATUS'] == 'Completed' %}
                                             <em class="badge-status badge--completed">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{current_run['RUN_STATUS']}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>
@@ -162,7 +163,7 @@
 
                                         <div class="top_50_extra_space">
                                             {{ form.csrf_token }}
-                                            {% if current_run['STEP_STATUS'] == '2'%}
+                                            {% if current_run['RUN_STATUS'] == 'Completed'%}
                                                 {{ form.display_button(class="btn btn--primary", type="submit") }}
                                             {% else %}
                                                 {{ form.run_button(class="btn btn--primary", type="submit") }}

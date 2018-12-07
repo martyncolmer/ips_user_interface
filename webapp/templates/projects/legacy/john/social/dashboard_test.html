@@ -110,13 +110,13 @@
 												<td width="9%" class="table--cell">&nbsp;{{record['START_DATE']}}&nbsp;</td>
 												<td width="9%" class="table--cell">&nbsp;{{record['END_DATE']}}&nbsp;</td>
 												<td width="6%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;{{record['RUN_TYPE_ID']}}&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
-												{% if record['status'] == 'Ready' %}
+												{% if record['RUN_STATUS'] == 'Ready' %}
 												<td width="9%" class="table--cell"><em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;{{record['RUN_STATUS']}}&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
-												{% elif record['status'] == 'In Progress' %}
+												{% elif record['RUN_STATUS'] == 'In Progress' %}
 												<td width="9%" class="table--cell"><em class="badge-status badge--pending">&nbsp;&nbsp;&nbsp;{{record['RUN_STATUS']}}&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
-												{% elif record['status'] == 'Completed' %}
+												{% elif record['RUN_STATUS'] == 'Completed' %}
 												<td width="9%" class="table--cell"><em class="badge-status badge--completed">&nbsp;&nbsp;&nbsp;{{record['RUN_STATUS']}}&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
-												{% elif record['status'] == 'Failed' %}
+												{% elif record['RUN_STATUS'] == 'Failed' %}
 												<td width="9%" class="table--cell"><em class="badge-status badge--pending">&nbsp;&nbsp;&nbsp;{{record['RUN_STATUS']}}&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
 												{% endif %}
 											</tr>

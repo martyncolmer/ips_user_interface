@@ -26,8 +26,6 @@ def dashboard_view():
 
     # Reformat values to be displayed on the UI
     for record in records:
-        record['START_DATE'] = str(record['START_DATE'])[:2] + "-" + str(record['START_DATE'])[2:4] + "-" + str(record['START_DATE'])[4:]
-        record['END_DATE'] = str(record['END_DATE'])[:2] + "-" + str(record['END_DATE'])[2:4] + "-" + str(record['END_DATE'])[4:]
         record['RUN_STATUS'] = run_statuses[str(int(record['RUN_STATUS']))]
         record['RUN_TYPE_ID'] = run_types[str(int(record['RUN_TYPE_ID']))]
 
