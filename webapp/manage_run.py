@@ -40,6 +40,8 @@ def manage_run(run_id):
                     step['STEP_STATUS'] = status_values[str(int(step['STEP_STATUS']))]
                     step['STEP_NUMBER'] = str(int(step['STEP_NUMBER']))
 
+                return redirect(url_for('dashboard.dashboard_view'), code=302)
+
             elif 'display_button' in request.form:
                 return redirect('/manage_run/weights/' + current_run['RUN_ID'], code=302)
             elif 'edit_button' in request.form:
@@ -85,7 +87,7 @@ def weights(run_id=None):
 
         if request.method == 'POST':
             if form.validate():
-                #print(request.values)
+                # print(request.values)
                 table_name, table_title, data_source = request.values['data_selection'].split('|')
                 session['dw_table'] = table_name
                 session['dw_title'] = table_title
@@ -98,8 +100,8 @@ def weights(run_id=None):
         abort(404)
 
 
-@bp.route('/weights_2/<id>', methods=['GET','POST'])
-@bp.route('/weights_2/<id>/<table>/<table_title>/<source>', methods=['GET','POST'])
+@bp.route('/weights_2/<id>', methods=['GET', 'POST'])
+@bp.route('/weights_2/<id>/<table>/<table_title>/<source>', methods=['GET', 'POST'])
 def weights_2(id, table=None, table_title=None, source=None):
 
     print(request)
