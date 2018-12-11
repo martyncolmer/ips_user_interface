@@ -2,6 +2,7 @@ from flask import request, render_template, Blueprint, session, redirect, url_fo
 from .forms import CreateRunForm, DateSelectionForm, LoadDataForm
 from . import app_methods
 import uuid
+import os
 import json
 import csv
 import io
@@ -100,7 +101,7 @@ def new_run_2(run_id=None):
 
                     return redirect('/new_run/new_run_3/' + run_id, code=302)
                 else:
-                    app_methods.create_run(session['id'], session['run_name'], session['run_description'],
+                    app_methods.create_run(session['id'], session['run_name'], session['run_description'], os.getlogin(),
                                            session['start_date'], session['end_date'])
                     current_app.logger.info("New run created from session variables. Redirecting to new_run_3...")
 
@@ -306,7 +307,7 @@ def new_run_5():
                     }
             data_dictionary_array.append(data)
 
-        user = 'test_user_placeholder'
+        user = os.getlogin()
 
         current_app.logger.info("Getting session values...")
 

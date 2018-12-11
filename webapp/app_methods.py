@@ -14,7 +14,7 @@ API_TARGET = r'http://10.28.56.87:5000'        # This is my VDI instance IP.
 #API_TARGET = r'http://localhost:5000'
 
 
-def create_run(unique_id, run_name, run_description, start_date, end_date, run_type='0', run_status='0'):
+def create_run(unique_id, run_name, run_description, user_id, start_date, end_date, run_type='0', run_status='0'):
     """
     Purpose: Creates a new run and adds it to the current list of runs (.csv currently but will be to database).
 
@@ -22,7 +22,7 @@ def create_run(unique_id, run_name, run_description, start_date, end_date, run_t
     """
     #response = requests.get(API_TARGET + r"/runs")
 
-    new_run = {'RUN_ID': unique_id, 'RUN_NAME': run_name, 'RUN_DESC': run_description,
+    new_run = {'RUN_ID': unique_id, 'RUN_NAME': run_name, 'RUN_DESC': run_description, 'USER_ID': user_id,
                'START_DATE': start_date, 'END_DATE': end_date, 'RUN_TYPE_ID': run_type, 'RUN_STATUS': run_status}
 
     requests.post(API_TARGET + r"/runs", json=new_run)
