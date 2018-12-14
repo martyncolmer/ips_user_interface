@@ -29,11 +29,14 @@ def manage_run(run_id):
 
     # If this is a post then validate if needed
     if request.method == 'POST' and form.validate():
-            print(request.form)
             # If the run button is selected run the calculation steps
             if 'run_button' in request.form:
 
-                app_methods.start_run(run_id)
+                # Get list of checked boxes from HTML to determine which steps to run
+                step_boxes_checked = request.form.getlist("step_checkbox")
+
+                app_methods.start_run(run_id, step_boxes_checked)
+
                 run_status = app_methods.get_run_steps(run['RUN_ID'])
 
                 for step in run_status:
@@ -115,7 +118,7 @@ def weights_2(id, table=None, table_title=None, source=None):
                                    table=dataframe,
                                    run_id=id)
         else:
-            return redirect(url_for('manage_run.weights', run_id=id), code=302)
+            return redirect(url_for('export.export_data', run_id=id), code=302)
     else:
         abort(404)
 

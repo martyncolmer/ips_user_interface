@@ -94,9 +94,9 @@ def new_run_2(run_id=None):
                     run = app_methods.get_run(run_id)
                     run['start_date'] = start_date
                     run['end_date'] = end_date
-                    app_methods.edit_run(run_id=run_id, run_name=run['RUN_NAME'], run_description=run['RUN_DESC']
-                                         , start_date=run['START_DATE'], end_date=run['END_DATE']
-                                         , run_type=run['RUN_TYPE_ID'], run_status='0')
+                    app_methods.edit_run(run_id=run_id, run_name=run['RUN_NAME'], run_description=run['RUN_DESC'],
+                                         start_date=run['START_DATE'], end_date=run['END_DATE'],
+                                         run_type=run['RUN_TYPE_ID'], run_status='0')
                     current_app.logger.info("Run edited with start and end date. Redirecting to new_run_3...")
 
                     return redirect('/new_run/new_run_3/' + run_id, code=302)
@@ -165,7 +165,7 @@ def new_run_3(run_id=None):
         # print(survey_json)
         # app_methods.import_data('SHIFT_DATA', session['id'], survey_json)
 
-        #TODO: Duplicates causing issues with imports (Returning 500)... need to look into dealing with this. @TM
+        # TODO: Duplicates causing issues with imports (Returning 500)... need to look into dealing with this. @TM
 
         # External
         current_app.logger.debug("Clearing down table records...")

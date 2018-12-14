@@ -336,7 +336,7 @@ def create_export_data_download(run_id, sql_table, target_filename):
     data = columns_csv_data + values_csv_data
 
     # Create dict with data to post
-    json_data = {'DATE_CREATED': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') ,
+    json_data = {'DATE_CREATED': datetime.datetime.now().strftime('%Y-%d-%m %H:%M:%S'),
                  'DOWNLOADABLE_DATA': data,
                  'FILENAME': target_filename,
                  'RUN_ID': run_id,
@@ -476,5 +476,7 @@ def create_request(run_id,step_number, json=None):
     requests.post(API_TARGET + r'/RESPONSE', json=json)
 
 
-def start_run(run_id):
-    requests.post(API_TARGET + r'/manage_run/start_run/' + str(run_id))
+# Steps to run comes through as a string list containing the step numbers to run
+def start_run(run_id, steps_to_run):
+    steps_json = json.dumps(steps_to_run)
+    requests.post(API_TARGET + r'/manage_run/start_run/' + str(run_id), json=steps_json)
