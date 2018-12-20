@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 <!doctype html>
-<html lang="en-gb" dir="ltr" class="no-js"> 
+<html lang="en-gb" dir="ltr" class="no-js">
 	<head>
 		<!--Styles are imported from the parent template.-->
 		{% block styles %}
@@ -115,7 +115,7 @@
 												{% elif record['RUN_STATUS'] == 'Completed' %}
 												<td width="9%" class="table--cell"><em class="badge-status badge--completed">&nbsp;&nbsp;&nbsp;{{record['RUN_STATUS']}}&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
 												{% elif record['RUN_STATUS'] == 'Failed' %}
-												<td width="9%" class="table--cell"><em class="badge-status badge--pending">&nbsp;&nbsp;&nbsp;{{record['RUN_STATUS']}}&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
+												<td width="9%" class="table--cell"><em class="badge-status badge--red">&nbsp;&nbsp;&nbsp;{{record['RUN_STATUS']}}&nbsp;&nbsp;&nbsp;</em>&nbsp;</td>
 												{% endif %}
 											</tr>
 											{% endfor %}

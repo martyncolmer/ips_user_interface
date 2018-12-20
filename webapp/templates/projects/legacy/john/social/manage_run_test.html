@@ -68,12 +68,12 @@
                                         {% if current_run['RUN_STATUS'] == 'Ready' %}
                                             <em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{current_run['RUN_STATUS']}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>
                                         {% elif current_run['RUN_STATUS'] == 'In Progress' %}
-                                            <meta http-equiv="refresh" content="2">
+                                            <meta http-equiv="refresh" content="30">
                                             <em class="badge-status badge--pending">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{current_run['RUN_STATUS']}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>
                                         {% elif current_run['RUN_STATUS'] == 'Completed' %}
                                             <em class="badge-status badge--completed">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{current_run['RUN_STATUS']}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>
                                         {% elif current_run['RUN_STATUS'] == 'Failed' %}
-                                            <em class="badge-status badge--pending">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{current_run['RUN_STATUS']}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>
+                                            <em class="badge-status badge--red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{current_run['RUN_STATUS']}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>
                                         {% endif %}
                                     </div>
                                 </div>
@@ -202,14 +202,14 @@
                                 {% for rec in reports %}
                                     {% if rec['STEP_NUMBER']|int == step['STEP_NUMBER']|int %}
                                         {% if rec['RESPONSE_CODE']|int == 1 %}
-                                            <label>Success</label>
-                                            <textarea data-maxlength="50000" class="modal-input" id="content_input" readonly="readonly">{{rec['ERROR_MSG']}}</textarea>
+                                            <!--<label>Success</label>-->
+                                            <!--<textarea data-maxlength="50000" class="modal-input" id="content_input" readonly="readonly">{{rec['STACK_TRACE']}}</textarea>-->
                                         {% elif rec['RESPONSE_CODE']|int == 2 %}
-                                            <label>Warning</label>
-                                            <textarea data-maxlength="50000" class="modal-input" id="content_input" readonly="readonly">{{rec['WARNINGS']}}</textarea>
+                                            <label>Warning - {{rec['WARNINGS']}}</label>
+                                            <textarea data-maxlength="50000" class="modal-input" id="content_input" readonly="readonly">{{rec['STACK_TRACE']}}</textarea>
                                         {% elif rec['RESPONSE_CODE']|int == 3 %}
-                                            <label>Error</label>
-                                            <textarea data-maxlength="50000" class="modal-input" id="content_input" readonly="readonly">{{rec['ERROR_MSG']}}</textarea>
+                                            <label>Error - {{rec['ERROR_MSG']}}</label>
+                                            <textarea data-maxlength="50000" class="modal-input" id="content_input" readonly="readonly">{{rec['STACK_TRACE']}}</textarea>
                                         {% endif %}
                                         <!--<label>Report:</label>-->
                                         <!--<textarea data-maxlength="50000" class="modal-input" id="content_input" readonly="readonly">{{rec}}</textarea>-->

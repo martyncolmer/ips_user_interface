@@ -125,7 +125,9 @@ def get_display_data_json(table_name, run_id=None, data_source=None):
         address = address + "/" + run_id
 
     if data_source:
-        address = address + "/" + data_source
+
+        if table_name == 'TRAFFIC_DATA':
+            address = address + "/" + data_source
 
     response = requests.get(address)
     if response.status_code == 200:

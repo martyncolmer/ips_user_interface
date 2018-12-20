@@ -9,9 +9,9 @@ bp = Blueprint('manage_run', __name__, url_prefix='/manage_run', static_folder='
 def manage_run(run_id):
     form = ManageRunForm()
 
+    run_statuses = {'0': 'Ready', '1': 'In Progress', '2': 'Completed', '3': 'Failed'}
     status_values = {'0': 'Ready', '1': 'Success', '2': 'Failed', '3': 'Running'}
     run_types = {'0': 'Test', '1': 'Live', '2': 'Deleted', '3': 'SQL', '4': 'SQL', '5': 'SQL', '6': 'SQL'}
-    run_statuses = {'0': 'Ready', '1': 'In Progress', '2': 'Completed', '3': 'Failed'}
 
     run = app_methods.get_run(run_id)
     if not run:
