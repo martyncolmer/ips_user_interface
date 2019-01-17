@@ -96,7 +96,7 @@
                                         <li class="nav-tabs__tab--active"><a class="tab-label" href="/manage_run/{{current_run['RUN_ID']}}">Manage Run</a></li>
                                         <li class="nav-tabs__tab"><a class="tab-label" href="/reference_export/{{current_run['RUN_ID']}}">Export </a></li>
                                     </ul>
-                                    <table class="table table__dense">
+                                     <table class="table table__dense">
                                         <thead class="table--head">
                                             <th width="5%" class="table--header--cell">&nbsp;&nbsp;&nbsp; <input type="checkbox" onClick="toggle(this)" />&nbsp;&nbsp;</th>
                                             <th width="75%" class="table--header--cell">&nbsp;&nbsp; Steps</th>
@@ -205,11 +205,11 @@
                                             <!--<label>Success</label>-->
                                             <!--<textarea data-maxlength="50000" class="modal-input" id="content_input" readonly="readonly">{{rec['STACK_TRACE']}}</textarea>-->
                                         {% elif rec['RESPONSE_CODE']|int == 2 %}
-                                            <label>Warning - {{rec['WARNINGS']}}</label>
-                                            <textarea data-maxlength="50000" class="modal-input" id="content_input" readonly="readonly">{{rec['STACK_TRACE']}}</textarea>
+                                            <label>Warning - {{rec['MESSAGE']}}</label>
+                                            <textarea data-maxlength="50000" class="modal-input" id="content_input" readonly="readonly">{{rec['OUTPUT']}}</textarea>
                                         {% elif rec['RESPONSE_CODE']|int == 3 %}
-                                            <label>Error - {{rec['ERROR_MSG']}}</label>
-                                            <textarea data-maxlength="50000" class="modal-input" id="content_input" readonly="readonly">{{rec['STACK_TRACE']}}</textarea>
+                                            <label>Error - {{rec['MESSAGE']}}</label>
+                                            <textarea data-maxlength="50000" class="modal-input" id="content_input" readonly="readonly">{{rec['OUTPUT']}}</textarea>
                                         {% endif %}
                                         <!--<label>Report:</label>-->
                                         <!--<textarea data-maxlength="50000" class="modal-input" id="content_input" readonly="readonly">{{rec}}</textarea>-->
