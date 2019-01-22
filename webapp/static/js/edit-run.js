@@ -68,7 +68,7 @@ $(document).ready(function(e){
         // Set the inputs values to that in the data array
         $("#id_input").val(data[0].innerHTML);
         $("#reason_input").val(data[1].innerHTML);
-        $("#content_input").val(data[2].innerHTML);
+        $("#content_input").val(data[2].innerText);
 
         // Edit table data when the okay button is pressed
         $("#modal_okay_button").click(function(event){
@@ -95,45 +95,6 @@ $(document).ready(function(e){
         // Make sure the page doesn't refresh/change when this button is clicked
         return false;
     });
-
-    /*function fillInputFieldForPosting(rowsLength) {
-        // Fill hidden input with all table data as a comma separated string
-        data = [];
-        for (i=0; i < rowsLength; i++) {
-            // Get row from dictionary
-            row = tableRows[i];
-
-            // Get the data from row
-            name = row['name'].innerHTML;
-            reason = row['reason'].innerHTML;
-            content = row['content'].innerHTML;
-
-            // Create a dictionary entry to put in the input
-            var row = {
-                  name : name,
-                  "reason" : reason,
-                  "content" : content,
-                };
-
-            // Add to the data array
-            data.push(row);
-        }
-
-        // Iterate over data array and add the data as a comma separated list in the input
-        dataLength = data.length;
-        dataToSend = "";
-        // Put the data array into the input
-        for (i=0; i < dataLength; i++) {
-            row = data[i]
-            dataToSend += row['name'] + ',';
-            dataToSend += row['reason']+ ',';
-            dataToSend += row['content']+ ',';
-        }
-        $(".hidden-edit-input-content").val(dataToSend);
-
-    }
-});
-*/
 
 function fillInputFieldForPosting(rowsLength) {
         // Fill hidden input with all table data as a comma separated string

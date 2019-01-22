@@ -10,8 +10,8 @@ from flask import session, render_template
 
 APP_DIR = os.path.dirname(__file__)
 
-API_TARGET = r'http://10.28.56.87:5000'        # This is my VDI instance IP.
-#API_TARGET = r'http://localhost:5000'
+#API_TARGET = r'http://10.28.56.87:5000'        # This is my VDI instance IP.
+API_TARGET = r'http://localhost:5000'
 
 
 def create_run(unique_id, run_name, run_description, user_id, start_date, end_date, run_type='0', run_status='0'):

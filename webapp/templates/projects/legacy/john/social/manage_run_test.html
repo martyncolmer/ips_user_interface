@@ -203,13 +203,16 @@
                                     {% if rec['STEP_NUMBER']|int == step['STEP_NUMBER']|int %}
                                         {% if rec['RESPONSE_CODE']|int == 1 %}
                                             <label>Success</label>
-                                            <textarea data-maxlength="50000" class="modal-input" id="content_input" readonly="readonly">{{rec['ERROR_MSG']}}</textarea>
+                                            <textarea data-maxlength="50000" class="modal-input" id="content_input" readonly="readonly">{{rec['MESSAGE']}}
+{{rec['OUTPUT']}}</textarea>
                                         {% elif rec['RESPONSE_CODE']|int == 2 %}
                                             <label>Warning</label>
-                                            <textarea data-maxlength="50000" class="modal-input" id="content_input" readonly="readonly">{{rec['WARNINGS']}}</textarea>
+                                            <textarea data-maxlength="50000" class="modal-input" id="content_input" readonly="readonly">{{rec['MESSAGE']}}
+{{rec['OUTPUT']}}</textarea>
                                         {% elif rec['RESPONSE_CODE']|int == 3 %}
                                             <label>Error</label>
-                                            <textarea data-maxlength="50000" class="modal-input" id="content_input" readonly="readonly">{{rec['ERROR_MSG']}}</textarea>
+                                            <textarea data-maxlength="50000" class="modal-input" id="content_input" readonly="readonly">{{rec['MESSAGE']}}
+{{rec['OUTPUT']}}</textarea>
                                         {% endif %}
                                         <!--<label>Report:</label>-->
                                         <!--<textarea data-maxlength="50000" class="modal-input" id="content_input" readonly="readonly">{{rec}}</textarea>-->
