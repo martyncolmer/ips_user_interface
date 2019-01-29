@@ -66,14 +66,14 @@
                                         <br>
                                         <spam><strong>Run Status: </strong>&nbsp;</spam>
                                         {% if current_run['RUN_STATUS'] == 'Ready' %}
-                                            <em class="badge-status badge--no-started">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{current_run['RUN_STATUS']}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>
+                                            <em class="status status--info ">{{current_run['RUN_STATUS']}}</em>
                                         {% elif current_run['RUN_STATUS'] == 'In Progress' %}
-                                            <meta http-equiv="refresh" content="2">
-                                            <em class="badge-status badge--pending">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{current_run['RUN_STATUS']}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>
+                                            <meta http-equiv="refresh" content="10">
+                                            <em class="status status--info ">{{current_run['RUN_STATUS']}}</em>
                                         {% elif current_run['RUN_STATUS'] == 'Completed' %}
-                                            <em class="badge-status badge--completed">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{current_run['RUN_STATUS']}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>
+                                            <em class="status status--success ">{{current_run['RUN_STATUS']}}</em>
                                         {% elif current_run['RUN_STATUS'] == 'Failed' %}
-                                            <em class="badge-status badge--pending">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{current_run['RUN_STATUS']}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em>
+                                            <em class="status status--error ">{{current_run['RUN_STATUS']}}</em>
                                         {% endif %}
                                     </div>
                                 </div>
@@ -115,33 +115,24 @@
                                                         {% if step['STEP_NUMBER'] in (report_index) and step['STEP_STATUS'] in ('Success', 'Failed') %}
                                                             <button type="button" data-toggle="modal" data-target="#myModal{{step['STEP_NUMBER']}}">
                                                                 {% if step['STEP_STATUS'] == 'Ready' %}
-                                                                    <em class="badge-status badge--no-started">
-                                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ step['STEP_STATUS'] }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                    <em class="status status--info status--small">{{ step['STEP_STATUS'] }}</em>
                                                                 {% elif step['STEP_STATUS'] == 'Success' %}
-                                                                    <em class="badge-status badge--pending">
-                                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ step['STEP_STATUS'] }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                    <em class="status status--warning status--small">{{ step['STEP_STATUS'] }}</em>
                                                                 {% elif step['STEP_STATUS'] == 'Failed' %}
-                                                                    <em class="badge-status badge--red">
-                                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ step['STEP_STATUS'] }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                    <em class="status status--error status--small">{{ step['STEP_STATUS'] }}</em>
                                                                 {% endif %}
-                                                                </em></em></em>
                                                             </button>
                                                         <!--If there is no report just show the status label with on button-->
                                                         {% else %}
                                                             {% if step['STEP_STATUS'] == 'Ready' %}
-                                                                <em class="badge-status badge--no-started">
-                                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ step['STEP_STATUS'] }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                <em class="status status--info status--small">{{ step['STEP_STATUS'] }}</em>
                                                             {% elif step['STEP_STATUS'] == 'Success' %}
-                                                                <em class="badge-status badge--completed">
-                                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ step['STEP_STATUS'] }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                <em class="status status--success status--small">{{ step['STEP_STATUS'] }}</em>
                                                             {% elif step['STEP_STATUS'] == 'Failed' %}
-                                                                <em class="badge-status" b>
-                                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ step['STEP_STATUS'] }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                <em class="status status--error status--small">{{ step['STEP_STATUS'] }}</em>
                                                             {% elif step['STEP_STATUS'] == 'Running' %}
-                                                                    <em class="badge-status badge--pending">
-                                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ step['STEP_STATUS'] }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                <em class="status status--info status--small">{{ step['STEP_STATUS'] }}</em>
                                                             {% endif %}
-                                                                    </em></em></em></em>
                                                         {% endif %}
                                                     </td>
                                                 </tr>
