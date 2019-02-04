@@ -13,9 +13,10 @@ class SearchActivityForm(FlaskForm):
     search_button = SubmitField(label='Search')
     advanced_search = SubmitField(label='Advanced search')
     run_type_list = [('-1', 'All Runs'),
-                     ('0', 'Test'),
-                     ('1', 'Live'),
-                     ('2', 'Deleted')]
+                     ('0', 'Ready'),
+                     ('1', 'In Progress'),
+                     ('2', 'Completed'),
+                     ('3', 'Failed')]
     run_type_filter = SelectField(label='RunType', choices=run_type_list)
 
 
@@ -27,20 +28,25 @@ class CreateRunForm(FlaskForm):
 
 
 class DateSelectionForm(FlaskForm):
-    months = [('', 'Select Month'),
-              ('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'),
-              ('05', 'May'), ('06', 'June'), ('07', 'July'), ('08', 'August'),
-              ('09', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')]
+
     import datetime
     now = datetime.datetime.now()
 
-    s_day = IntegerField(label='Day', validators=[InputRequired(), NumberRange(min=1, max=31)])
-    s_month = SelectField(label='Month', choices=months, validators=[InputRequired()])
-    s_year = IntegerField(label='Year', validators=[InputRequired(), NumberRange(min=1991, max=now.year + 1)])
+    months = [('', 'Select Period'), ('', '---------'),
+              ('Q1', 'Quarter 1'), ('Q2', 'Quarter 2'), ('Q3', 'Quarter 3'), ('Q4', 'Quarter 4'),
+              ('', '---------'),
+              ('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'),
+              ('05', 'May'), ('06', 'June'), ('07', 'July'), ('08', 'August'),
+              ('09', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')]
 
-    e_day = IntegerField(label='Day', validators=[InputRequired(), NumberRange(min=1, max=31)])
-    e_month = SelectField(label='Month', choices=months,validators=[InputRequired()])
-    e_year = IntegerField(label='Year', validators=[InputRequired(), NumberRange(min=1991, max=now.year + 2)])
+    years = [('', 'Select Year'),('', '---------'),
+             (str(now.year-10), now.year-10), (str(now.year-9), now.year-9), (str(now.year-8), now.year-8),
+             (str(now.year - 7), now.year - 7), (str(now.year-6), now.year-6), (str(now.year-5), now.year-5),
+             (str(now.year - 4), now.year - 4), (str(now.year-3), now.year-3), (str(now.year-2), now.year-2),
+             (str(now.year - 1), now.year - 1), (str(now.year), now.year),
+             ]
+    s_month = SelectField(label='Month', choices=months, validators=[InputRequired()])
+    s_year = SelectField(label='Year', choices=years)#, validators=[InputRequired()])
 
 
 class ExportSelectionForm(FlaskForm):
@@ -48,9 +54,9 @@ class ExportSelectionForm(FlaskForm):
                  ("SURVEY_SUBSAMPLE", "Survey Subsample"),
                  ("PS_FINAL", "Final Weight Summary"),
                  ("SHIFT_DATA", "Shift"),
-                 ("PS_NON_RESPONSE", "Non-Response"),
+                 ("NON_RESPONSE_DATA", "Non-Response"),
                  ("PS_SHIFT_DATA", "Shift Weight Summary"),
-                 ("NON_RESPONSE_DATA", "Non Response Weight Summary"),
+                 ("PS_NON_RESPONSE", "Non Response Weight Summary"),
                  ("PS_MINIMUMS", "Minimum Weight Summary"),
                  ("PS_TRAFFIC", "Traffic Weight Summary"),
                  ("PS_UNSAMPLED_OOH", "Unsampled Traffic Weight Summary"),
@@ -80,7 +86,7 @@ class DataSelectionForm(FlaskForm):
                  ('PS_FINAL|Final weight summary|0', 'Final weight summary')]
 
     display_data = SubmitField(label='Display data')
-    data_selection = SelectField(label='Select Data', choices=data_list,validators=[InputRequired()])
+    data_selection = SelectField(label='Select Data', choices=data_list, validators=[InputRequired()])
 
 
 class LoadDataForm(FlaskForm):
