@@ -58,11 +58,11 @@
                                     <div>
                                         <spam><strong>Description: </strong>&nbsp; {{current_run['RUN_DESC']}}</spam>
                                         <br>
-                                        <spam><strong>Field Work dates: </strong>&nbsp; {{current_run['START_DATE']}} - {{current_run['END_DATE']}}</spam>
+                                        <spam><strong>Fieldwork period: </strong>&nbsp; {{current_run['PERIOD']}} {{current_run['YEAR']}}</spam>
                                         <br>
                                         <spam><strong>User: </strong>&nbsp;{{current_run['USER_ID']}}</spam>
                                         <br>
-                                        <spam><strong>Execution date & time: </strong>&nbsp; 19-10-2017 | 12:05pm</spam>
+                                        <spam><strong>Execution date & time: </strong>&nbsp; {{current_run['LAST_MODIFIED']}}</spam>
                                         <br>
                                         <spam><strong>Run Status: </strong>&nbsp;</spam>
                                         {% if current_run['RUN_STATUS'] == 'Ready' %}
@@ -98,7 +98,11 @@
                                     </ul>
                                     <table class="table table__dense">
                                         <thead class="table--head">
-                                            <th width="5%" class="table--header--cell">&nbsp;&nbsp;&nbsp; <input type="checkbox" onClick="toggle(this)" />&nbsp;&nbsp;</th>
+                                            {% if current_run['RUN_STATUS'] == 'Ready' or current_run['RUN_STATUS'] == 'In Progress'%}
+                                                <th width="5%" class="table--header--cell">&nbsp;&nbsp;&nbsp; <input type="checkbox" checked disabled onClick="toggle(this)" />&nbsp;&nbsp;</th>
+                                            {% else %}
+                                                <th width="5%" class="table--header--cell">&nbsp;&nbsp;&nbsp; <input type="checkbox" checked onClick="toggle(this)" />&nbsp;&nbsp;</th>
+                                            {% endif %}
                                             <th width="75%" class="table--header--cell">&nbsp;&nbsp; Steps</th>
                                             <th width="20%" class="table--header--cell">Status</th>
                                         </thead>
@@ -106,7 +110,11 @@
                                             {% for step in run_status %}
                                                 <tr class="table--row">
                                                     <td width="5%" class="table--cell field__item2">
-                                                        &nbsp;&nbsp;&nbsp;<input name="step_checkbox" type="checkbox" value="{{step['STEP_NUMBER']}}">&nbsp;&nbsp;&nbsp;
+                                                        {% if current_run['RUN_STATUS'] == 'Ready' or step['STEP_STATUS'] == 'Ready' or current_run['RUN_STATUS'] == 'In Progress'%}
+                                                        &nbsp;&nbsp;&nbsp;<input name="step_checkbox" type="checkbox" checked disabled value="{{step['STEP_NUMBER']}}">&nbsp;&nbsp;&nbsp;
+                                                        {% else %}
+                                                        &nbsp;&nbsp;&nbsp;<input name="step_checkbox" type="checkbox" checked value="{{step['STEP_NUMBER']}}">&nbsp;&nbsp;&nbsp;
+                                                        {% endif %}
                                                     </td>
                                                     <td width="75%" class="table--cell">&nbsp; {{step['STEP_NUMBER']}}. {{ step['STEP_NAME'] }}</td>
 
@@ -150,9 +158,13 @@
 
                                         <div class="top_50_extra_space">
                                             {{ form.csrf_token }}
-                                            {{ form.run_button(class="btn btn--primary", type="submit") }}
-                                            &nbsp;&nbsp;&nbsp;
+                                            {% if current_run['RUN_STATUS'] == 'In Progress'%}
+                                                <button class="btn btn--loader is-loading" disabled>Run</button>
+                                            {% else %}
+                                                {{ form.run_button(class="btn btn--primary", type="submit") }}
+                                            {% endif %}
                                             {% if current_run['RUN_STATUS'] == 'Completed'%}
+                                                &nbsp;&nbsp;&nbsp;
                                                 {{ form.display_button(class="btn btn--primary", type="submit") }}
                                             {% endif %}
                                             &nbsp;&nbsp;&nbsp;

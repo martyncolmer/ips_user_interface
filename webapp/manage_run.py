@@ -1,6 +1,7 @@
 from flask import request, render_template, Blueprint, session, redirect, url_for, abort
 from .forms import ManageRunForm, DataSelectionForm, ExportSelectionForm
 from . import app_methods
+from datetime import  datetime
 
 bp = Blueprint('manage_run', __name__, url_prefix='/manage_run', static_folder='static')
 
@@ -9,9 +10,37 @@ bp = Blueprint('manage_run', __name__, url_prefix='/manage_run', static_folder='
 def manage_run(run_id):
     form = ManageRunForm()
 
-    status_values = {'0': 'Ready', '1': 'Success', '2': 'Failed', '3': 'Running'}
-    run_types = {'0': 'Test', '1': 'Live', '2': 'Deleted', '3': 'SQL', '4': 'SQL', '5': 'SQL', '6': 'SQL'}
-    run_statuses = {'0': 'Ready', '1': 'In Progress', '2': 'Completed', '3': 'Failed'}
+    status_values = {'0': 'Ready',
+                     '1': 'Success',
+                     '2': 'Failed',
+                     '3': 'Running'}
+    run_types = {'0': 'Test',
+                 '1': 'Live',
+                 '2': 'Deleted',
+                 '3': 'SQL',
+                 '4': 'SQL',
+                 '5': 'SQL',
+                 '6': 'SQL'}
+    run_statuses = {'0': 'Ready',
+                    '1': 'In Progress',
+                    '2': 'Completed',
+                    '3': 'Failed'}
+    periods = {"01" : "January",
+               "02": "February",
+               "03": "March",
+               "04": "April",
+               "05": "May",
+               "06": "June",
+               "07": "July",
+               "08": "August",
+               "09": "September",
+               "10": "October",
+               "11": "Novemeber",
+               "12": "December",
+               "Q1": "Quarter 1",
+               "Q2": "Quarter 2",
+               "Q3": "Quarter 3",
+               "Q4": "Quarter 4"}
 
     run = app_methods.get_run(run_id)
     if not run:
@@ -20,13 +49,14 @@ def manage_run(run_id):
     session['id'] = run['RUN_ID']
     session['run_name'] = run['RUN_NAME']
     session['run_description'] = run['RUN_DESC']
-    session['start_date'] = run['START_DATE']
-    session['end_date'] = run['END_DATE']
+    session['period'] = run['PERIOD']
+    session['year'] = run['YEAR']
     current_run = run
 
     current_run['RUN_STATUS'] = run_statuses[str(int(current_run['RUN_STATUS']))]
     current_run['RUN_TYPE_ID'] = run_types[str(int(current_run['RUN_TYPE_ID']))]
-
+    current_run['PERIOD'] = periods[run['PERIOD']]
+    current_run['LAST_MODIFIED'] = datetime.utcfromtimestamp(current_run['LAST_MODIFIED']/1000).strftime('%Y-%m-%d %H:%M:%S')
     # If this is a post then validate if needed
     if request.method == 'POST' and form.validate():
             # If the run button is selected run the calculation steps
