@@ -5,7 +5,7 @@ import os
 import json
 import pandas
 import io
-import datetime
+from datetime import datetime
 from flask import session, render_template
 
 APP_DIR = os.path.dirname(__file__)
@@ -14,7 +14,7 @@ APP_DIR = os.path.dirname(__file__)
 API_TARGET = r'http://localhost:5000'
 
 
-def create_run(unique_id, run_name, run_description, user_id, start_date, end_date, run_type='0', run_status='0'):
+def create_run(unique_id, run_name, run_description, user_id, period, year, run_type='0', run_status='0'):
     """
     Purpose: Creates a new run and adds it to the current list of runs (.csv currently but will be to database).
 
@@ -23,14 +23,14 @@ def create_run(unique_id, run_name, run_description, user_id, start_date, end_da
     #response = requests.get(API_TARGET + r"/runs")
 
     new_run = {'RUN_ID': unique_id, 'RUN_NAME': run_name, 'RUN_DESC': run_description, 'USER_ID': user_id,
-               'START_DATE': start_date, 'END_DATE': end_date, 'RUN_TYPE_ID': run_type, 'RUN_STATUS': run_status}
+               'PERIOD': period, 'YEAR': year, 'RUN_TYPE_ID': run_type, 'RUN_STATUS': run_status, 'LAST_MODIFIED': datetime.now().strftime('%Y-%d-%m %H:%M:%S')}
 
     requests.post(API_TARGET + r"/runs", json=new_run)
 
     create_run_steps(new_run['RUN_ID'])
 
 
-def edit_run(run_id, run_name, run_description, start_date, end_date, run_type='0', run_status='0'):
+def edit_run(run_id, run_name, run_description, period, year, run_type='0', run_status='0'):
     """
     Purpose: Modifies an already existing run through a PUT request.
 
@@ -45,18 +45,20 @@ def edit_run(run_id, run_name, run_description, start_date, end_date, run_type='
     run['RUN_ID'] = run_id
     run['RUN_NAME'] = run_name
     run['RUN_DESC'] = run_description
-    run['START_DATE'] = start_date
-    run['END_DATE'] = end_date
+    run['PERIOD'] = period
+    run['YEAR'] = year
     run['RUN_TYPE_ID'] = run_type
     run['RUN_STATUS'] = run_status
+    run['LAST_MODIFIED'] = last_modified=datetime.now().strftime('%Y-%d-%m %H:%M:%S')
     requests.put(API_TARGET + r'/runs/' + run_id, json=run)
 
 
 def get_system_info():
     """
     Purpose: Collects and returns the current build's system info to be displayed on the web application.
+             This function uses placeholder data and may not be required in the final system.
 
-    :return: List of records
+    :return: List of records containing the system info
     """
 
     f = open('webapp/resources/ips_system_info.csv', encoding='utf-8')
@@ -336,7 +338,7 @@ def create_export_data_download(run_id, sql_table, target_filename):
     data = columns_csv_data + values_csv_data
 
     # Create dict with data to post
-    json_data = {'DATE_CREATED': datetime.datetime.now().strftime('%Y-%d-%m %H:%M:%S'),
+    json_data = {'DATE_CREATED': datetime.now().strftime('%Y-%d-%m %H:%M:%S'),
                  'DOWNLOADABLE_DATA': data,
                  'FILENAME': target_filename,
                  'RUN_ID': run_id,
@@ -407,27 +409,6 @@ def survey_data_import(table_name, import_run_id, import_data_file):
 
 def get_run_step_requests(run_id, step_number = None):
 
-    # Get using sql server connection
-    # conn = get_sql_connection()
-    # cur = conn.cursor()
-    #
-    # # Create and execute SQL query
-    # sql = "SELECT * from [dbo].[RESPONSE] where RUN_ID = '" + run_id + "'"
-    #
-    # try:
-    #     cur.execute(sql)
-    #     result = cur.fetchall()
-    # except Exception as err:
-    #     # Raise (unit testing purposes) and return False to indicate table does not exist
-    #     # database_logger().error(err, exc_info = True)
-    #     print("An exception has been raised. IMPLEMENT LOGGING HERE")
-    #     return False
-    #
-    # print(result)
-    #
-    # return result
-
-
     address = API_TARGET + r'/RESPONSE/' + run_id
 
     if step_number:
@@ -441,35 +422,6 @@ def get_run_step_requests(run_id, step_number = None):
         values = []
 
     return values
-
-# Added temporarily as to not write too much SQL alchemy code which will be removed from SQL when connection can be established from API Gateway
-# def get_sql_connection():
-#     """
-#     Author       : Thomas Mahoney / Nassir Mohammad (edits)
-#     Date         : 11 / 07 / 2018
-#     Purpose      : Establishes a connection to the SQL Server database and returns the connection object.
-#     Parameters   : in_table_name - the IPS survey records for the period.
-#                    credentials_file  - file containing the server and login credentials used for connection.
-#     Returns      : a pyodbc connection object.
-#     Requirements : NA
-#     Dependencies : NA
-#     """
-#
-#     # Get credentials and decrypt
-#     username = os.getenv("DB_USER_NAME")
-#     password = os.getenv("DB_PASSWORD")
-#     database = os.getenv("DB_NAME")
-#     server = os.getenv("DB_SERVER")
-#
-#     # Attempt to connect to the database
-#     try:
-#         conn = pyodbc.connect(driver="{SQL Server}", server=server, database=database, uid=username, pwd=password, autocommit=True)
-#     except Exception as err:
-#         print("computer says no")
-#         #database_logger().error(err, exc_info = True)
-#         return False
-#     else:
-#         return conn
 
 
 def create_request(run_id,step_number, json=None):

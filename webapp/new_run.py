@@ -10,6 +10,7 @@ import io
 
 bp = Blueprint('new_run', __name__, url_prefix='/new_run', static_folder='static')
 
+from datetime import datetime
 
 @bp.route('/new_run_1', methods=['GET', 'POST'])
 @bp.route('/new_run_1/<run_id>', methods=['GET', 'POST'])
@@ -32,7 +33,7 @@ def new_run_1(run_id=None):
                 run['RUN_DESC'] = request.form['run_description']
                 # Update run name and description
                 app_methods.edit_run(run_id=run_id, run_name=run['RUN_NAME'], run_description=run['RUN_DESC'],
-                                     start_date=run['START_DATE'], end_date=run['END_DATE'], run_type=run['RUN_TYPE_ID'],
+                                     period=run['PERIOD'], year=run['YEAR'], run_type=run['RUN_TYPE_ID'],
                                      run_status='0')
 
                 current_app.logger.debug("Updated existing run details.")
@@ -70,71 +71,53 @@ def new_run_2(run_id=None):
     # if request is a post
     if request.method == 'POST':
         current_app.logger.debug("Processing post request.")
-        session['s_day'] = request.form['s_day']
-        session['s_month'] = request.form['s_month']
-        session['s_year'] = request.form['s_year']
-        session['e_day'] = request.form['e_day']
-        session['e_month'] = request.form['e_month']
-        session['e_year'] = request.form['e_year']
-
-        if 'last_name' in session:
-            last_name = session['last_name']
+        session['period'] = request.form['s_month']
+        session['year'] = request.form['s_year']
 
         if form.validate():
             if request.form['submit'] == 'create_run':
 
-                start_date = request.form['s_year'] + r"-" + request.form['s_month'] + r"-" + request.form['s_day']
-                end_date = request.form['s_year'] + r"-" + request.form['e_month'] + r"-" + request.form['s_day']
+                start_date = request.form['s_month']
+                end_date = request.form['s_year']
 
-                session['start_date'] = start_date
-                session['end_date'] = end_date
+                session['period'] = start_date
+                session['year'] = end_date
 
                 if run_id:
                     # Update run start and end dates
                     run = app_methods.get_run(run_id)
-                    run['start_date'] = start_date
-                    run['end_date'] = end_date
+                    run['PERIOD'] = start_date
+                    run['YEAR'] = end_date
                     app_methods.edit_run(run_id=run_id, run_name=run['RUN_NAME'], run_description=run['RUN_DESC'],
-                                         start_date=run['START_DATE'], end_date=run['END_DATE'],
+                                         period=run['PERIOD'], year=run['YEAR'],
                                          run_type=run['RUN_TYPE_ID'], run_status='0')
                     current_app.logger.info("Run edited with start and end date. Redirecting to new_run_3...")
 
                     return redirect('/new_run/new_run_3/' + run_id, code=302)
                 else:
                     app_methods.create_run(session['id'], session['run_name'], session['run_description'], os.getlogin(),
-                                           session['start_date'], session['end_date'])
+                                           session['period'], session['year'])
                     current_app.logger.info("New run created from session variables. Redirecting to new_run_3...")
 
                     return redirect('/new_run/new_run_3', code=302)
 
+    errors = form.errors
     last_entry = {}
 
     if 's_day' in session:
-        last_entry['s_day'] = session['s_day']
         last_entry['s_month'] = session['s_month']
         last_entry['s_year'] = session['s_year']
-        last_entry['e_day'] = session['e_day']
-        last_entry['e_month'] = session['e_month']
-        last_entry['e_year'] = session['e_year']
     else:
-        last_entry['s_day'] = ""
         last_entry['s_month'] = ""
         last_entry['s_year'] = ""
-        last_entry['e_day'] = ""
-        last_entry['e_month'] = ""
-        last_entry['e_year'] = ""
 
     if run_id:
         run = app_methods.get_run(run_id)
-        last_entry['s_day'] = run['START_DATE'][8:10]
-        last_entry['s_month'] = run['START_DATE'][5:7]
-        last_entry['s_year'] = run['START_DATE'][:4]
-        last_entry['e_day'] = run['END_DATE'][8:10]
-        last_entry['e_month'] = run['END_DATE'][5:7]
-        last_entry['e_year'] = run['END_DATE'][:4]
+        last_entry['s_month'] = run['PERIOD']
+        last_entry['s_year'] = run['YEAR']
 
-        form.s_month.default = run['START_DATE'][5:7]
-        form.e_month.default = run['END_DATE'][5:7]
+        form.s_month.default = run['PERIOD']
+        form.s_year.default = run['YEAR']
         form.process()
 
     return render_template('/projects/legacy/john/social/new_run_2_test.html',

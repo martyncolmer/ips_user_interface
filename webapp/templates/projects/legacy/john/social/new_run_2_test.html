@@ -59,7 +59,7 @@
                                     </div>
                                 </div>
                             </div>
-                            {% if form.s_day.errors or form.s_month.errors or form.s_year.errors or form.e_day.errors or form.e_month.errors or form.e_year.errors %}
+                            {% if form.s_month.errors or form.s_year.errors %}
                                 <div class="collator-item">
                                     <h2 class="collator-title"></h2>
                                     <!-- Start: @panel--error -->
@@ -102,19 +102,6 @@
                                 <fieldset class="fieldgroup fieldgroup--date" data-qa="widget-date">
                                     <legend class="fieldgroup__title venus">Start date</legend>
                                     <div class="fieldgroup__fields">
-                                        <div class="field field--input field--day">
-                                            {{ form.csrf_token }}
-                                            {{ form.s_day.label(class="label mercury", for="input-date-range-from-day", id="label-date-range-from-day")}}
-                                            {{ form.s_day(class="input input--StringField ", value= last_entry['s_day'] , placeholder="DD", id="input-date-range-from-day") }}
-
-                                            {% if form.s_day.errors %}
-                                            <ul>
-                                                {% for error_message in form.s_day.errors %}
-                                                <li style = "color:red;">{{ error_message }}</li>
-                                                {% endfor %}
-                                            </ul>
-                                            {% endif %}
-                                        </div>
 
                                         <div class="field field--select field--month">
                                             {{ form.csrf_token }}
@@ -129,10 +116,10 @@
                                             {% endif %}
                                         </div>
 
-                                        <div class="field field--input field--year">
+                                        <div class="field field--input field--month">
                                             {{ form.csrf_token }}
-                                            {{ form.s_year.label(class="label mercury", for="input-date-range-from-year", id="label-date-range-from-year")}}
-                                            {{ form.s_year(class="input input--StringField ", value=last_entry['s_year'], placeholder="YYYY", id="input-date-range-from-year") }}
+                                            {{ form.s_year.label(class="label mercury", for="input-date-range-from-year")}}
+                                            {{ form.s_year(class="input input--select", value = last_entry['s_year'])}}
                                             {% if form.s_year.errors %}
                                             <ul>
                                                 {% for error_message in form.s_year.errors %}
@@ -145,57 +132,6 @@
 
                                 </fieldset>
 
-                                <br>
-                                <br>
-
-                                <fieldset class="fieldgroup fieldgroup--date" data-qa="widget-date">
-                                    <legend class="fieldgroup__title venus">End date</legend>
-                                    <div class="fieldgroup__fields">
-                                        <div class="field field--input field--day">
-                                            {{ form.csrf_token }}
-                                            {{ form.e_day.label(class="label mercury", for="input-date-range-from-day", id="label-date-range-from-day")}}
-                                            {{ form.e_day(class="input input--StringField ", value=last_entry['e_day'], placeholder="DD", id="input-date-range-from-day") }}
-
-                                            {% if form.e_day.errors %}
-                                            <ul>
-                                                {% for error_message in form.e_day.errors %}
-                                                <li style = "color:red;">{{ error_message }}</li>
-                                                {% endfor %}
-                                            </ul>
-                                            {% endif %}
-                                        </div>
-
-                                        <div class="field field--select field--month">
-                                            {{ form.csrf_token }}
-                                            {{ form.e_month.label(class="label mercury", for="input-date-range-from-month")}}
-                                            {{ form.e_month(class="input input--select", value = last_entry['e_month'])}}
-
-                                            {% if form.e_month.errors %}
-                                            <ul>
-                                                {% for error_message in form.e_month.errors %}
-                                                <li style = "color:red;">{{ error_message }}</li>
-                                                {% endfor %}
-                                            </ul>
-                                            {% endif %}
-                                        </div>
-
-                                        <div class="field field--input field--year">
-                                            {{ form.csrf_token }}
-                                            {{ form.e_year.label(class="label mercury", for="input-date-range-from-year", id="label-date-range-from-year")}}
-                                            {{ form.e_year(class="input input--StringField ", value=last_entry['e_year'], placeholder="YYYY", id="input-date-range-from-year") }}
-
-                                            {% if form.e_year.errors %}
-                                            <ul>
-                                                {% for error_message in form.e_year.errors %}
-                                                <li style = "color:red;">{{ error_message }}</li>
-                                                {% endfor %}
-                                            </ul>
-                                            {% endif %}
-
-                                        </div>
-                                    </div>
-
-                                </fieldset>
 
                                 <div class="top_60_extra_space">
                                     <button class="btn btn--primary" type="submit" name="submit" value="create_run">Save and continue</button>
