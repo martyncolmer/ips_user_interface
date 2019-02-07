@@ -229,12 +229,31 @@ def new_run_4():
 
     pv_set_id = False
 
+    periods = {"01": "January",
+               "02": "February",
+               "03": "March",
+               "04": "April",
+               "05": "May",
+               "06": "June",
+               "07": "July",
+               "08": "August",
+               "09": "September",
+               "10": "October",
+               "11": "Novemeber",
+               "12": "December",
+               "Q1": "Quarter 1",
+               "Q2": "Quarter 2",
+               "Q3": "Quarter 3",
+               "Q4": "Quarter 4",
+               None: "-"}
+
     if run_id:
         for rec in records:
+            rec['PERIOD'] = periods[rec['PERIOD']]
             if rec['RUN_ID'] in run_id:
                 pv_set_id = rec['RUN_ID']
 
-    header = ['RUN_ID', 'NAME', 'USER', 'START_DATE', 'END_DATE']
+    header = ['RUN_ID', 'NAME', 'USER', 'PERIOD', 'YEAR']
 
     current_app.logger.debug("Retrieved process variable sets, rendering new_run_4.")
 
@@ -297,17 +316,17 @@ def new_run_5():
         # Get required values from the session
         run_id = session['id']
         run_name = session['run_name']
-        start_date = session['start_date']
-        end_date = session['end_date']
+        period = session['period']
+        year = session['year']
 
-        current_app.logger.debug("Session values: %s, %s, %s, %s, %s, %s.", run_id, run_name, start_date, end_date, user)
+        current_app.logger.debug("Session values: %s, %s, %s, %s, %s, %s.", run_id, run_name, period, year, user)
 
         # Creates a new pv set if run_id doesn't already exist, otherwise delete existing rows and repopulate
         if run_id not in app_methods.get_all_run_ids():
             current_app.logger.info("New run_id given, creating new process variable set...")
 
             # Creates a new set of process variables, then fill the empty set with the edited javascript data
-            app_methods.create_process_variables_set(run_id, run_name, user, start_date, end_date)
+            app_methods.create_process_variables_set(run_id, run_name, user, period, year)
 
             # Fill newly created pv set with new process variables (for new runs)
             app_methods.create_process_variables(run_id, data_dictionary_array)

@@ -114,8 +114,6 @@ def weights(run_id=None):
         session['id'] = run['RUN_ID']
         session['run_name'] = run['RUN_NAME']
         session['run_description'] = run['RUN_DESC']
-        session['start_date'] = run['START_DATE']
-        session['end_date'] = run['END_DATE']
         current_run = run
 
         if request.method == 'POST':

@@ -24,8 +24,6 @@ def reference_export(run_id, new_export="0", msg="", data=""):
         session['id'] = run['RUN_ID']
         session['run_name'] = run['RUN_NAME']
         session['run_description'] = run['RUN_DESC']
-        session['start_date'] = run['START_DATE']
-        session['end_date'] = run['END_DATE']
         current_run = run
 
         current_run['RUN_STATUS'] = run_statuses[str(int(current_run['RUN_STATUS']))]
@@ -59,8 +57,6 @@ def export_data(run_id):
         session['id'] = run['RUN_ID']
         session['run_name'] = run['RUN_NAME']
         session['run_description'] = run['RUN_DESC']
-        session['start_date'] = run['START_DATE']
-        session['end_date'] = run['END_DATE']
 
         current_run = run
 
