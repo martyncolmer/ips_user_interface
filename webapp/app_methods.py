@@ -152,7 +152,7 @@ def get_process_variables(run_id):
     return json.loads(response.content)
 
 
-def create_process_variables_set(run_id, name, user, start_date, end_date):
+def create_process_variables_set(run_id, name, user, period, year):
 
     response = requests.get(API_TARGET + r'/pv_sets')
     file = json.loads(response.content)
@@ -161,8 +161,8 @@ def create_process_variables_set(run_id, name, user, start_date, end_date):
     new_pv_set['RUN_ID'] = run_id
     new_pv_set['NAME'] = name
     new_pv_set['USER'] = user
-    new_pv_set['START_DATE'] = start_date
-    new_pv_set['END_DATE'] = end_date
+    new_pv_set['PERIOD'] = period
+    new_pv_set['YEAR'] = year
 
     requests.post(API_TARGET + r'/pv_sets', json=new_pv_set)
 
